@@ -5,26 +5,33 @@
       <hue class="hue" @change="onSelectHue"/>
       <alpha class="alpha" :color="rgbStr" @change="onSelectAlpha"/>
     </div>
-    <preview :color="rgbaStr"/>
+    <input-value :value="value"/>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue'
+import { defineComponent, ref, computed, watch } from 'vue'
 import Saturation from './Saturation.vue'
 import Hue from './Hue.vue'
 import Alpha from './Alpha.vue'
-import Preview from './Preview.vue'
+import InputValue from './InputValue.vue'
 import { hsv2rgb } from './utils'
 export default defineComponent({
   name: 'Picker',
   components: {
-    Preview,
     Saturation,
     Hue,
-    Alpha
+    Alpha,
+    InputValue
   },
-  setup () {
+  props: {
+    value: {
+      type: String,
+      default: 'rgba(255,0,0)'
+    }
+  },
+  emits: ['update:value'],
+  setup (props, { emit }) {
     const a = ref(1)
     const h = ref(0)
     const s = ref(0)
@@ -43,6 +50,9 @@ export default defineComponent({
     const onSelectAlpha = (alpha) => {
       a.value = alpha
     }
+    watch(rgbaStr, (value) => {
+      emit('update:value', value)
+    })
     return {
       h,
       rgbStr,
@@ -58,8 +68,7 @@ export default defineComponent({
 
 <style scoped lang="less">
 .picker {
-  width: 220px;
-  height: 280px;
+  width: 210px;
   background: #f7f8f9;
   border-radius: 4px;
   box-shadow: 0 0 16px 0 rgb(0 0 0 / 16%);
@@ -67,6 +76,7 @@ export default defineComponent({
 }
 .picker-header {
   display: flex;
+  margin-bottom: 5px;
 }
 .saturation {
   margin-right: 10px;

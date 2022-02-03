@@ -1,28 +1,25 @@
 <template>
   <div class="color-picker" @click.stop="openPickerShow">
-    <div
-      class="color-item"
-      :style="{
-        background: value
-      }"
-    >
-    </div>
+    <color-item :value="value"/>
     <transition name="popup">
       <picker
         v-show="isPickerShow"
         class="picker"
+        v-model:value="value"
       />
     </transition>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, onUnmounted } from 'vue'
+import { defineComponent, ref, onMounted, onUnmounted, watch } from 'vue'
 import type { PropType } from 'vue'
 import Picker from './picker'
+import ColorItem from './color-item'
 export default defineComponent({
   name: 'ColorPicker',
   components: {
+    ColorItem,
     Picker
   },
   props: {
@@ -33,14 +30,11 @@ export default defineComponent({
     theme: {
       type: String as PropType<'light' | 'dark'>,
       default: 'light'
-    },
-    value: {
-      type: String,
-      default: '#f5222d'
     }
   },
   setup () {
     const isPickerShow = ref(false)
+    const value = ref('')
     const openPickerShow = () => {
       isPickerShow.value = true
     }
@@ -53,7 +47,11 @@ export default defineComponent({
     onUnmounted(() => {
       document.removeEventListener('click', closePickerShow)
     })
+    watch(() => value, (value) => {
+      console.log(value)
+    })
     return {
+      value,
       isPickerShow,
       openPickerShow,
       closePickerShow
@@ -67,13 +65,6 @@ export default defineComponent({
   position: relative;
   width: 20px;
   height: 20px;
-}
-
-.color-item {
-  width: 20px;
-  height: 20px;
-  border-radius: 5px;
-  border: 1px solid #d9d9d9;
 }
 
 .picker {

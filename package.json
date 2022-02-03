@@ -24,6 +24,10 @@
   "keywords": [],
   "author": "ayuan",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/qiuzongyuan/vue-pick-colors"
+  },
   "devDependencies": {
     "@babel/core": "^7.16.7",
     "@babel/plugin-transform-runtime": "^7.16.8",

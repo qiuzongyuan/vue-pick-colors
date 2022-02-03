@@ -17,7 +17,7 @@ export default defineComponent({
   props: {
     size: {
       type: Number,
-      default: 150
+      default: 160
     },
     hue: {
       type: Number,

@@ -1,42 +1,35 @@
-export const hsv2hsl = function (hue: number, sat: number, val: number) {
+export const hsv2hsl = (h: number, s: number, v: number) => {
   return [
-    hue,
-    (sat * val) / ((hue = (2 - sat) * val) < 1 ? hue : 2 - hue) || 0,
-    hue / 2
+    h,
+    (s * v) / ((h = (2 - s) * v) < 1 ? h : 2 - h) || 0,
+    h / 2
   ]
 }
 
-export const hsl2hsv = function (hue: number, sat: number, light: number) {
-  sat = sat / 100
-  light = light / 100
-  let smin = sat
-  const lmin = Math.max(light, 0.01)
-  // let sv
-  // let v
+const INT_HEX_MAP = { 10: 'A', 11: 'B', 12: 'C', 13: 'D', 14: 'E', 15: 'F' }
 
-  light *= 2
-  sat *= light <= 1 ? light : 2 - light
-  smin *= lmin <= 1 ? lmin : 2 - lmin
-  const v = (light + sat) / 2
-  const sv =
-    light === 0 ? (2 * smin) / (lmin + smin) : (2 * sat) / (light + sat)
-
-  return {
-    h: hue,
-    s: sv * 100,
-    v: v * 100
-  }
+const hexOne = (value: number) => {
+  value = Math.min(Math.round(value), 255)
+  const high = Math.floor(value / 16)
+  const low = value % 16
+  return `${INT_HEX_MAP[high] || high}${INT_HEX_MAP[low] || low}`
 }
 
-const isOnePointZero = function (n: unknown) {
+export const rgb2hex = ({ r, g, b }) => {
+  if (isNaN(r) || isNaN(g) || isNaN(b)) return ''
+
+  return `#${hexOne(r)}${hexOne(g)}${hexOne(b)}`
+}
+
+const isOnePointZero = (n: unknown) => {
   return typeof n === 'string' && n.indexOf('.') !== -1 && parseFloat(n) === 1
 }
 
-const isPercentage = function (n: unknown) {
+const isPercentage = (n: unknown) => {
   return typeof n === 'string' && n.indexOf('%') !== -1
 }
 
-const bound01 = function (value: number | string, max: number | string) {
+const bound01 = (value: number | string, max: number | string) => {
   if (isOnePointZero(value)) value = '100%'
 
   const processPercent = isPercentage(value)
@@ -56,7 +49,7 @@ const bound01 = function (value: number | string, max: number | string) {
   return (value % (max as number)) / parseFloat(max as string)
 }
 
-export const hsv2rgb = function (h, s, v) {
+export const hsv2rgb = (h, s, v) => {
   h = bound01(h, 360) * 6
   s = bound01(s, 100)
   v = bound01(v, 100)
@@ -75,5 +68,39 @@ export const hsv2rgb = function (h, s, v) {
     r: Math.round(r * 255),
     g: Math.round(g * 255),
     b: Math.round(b * 255)
+  }
+}
+
+export const formatColor = ({ h, s, v, a }, format, useAlpha = true) => {
+  if (useAlpha) {
+    switch (format) {
+      case 'hsl': {
+        const hsl = hsv2hsl(h, s / 100, v / 100)
+        return `hsla(${h}, ${Math.round(hsl[1] * 100)}%, ${Math.round(hsl[2] * 100)}%, ${a})`
+      }
+      case 'hex': {
+        return `${rgb2hex(hsv2rgb(h, s, v))}${hexOne(
+          (a * 255) / 100
+        )}`
+      }
+      default: {
+        const { r, g, b } = hsv2rgb(h, s, v)
+        return `rgba(${r}, ${g}, ${b}, ${a})`
+      }
+    }
+  } else {
+    switch (format) {
+      case 'hsl': {
+        const hsl = hsv2hsl(h, s / 100, v / 100)
+        return `hsl(${h}, ${Math.round(hsl[1] * 100)}%, ${Math.round(hsl[2] * 100)}%)`
+      }
+      case 'rgb': {
+        const { r, g, b } = hsv2rgb(h, s, v)
+        return `rgb(${r}, ${g}, ${b})`
+      }
+      default : {
+        return rgb2hex(hsv2rgb(h, s, v))
+      }
+    }
   }
 }

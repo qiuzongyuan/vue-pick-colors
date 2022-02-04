@@ -3,8 +3,10 @@
     <color-item :value="value"/>
     <transition name="popup">
       <picker
-        v-show="isPickerShow"
         class="picker"
+        :format="format"
+        :show-alpha="showAlpha"
+        v-show="isPickerShow"
         v-model:value="value"
       />
     </transition>
@@ -30,6 +32,14 @@ export default defineComponent({
     theme: {
       type: String as PropType<'light' | 'dark'>,
       default: 'light'
+    },
+    format: {
+      type: String as PropType<'rgb' | 'hex' | 'hsl'>,
+      default: 'rgb'
+    },
+    showAlpha: {
+      type: Boolean,
+      default: true
     }
   },
   setup () {

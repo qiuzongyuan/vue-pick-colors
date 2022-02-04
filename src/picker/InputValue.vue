@@ -25,7 +25,6 @@ export default defineComponent({
   setup (props, { emit }) {
     const onInput = (e) => {
       const value = (e.target as any).value
-      console.log(value)
       emit('update:value', value)
       emit('change', value)
     }
@@ -39,10 +38,10 @@ export default defineComponent({
 <style scoped lang="less">
 .input {
   display: flex;
-  font-size: 13px;
+  font-size: 12px;
 }
 .label {
-  width: 50px;
+  padding: 0 5px;
   height: 30px;
   float: left;
   display: flex;
@@ -52,13 +51,13 @@ export default defineComponent({
   background: #e7e8e9;
 }
 .value {
-  @value-width: 170px;
+  @width: 168px;
   flex: 1;
   height: 30px;
-  min-width: @value-width;
-  max-width: @value-width;
-  width: @value-width;
-  padding: 0 12px;
+  min-width: @width;
+  max-width: @width;
+  width: @width;
+  text-align: center;
   background: #eceef0;
   box-sizing: border-box;
   border: 1px solid #eceef0;

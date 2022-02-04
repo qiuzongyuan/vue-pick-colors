@@ -1,7 +1,7 @@
 <template>
   <div class="picker">
     <div class="picker-header">
-      <saturation class="saturation" :hue="h" @change="onSelectSaturation" ref="saturation"/>
+      <saturation class="saturation" :hue="h" @change="onSelectSaturation"/>
       <hue class="hue" @change="onSelectHue"/>
       <alpha class="alpha" :color="rgbStr" @change="onSelectAlpha"/>
     </div>
@@ -11,11 +11,12 @@
 
 <script lang="ts">
 import { defineComponent, ref, computed, watch } from 'vue'
+import type { PropType } from 'vue'
 import Saturation from './Saturation.vue'
 import Hue from './Hue.vue'
 import Alpha from './Alpha.vue'
 import InputValue from './InputValue.vue'
-import { hsv2rgb } from './utils'
+import { formatColor, hsv2rgb } from './utils'
 export default defineComponent({
   name: 'Picker',
   components: {
@@ -25,9 +26,13 @@ export default defineComponent({
     InputValue
   },
   props: {
-    value: {
-      type: String,
-      default: 'rgba(255,0,0)'
+    format: {
+      type: String as PropType<'rgb' | 'hex' | 'hsl'>,
+      default: 'rgb'
+    },
+    showAlpha: {
+      type: Boolean,
+      default: true
     }
   },
   emits: ['update:value'],
@@ -39,7 +44,12 @@ export default defineComponent({
     const rgb = computed(() => hsv2rgb(h.value, s.value, v.value))
     const rgbStr = computed(() => `rgb(${rgb.value.r}, ${rgb.value.g}, ${rgb.value.b})`)
     const rgbaStr = computed(() => `rgba(${rgb.value.r}, ${rgb.value.g}, ${rgb.value.b}, ${a.value})`)
-    const saturation = ref()
+    const value = computed(() => formatColor({
+      h: h.value,
+      s: s.value,
+      v: v.value,
+      a: a.value
+    }, props.format, props.showAlpha))
     const onSelectHue = (hue: number) => {
       h.value = hue
     }
@@ -60,7 +70,7 @@ export default defineComponent({
       onSelectSaturation,
       onSelectHue,
       onSelectAlpha,
-      saturation
+      value
     }
   }
 })

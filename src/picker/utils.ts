@@ -78,15 +78,13 @@ export const formatColor = ({ h, s, v, a }, format, useAlpha = true) => {
         const hsl = hsv2hsl(h, s / 100, v / 100)
         return `hsla(${h}, ${Math.round(hsl[1] * 100)}%, ${Math.round(hsl[2] * 100)}%, ${a})`
       }
-      case 'hex': {
-        return `${rgb2hex(hsv2rgb(h, s, v))}${hexOne(
-          (a * 255) / 100
-        )}`
-      }
-      default: {
+      case 'rgb': {
         const { r, g, b } = hsv2rgb(h, s, v)
         return `rgba(${r}, ${g}, ${b}, ${a})`
       }
+      case 'hex':
+      default:
+        return `${rgb2hex(hsv2rgb(h, s, v))}${hexOne(a * 255)}`
     }
   } else {
     switch (format) {
@@ -98,9 +96,9 @@ export const formatColor = ({ h, s, v, a }, format, useAlpha = true) => {
         const { r, g, b } = hsv2rgb(h, s, v)
         return `rgb(${r}, ${g}, ${b})`
       }
-      default : {
+      case 'hex':
+      default :
         return rgb2hex(hsv2rgb(h, s, v))
-      }
     }
   }
 }

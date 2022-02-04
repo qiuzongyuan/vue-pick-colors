@@ -35,7 +35,7 @@ export default defineComponent({
     },
     format: {
       type: String as PropType<'rgb' | 'hex' | 'hsl'>,
-      default: 'rgb'
+      default: 'hex'
     },
     showAlpha: {
       type: Boolean,

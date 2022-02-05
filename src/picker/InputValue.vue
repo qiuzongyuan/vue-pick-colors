@@ -56,7 +56,7 @@ export default defineComponent({
   font-size: 12px;
 }
 .label {
-  padding: 0 5px;
+  width: 45px;
   height: 30px;
   float: left;
   display: flex;

@@ -5,7 +5,7 @@
       <hue class="hue" @change="onSelectHue"/>
       <alpha class="alpha" :color="rgbStr" @change="onSelectAlpha" v-if="showAlpha"/>
     </div>
-    <input-value :value="value" :width="inputWidth"/>
+    <input-value :label="label" :value="value" :width="inputWidth"/>
   </div>
 </template>
 
@@ -51,6 +51,7 @@ export default defineComponent({
       a: a.value
     }, props.format, props.showAlpha))
     const inputWidth = computed(() => props.showAlpha ? 168 : 145)
+    const label = computed(() => props.format.toLocaleUpperCase())
     const onSelectHue = (hue: number) => {
       h.value = hue
     }
@@ -71,6 +72,7 @@ export default defineComponent({
       onSelectSaturation,
       onSelectHue,
       onSelectAlpha,
+      label,
       value,
       inputWidth
     }

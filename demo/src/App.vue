@@ -1,5 +1,5 @@
 <template>
-  <color-picker/>
+  <color-picker />
 </template>
 
 <script lang="ts">

@@ -3,12 +3,17 @@
     <span class="label">
       {{ label }}
     </span>
-    <input class="value" :value="value" @input="onInput"/>
+    <input
+      class="value"
+      :style="valueStyle"
+      :value="value"
+      @input="onInput"
+    />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, computed } from 'vue'
 export default defineComponent({
   name: 'Input',
   props: {
@@ -19,17 +24,27 @@ export default defineComponent({
     value: {
       type: String,
       default: ''
+    },
+    width: {
+      type: Number,
+      default: 168
     }
   },
   emits: ['update:value', 'change'],
   setup (props, { emit }) {
+    const valueStyle = computed(() => ({
+      minWidth: `${props.width}px`,
+      maxWidth: `${props.width}px`,
+      width: `${props.width}px`
+    }))
     const onInput = (e) => {
       const value = (e.target as any).value
       emit('update:value', value)
       emit('change', value)
     }
     return {
-      onInput
+      onInput,
+      valueStyle
     }
   }
 })
@@ -51,12 +66,8 @@ export default defineComponent({
   background: #e7e8e9;
 }
 .value {
-  @width: 168px;
   flex: 1;
   height: 30px;
-  min-width: @width;
-  max-width: @width;
-  width: @width;
   text-align: center;
   background: #eceef0;
   box-sizing: border-box;

@@ -3,9 +3,9 @@
     <div class="picker-header">
       <saturation class="saturation" :hue="h" @change="onSelectSaturation"/>
       <hue class="hue" @change="onSelectHue"/>
-      <alpha class="alpha" :color="rgbStr" @change="onSelectAlpha"/>
+      <alpha class="alpha" :color="rgbStr" @change="onSelectAlpha" v-if="showAlpha"/>
     </div>
-    <input-value :value="value"/>
+    <input-value :value="value" :width="inputWidth"/>
   </div>
 </template>
 
@@ -50,6 +50,7 @@ export default defineComponent({
       v: v.value,
       a: a.value
     }, props.format, props.showAlpha))
+    const inputWidth = computed(() => props.showAlpha ? 168 : 145)
     const onSelectHue = (hue: number) => {
       h.value = hue
     }
@@ -70,7 +71,8 @@ export default defineComponent({
       onSelectSaturation,
       onSelectHue,
       onSelectAlpha,
-      value
+      value,
+      inputWidth
     }
   }
 })
@@ -78,7 +80,6 @@ export default defineComponent({
 
 <style scoped lang="less">
 .picker {
-  width: 210px;
   background: #f7f8f9;
   border-radius: 4px;
   box-shadow: 0 0 16px 0 rgb(0 0 0 / 16%);

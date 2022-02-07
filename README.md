@@ -1,6 +1,6 @@
 ### vue-pick-colors：颜色拾取器
 
-<img src="./images/effect.png" style="zoom:30%;" />
+<img src="./images/effect.png" style="zoom:20%;" />
 
 安装：
 

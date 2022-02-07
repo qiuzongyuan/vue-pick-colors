@@ -1,5 +1,5 @@
 <template>
-  <color-picker format="rgb" v-model:value="value" @change="onChange"/>
+  <color-picker v-model:value="value" @change="onChange"/>
 </template>
 
 <script lang="ts">

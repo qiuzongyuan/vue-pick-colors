@@ -21,7 +21,13 @@
     "clean": "rimraf ./dist",
     "test": "jest"
   },
-  "keywords": [],
+  "keywords": [
+    "vue",
+    "vue3",
+    "color pick",
+    "pick color",
+    "vue-pick-colors"
+  ],
   "author": "ayuan",
   "license": "ISC",
   "repository": {

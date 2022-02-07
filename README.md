@@ -1,4 +1,4 @@
-### vue-pick-colors：颜色拾取器
+### [vue-pick-colors：颜色拾取器](https://github.com/qiuzongyuan/vue-pick-colors)
 
 <img src="./images/effect.png" style="zoom:20%;" />
 

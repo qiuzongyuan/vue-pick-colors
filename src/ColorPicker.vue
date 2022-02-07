@@ -1,20 +1,21 @@
 <template>
   <div class="color-picker" @click.stop="openPickerShow">
-    <color-item :value="value"/>
+    <color-item :format="format" :value="value"/>
     <transition name="popup">
       <picker
         class="picker"
+        :value="value"
         :format="format"
         :show-alpha="showAlpha"
         v-show="isPickerShow"
-        v-model:value="value"
+        @change="onPickChange"
       />
     </transition>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, onUnmounted, watch } from 'vue'
+import { defineComponent, ref, onMounted, onUnmounted } from 'vue'
 import type { PropType } from 'vue'
 import Picker from './picker'
 import ColorItem from './color-item'
@@ -25,6 +26,10 @@ export default defineComponent({
     Picker
   },
   props: {
+    value: {
+      type: String,
+      default: '#FF001DFF'
+    },
     mode: {
       type: String as PropType<'single' | 'multiple'>,
       default: 'single'
@@ -42,9 +47,10 @@ export default defineComponent({
       default: true
     }
   },
-  setup () {
+  emits: ['change', 'update:value'],
+  setup (props, { emit }) {
+    const rgbColor = ref()
     const isPickerShow = ref(false)
-    const value = ref('')
     const openPickerShow = () => {
       isPickerShow.value = true
     }
@@ -57,14 +63,15 @@ export default defineComponent({
     onUnmounted(() => {
       document.removeEventListener('click', closePickerShow)
     })
-    watch(() => value, (value) => {
-      console.log(value)
-    })
+    const onPickChange = (value) => {
+      emit('change', value)
+      emit('update:value', value)
+    }
     return {
-      value,
+      rgbColor,
+      onPickChange,
       isPickerShow,
-      openPickerShow,
-      closePickerShow
+      openPickerShow
     }
   }
 })

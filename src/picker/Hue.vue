@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, ref } from 'vue'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 export default defineComponent({
   name: 'Hue',
   props: {
@@ -17,16 +17,20 @@ export default defineComponent({
     height: {
       type: Number,
       default: 160
+    },
+    hue: {
+      type: Number,
+      default: 0
     }
   },
   emits: ['change'],
   setup (props, { emit }) {
     const sliderHeight = 4
     const sliderHeightHalf = sliderHeight / 2
-    const sliderStyle = reactive({
-      top: '0px',
+    const sliderStyle = computed(() => ({
+      top: `${(1 - props.hue / 360) * props.height - sliderHeightHalf}px`,
       height: `${sliderHeight}px`
-    })
+    }))
     const canvas = ref<HTMLCanvasElement>()
     const renderHue = () => {
       canvas.value.width = props.width
@@ -54,7 +58,6 @@ export default defineComponent({
         let y = clientY - top
         if (y < 0) y = 0
         if (y > props.height) y = props.height
-        sliderStyle.top = `${y - sliderHeightHalf}px`
         const percent = -((y * 100) / props.height) + 100
         const hue = (360 * percent) / 100
         emit('change', hue)

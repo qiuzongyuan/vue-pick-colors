@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive } from 'vue'
+import { computed, defineComponent } from 'vue'
 export default defineComponent({
   name: 'Saturation',
   props: {
@@ -20,6 +20,14 @@ export default defineComponent({
       default: 160
     },
     hue: {
+      type: Number,
+      default: 0
+    },
+    saturation: {
+      type: Number,
+      default: 0
+    },
+    value: {
       type: Number,
       default: 0
     }
@@ -33,12 +41,12 @@ export default defineComponent({
     }))
     const sliderSize = 10
     const sliderRadius = sliderSize / 2
-    const sliderStyle = reactive({
-      top: `${-sliderRadius}px`,
-      left: `${-sliderRadius}px`,
+    const sliderStyle = computed(() => ({
+      top: `${((100 - props.value) / 100) * props.size - sliderRadius}px`,
+      left: `${(props.saturation * props.size / 100) - sliderRadius}px`,
       width: `${sliderSize}px`,
       height: `${sliderSize}px`
-    })
+    }))
     const onSelect = (e: MouseEvent) => {
       const target = e.target as HTMLCanvasElement
       const { left, top } = target.getBoundingClientRect()
@@ -50,8 +58,8 @@ export default defineComponent({
         if (y < 0) y = 0
         if (x > props.size) x = props.size
         if (y > props.size) y = props.size
-        sliderStyle.left = `${x - sliderRadius}px`
-        sliderStyle.top = `${y - sliderRadius}px`
+        // sliderStyle.left = `${x - sliderRadius}px`
+        // sliderStyle.top = `${y - sliderRadius}px`
         const saturation = (x / props.size) * 100
         const value = 100 - (y / props.size) * 100
         emit('change', saturation, value)

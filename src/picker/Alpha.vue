@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, ref, watch } from 'vue'
+import { computed, defineComponent, onMounted, ref, watch } from 'vue'
 export default defineComponent({
   name: 'Alpha',
   props: {
@@ -21,15 +21,19 @@ export default defineComponent({
     color: {
       type: String,
       default: '#000000'
+    },
+    alpha: {
+      type: Number,
+      default: 1
     }
   },
   setup (props, { emit }) {
     const sliderHeight = 4
     const sliderHeightHalf = sliderHeight / 2
-    const sliderStyle = reactive({
-      top: `${props.height - sliderHeight}px`,
+    const sliderStyle = computed(() => ({
+      top: `${props.alpha * props.height - sliderHeightHalf}px`,
       height: `${sliderHeight}px`
-    })
+    }))
     const createAlphaSquare = (size: number) => {
       const canvas = document.createElement('canvas')
       const ctx = canvas.getContext('2d')
@@ -71,7 +75,6 @@ export default defineComponent({
         let y = clientY - top
         if (y < 0) y = 0
         if (y > props.height) y = props.height
-        sliderStyle.top = `${y - sliderHeightHalf}px`
         const a = parseFloat((y / props.height).toFixed(2))
         emit('change', a)
       }

@@ -6,7 +6,7 @@
     <input
       class="value"
       :style="valueStyle"
-      :value="value"
+      :value="color"
       @input="onInput"
     />
   </div>
@@ -21,7 +21,7 @@ export default defineComponent({
       type: String,
       default: 'RGBA'
     },
-    value: {
+    color: {
       type: String,
       default: ''
     },
@@ -30,7 +30,7 @@ export default defineComponent({
       default: 168
     }
   },
-  emits: ['update:value', 'change'],
+  emits: ['change'],
   setup (props, { emit }) {
     const valueStyle = computed(() => ({
       minWidth: `${props.width}px`,
@@ -39,7 +39,6 @@ export default defineComponent({
     }))
     const onInput = (e) => {
       const value = (e.target as any).value
-      emit('update:value', value)
       emit('change', value)
     }
     return {

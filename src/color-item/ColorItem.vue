@@ -6,6 +6,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, watch, onMounted, reactive } from 'vue'
+import type { PropType } from 'vue'
 export default defineComponent({
   name: 'ColorItem',
   props: {
@@ -16,6 +17,10 @@ export default defineComponent({
     value: {
       type: String,
       default: ''
+    },
+    format: {
+      type: String as PropType<'rgb' | 'hex' | 'hsl'>,
+      default: 'hex'
     }
   },
   setup (props) {

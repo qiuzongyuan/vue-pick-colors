@@ -10,18 +10,18 @@ npm i vue-pick-colors -S
 
 事例：
 
-```
+```vue
 <template>
-  <color-picker v-model:value="value"/>
+  <pick-colors v-model:value="value"/>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-import ColorPicker from 'vue-pick-colors'
+import PickColors from 'vue-pick-colors'
 export default defineComponent({
   name: 'App',
   components: {
-    ColorPicker
+    PickColors
   },
   setup () {
     const value = ref('')
@@ -32,7 +32,6 @@ export default defineComponent({
 })
 </script>
 ```
-
 
 API：
 

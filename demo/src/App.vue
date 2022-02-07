@@ -1,5 +1,5 @@
 <template>
-  <color-picker v-model:value="value" @change="onChange"/>
+  <color-picker v-model:value="value"/>
 </template>
 
 <script lang="ts">
@@ -12,12 +12,8 @@ export default defineComponent({
   },
   setup () {
     const value = ref('')
-    const onChange = (value) => {
-      console.log(value)
-    }
     return {
-      value,
-      onChange
+      value
     }
   }
 })

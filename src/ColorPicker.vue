@@ -28,7 +28,7 @@ export default defineComponent({
   props: {
     value: {
       type: String,
-      default: '#FF001DFF'
+      default: '#FF0000FF'
     },
     mode: {
       type: String as PropType<'single' | 'multiple'>,

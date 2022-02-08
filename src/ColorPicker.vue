@@ -1,6 +1,6 @@
 <template>
   <div class="color-picker" @click.stop="openPickerShow">
-    <color-item :format="format" :value="value"/>
+    <color-item :value="value"/>
     <transition name="popup">
       <picker
         class="picker"
@@ -28,7 +28,7 @@ export default defineComponent({
   props: {
     value: {
       type: String,
-      default: '#FF0000FF'
+      default: ''
     },
     mode: {
       type: String as PropType<'single' | 'multiple'>,
@@ -49,7 +49,6 @@ export default defineComponent({
   },
   emits: ['change', 'update:value'],
   setup (props, { emit }) {
-    const rgbColor = ref()
     const isPickerShow = ref(false)
     const openPickerShow = () => {
       isPickerShow.value = true
@@ -64,14 +63,14 @@ export default defineComponent({
       document.removeEventListener('click', closePickerShow)
     })
     const onPickChange = (value) => {
+      console.log(value)
       emit('change', value)
       emit('update:value', value)
     }
     return {
-      rgbColor,
-      onPickChange,
       isPickerShow,
-      openPickerShow
+      openPickerShow,
+      onPickChange
     }
   }
 })

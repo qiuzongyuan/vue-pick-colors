@@ -1,5 +1,5 @@
 <template>
-  <pick-colors v-model:value="value"/>
+  <pick-colors v-model:value="value" :show-alpha="false" format="hsl"/>
 </template>
 
 <script lang="ts">

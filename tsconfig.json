@@ -5,7 +5,7 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "jsx": "preserve",
-    "noUnusedParameters": true,
+    "noUnusedParameters": false,
     "noUnusedLocals": true,
     "noImplicitAny": false,
     "target": "es6",
@@ -15,6 +15,7 @@
     "declaration": true,
     "resolveJsonModule": true,
     "baseUrl": ".",
+
     "lib": [
       "esnext",
       "dom",

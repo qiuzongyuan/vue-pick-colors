@@ -16,7 +16,7 @@ import Saturation from './Saturation.vue'
 import Hue from './Hue.vue'
 import Alpha from './Alpha.vue'
 import InputValue from './InputValue.vue'
-import { hsvFormat, hsv2rgb, transformHsv } from './utils'
+import { hsvFormat, hsv2rgb, checkColor, transformHsv } from './utils'
 export default defineComponent({
   name: 'Picker',
   components: {
@@ -71,10 +71,11 @@ export default defineComponent({
     }
     const onInputChange = (color: string) => {
       if (!color.length) return
-      // TODO 验证颜色值
+      if (!checkColor(color.trim(), props.format, props.showAlpha)) return
       const hsv = transformHsv(color.trim(), props.format, props.showAlpha)
+      console.log('hsv', hsv)
       const { h: hue, s: Saturation, v: value } = hsv
-      if (isNaN(hue) && isNaN(Saturation) && isNaN(value)) return
+      if (isNaN(hue) || isNaN(Saturation) || isNaN(value)) return
       h.value = hue
       s.value = Saturation
       v.value = value

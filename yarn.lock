@@ -7549,6 +7549,11 @@
     "source-map" "0.5.6"
     "tsconfig" "^7.0.0"
 
+"vue-pick-colors@^1.0.1":
+  "integrity" "sha512-GmmQlPoNv91WT2HMWCDVzEpjxoyzdbO8QLfcrg4RTZpwZGgiATO0ttdvyulA1Yo08PzYSMDlx9c4YyvizlEg5A=="
+  "resolved" "https://registry.npmjs.org/vue-pick-colors/-/vue-pick-colors-1.0.1.tgz"
+  "version" "1.0.1"
+
 "vue@^3.0.0-0", "vue@^3.0.1", "vue@^3.2.25", "vue@^3.2.26", "vue@3.2.26":
   "integrity" "sha512-KD4lULmskL5cCsEkfhERVRIOEDrfEL9CwAsLYpzptOGjaGFNWo3BQ9g8MAb7RaIO71rmVOziZ/uEN/rHwcUIhg=="
   "resolved" "https://registry.npmmirror.com/vue/download/vue-3.2.26.tgz"

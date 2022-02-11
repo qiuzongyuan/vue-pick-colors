@@ -140,6 +140,7 @@ export const rgb2hsv = ({ r, g, b }) => {
 }
 
 export const hsl2hsv = ({ h, s, l }) => {
+  console.log({ h, s, l })
   s = s / 100
   l = l / 100
   let smin = s
@@ -221,11 +222,11 @@ const pickUpHsla = (hsla: string) => {
 }
 
 const pickUpHsl = (hsla: string) => {
-  const [h, s, l] = splitStr(hsla, 4, hsla.length)
+  const [h, s, l] = splitStr(hsla, 4, hsla.length - 1)
   return {
     h,
-    s,
-    l
+    s: parseFloat(s),
+    l: parseFloat(l)
   }
 }
 
@@ -248,6 +249,7 @@ export const transformHsv = (color: string, format, useAlpha = true) => {
   } else {
     switch (format) {
       case 'hex':
+        if (!color.match(/^#[0-9a-fA-F]{6}/g)) return
         return rgb2hsv(hex2rgb(color))
       case 'rgb': {
         return rgb2hsv(pickUpRgb(color))
@@ -255,6 +257,28 @@ export const transformHsv = (color: string, format, useAlpha = true) => {
       case 'hsl': {
         return hsl2hsv(pickUpHsl(color))
       }
+    }
+  }
+}
+
+export const checkColor = (color: string, format, useAlpha = true) => {
+  if (useAlpha) {
+    switch (format) {
+      case 'hex':
+        return color.match(/^#[0-9a-fA-F]{8}/g)
+      case 'rgb':
+        return color.match(/^rgba\((25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(0\.\d{1,2}|1|0)\)/g)
+      case 'hsl':
+        return color.match(/^hsla\((((([0-9]|([1-9][0-9])|([0-2][0-9][0-9])|([3][0-5][0-9])|([0]{1}))|360).[0-9]?[0-9])|(([0-9]|([1-9][0-9])|([0-2][0-9][0-9])|([3][0-5][0-9])|([0]{1}))|360)),(\s*)([0-9]?[0-9]|100)%,(\s*)([0-9]?[0-9]|100)%,(\s*)(0\.\d{1,2}|1|0)\)/g)
+    }
+  } else {
+    switch (format) {
+      case 'hex':
+        return color.match(/^#[0-9a-fA-F]{6}/g)
+      case 'rgb':
+        return color.match(/^rgb\((25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])\)/g)
+      case 'hsl':
+        return color.match(/^hsl\((((([0-9]|([1-9][0-9])|([0-2][0-9][0-9])|([3][0-5][0-9])|([0]{1}))|360).[0-9]?[0-9])|(([0-9]|([1-9][0-9])|([0-2][0-9][0-9])|([3][0-5][0-9])|([0]{1}))|360)),(\s*)([0-9]?[0-9]|100)%,(\s*)([0-9]?[0-9]|100)%\)/g)
     }
   }
 }

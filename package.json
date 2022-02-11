@@ -1,6 +1,6 @@
 {
   "name": "vue-pick-colors",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "dist/index.umd.js",
   "module": "dist/index.esm.js",
@@ -15,6 +15,7 @@
   "scripts": {
     "build": "npm run clean && npm run lint && npm run rollup",
     "dev": "vite ./demo",
+    "prepublishOnly": "npm run build",
     "rollup": "rollup -c ./rollup.config.ts",
     "lint": "eslint ./src --ext .vue,.js,.ts,.jsx,.tsx",
     "lint:fix": "eslint --fix ./src --ext .vue,.js,.ts,.jsx,.tsx",
@@ -78,5 +79,8 @@
   },
   "peerDependencies": {
     "vue": "^3.2.26"
+  },
+  "dependencies": {
+    "vue-pick-colors": "^1.0.1"
   }
 }

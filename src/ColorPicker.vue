@@ -63,7 +63,6 @@ export default defineComponent({
       document.removeEventListener('click', closePickerShow)
     })
     const onPickChange = (value) => {
-      console.log(value)
       emit('change', value)
       emit('update:value', value)
     }

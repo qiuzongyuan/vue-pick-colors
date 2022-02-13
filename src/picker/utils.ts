@@ -140,7 +140,6 @@ export const rgb2hsv = ({ r, g, b }) => {
 }
 
 export const hsl2hsv = ({ h, s, l }) => {
-  console.log({ h, s, l })
   s = s / 100
   l = l / 100
   let smin = s

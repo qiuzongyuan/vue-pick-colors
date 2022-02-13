@@ -5,7 +5,7 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "jsx": "preserve",
-    "noUnusedParameters": false,
+    "noUnusedParameters": true,
     "noUnusedLocals": true,
     "noImplicitAny": false,
     "target": "es6",

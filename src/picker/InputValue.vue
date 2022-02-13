@@ -64,6 +64,10 @@ export default defineComponent({
   color: #999999;
   background: #e7e8e9;
 }
+[pick-colors-theme='dark'] .label {
+  color: #999;
+  background: #252930;
+}
 .value {
   flex: 1;
   height: 30px;
@@ -73,7 +77,11 @@ export default defineComponent({
   border: 1px solid #eceef0;
   color: #666666;
 }
-
+[pick-colors-theme='dark'] .value {
+  background: #2e333a;
+  border: 1px solid #2e333a;
+  color: #ffffff;
+}
 .value:focus {
   outline: none;
   border: 1px solid #1890ff;

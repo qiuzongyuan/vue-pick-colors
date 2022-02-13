@@ -6,20 +6,23 @@
       <alpha class="alpha" :alpha="a" :color="rgbStr" @change="onSelectAlpha" v-if="showAlpha"/>
     </div>
     <input-value :label="label" :color="color" :width="inputWidth" @change="onInputChange"/>
+    <Colors />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, computed, watch } from 'vue'
 import type { PropType } from 'vue'
+import { hsvFormat, hsv2rgb, checkColor, transformHsv } from './utils'
 import Saturation from './Saturation.vue'
 import Hue from './Hue.vue'
 import Alpha from './Alpha.vue'
 import InputValue from './InputValue.vue'
-import { hsvFormat, hsv2rgb, checkColor, transformHsv } from './utils'
+import Colors from './Colors.vue'
 export default defineComponent({
   name: 'Picker',
   components: {
+    Colors,
     Saturation,
     Hue,
     Alpha,
@@ -37,6 +40,9 @@ export default defineComponent({
     value: {
       type: String,
       default: ''
+    },
+    colors: {
+      type: Array
     }
   },
   emits: ['change'],
@@ -73,7 +79,6 @@ export default defineComponent({
       if (!color.length) return
       if (!checkColor(color.trim(), props.format, props.showAlpha)) return
       const hsv = transformHsv(color.trim(), props.format, props.showAlpha)
-      console.log('hsv', hsv)
       const { h: hue, s: Saturation, v: value } = hsv
       if (isNaN(hue) || isNaN(Saturation) || isNaN(value)) return
       h.value = hue
@@ -109,6 +114,10 @@ export default defineComponent({
   border-radius: 4px;
   box-shadow: 0 0 16px 0 rgb(0 0 0 / 16%);
   padding: 10px;
+}
+[pick-colors-theme='dark'] .picker {
+  background: #1d2024;
+  box-shadow: 0 0 16px 0 rgb(0 0 0 / 16%);
 }
 .picker-header {
   display: flex;

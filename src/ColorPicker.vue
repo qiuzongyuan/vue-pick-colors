@@ -1,5 +1,5 @@
 <template>
-  <div class="color-picker" @click.stop="openPickerShow">
+  <div class="color-picker" ref="colorPicker" @click.stop="openPickerShow">
     <color-item :value="value"/>
     <transition name="popup">
       <picker
@@ -56,7 +56,9 @@ export default defineComponent({
     const closePickerShow = () => {
       isPickerShow.value = false
     }
+    const colorPicker = ref<HTMLElement>()
     onMounted(() => {
+      colorPicker.value.setAttribute('pick-colors-theme', props.theme)
       document.addEventListener('click', closePickerShow)
     })
     onUnmounted(() => {
@@ -69,7 +71,8 @@ export default defineComponent({
     return {
       isPickerShow,
       openPickerShow,
-      onPickChange
+      onPickChange,
+      colorPicker
     }
   }
 })

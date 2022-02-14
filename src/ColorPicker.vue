@@ -111,15 +111,18 @@ export default defineComponent({
   position: absolute;
   top: 25px;
   left: 0;
+  will-change: height;
 }
 
 .popup-enter-active,
 .popup-leave-active {
   transition: height 50ms ease-in;
+  height: auto;
+  overflow: hidden;
 }
 
 .popup-enter-from,
 .popup-leave-to {
-  height: 0;
+  height:0;
 }
 </style>

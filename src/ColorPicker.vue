@@ -30,7 +30,7 @@ export default defineComponent({
   props: {
     value: {
       type: String,
-      default: ''
+      default: '#FF0000FF'
     },
     mode: {
       type: String as PropType<'single' | 'multiple'>,
@@ -46,7 +46,7 @@ export default defineComponent({
     },
     showAlpha: {
       type: Boolean,
-      default: true
+      default: false
     },
     colors: {
       type: Array,

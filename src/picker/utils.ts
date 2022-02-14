@@ -225,7 +225,6 @@ export const transformHsv = (color: string, format, useAlpha = true) => {
   } else {
     switch (format) {
       case 'hex':
-        if (!color.match(/^#[0-9a-fA-F]{6}/g)) return
         return rgb2hsv(hex2rgb(color))
       case 'rgb': {
         return rgb2hsv(pickUpRgb(color))
@@ -263,4 +262,12 @@ export const checkColorFormat = (color: string) => {
   if (color.match(/^#/)) return 'hex'
   if (color.match(/^rgb/)) return 'rgb'
   if (color.match(/^hsl/)) return 'hsl'
+}
+
+export const filterHsva = ({ h, s, v, a }: { h?: number, s?:number, v?:number, a?: number }) => {
+  if (!h || isNaN(h)) h = 0
+  if (!s || isNaN(s)) s = 0
+  if (!v || isNaN(v)) v = 0
+  if (!a || isNaN(a)) a = 0
+  return { h, s, v, a }
 }

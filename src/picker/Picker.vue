@@ -11,14 +11,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, watch } from 'vue'
+import { defineComponent, computed, watch, ref } from 'vue'
 import type { PropType } from 'vue'
 import Saturation from './Saturation.vue'
 import Hue from './Hue.vue'
 import Alpha from './Alpha.vue'
 import InputValue from './InputValue.vue'
 import Colors from './Colors.vue'
-import { hsvFormat, hsv2rgb, checkColor, transformHsv, checkColorFormat } from './utils'
+import { hsvFormat, hsv2rgb, checkColor, transformHsv, checkColorFormat, filterHsva } from './utils'
 import type { Format } from '../constant'
 export default defineComponent({
   name: 'Picker',
@@ -36,7 +36,7 @@ export default defineComponent({
     },
     showAlpha: {
       type: Boolean,
-      default: true
+      default: false
     },
     value: {
       type: String,
@@ -49,20 +49,20 @@ export default defineComponent({
   },
   emits: ['change'],
   setup (props, { emit }) {
-    const a = ref(1)
-    const h = ref(0)
-    const s = ref(0)
-    const v = ref(0)
+    const hsva = filterHsva(transformHsv(props.value, props.format, props.showAlpha))
+    const h = ref(hsva.h)
+    const s = ref(hsva.s)
+    const v = ref(hsva.v)
+    const a = ref(hsva.a)
     const rgb = computed(() => hsv2rgb(h.value, s.value, v.value))
     const rgbStr = computed(() => `rgb(${rgb.value.r}, ${rgb.value.g}, ${rgb.value.b})`)
-    const rgbaStr = computed(() => `rgba(${rgb.value.r}, ${rgb.value.g}, ${rgb.value.b}, ${a.value})`)
     const color = computed(() => hsvFormat({
       h: h.value,
       s: s.value,
       v: v.value,
       a: a.value
     }, props.format, props.showAlpha))
-    watch(() => color.value, (color) => {
+    watch(color, (color) => {
       emit('change', color)
     })
     const inputWidth = computed(() => props.showAlpha ? 168 : 145)
@@ -78,14 +78,21 @@ export default defineComponent({
       a.value = alpha
     }
     const handleColorChange = (color: string, format: Format, showAlpha: boolean) => {
+      if (!color.length) {
+        h.value = 0
+        s.value = 0
+        v.value = 0
+        a.value = 0
+        return
+      }
       const hsv = transformHsv(color.trim(), format, showAlpha)
-      const { h: hue, s: Saturation, v: value } = hsv
-      if (isNaN(hue) || isNaN(Saturation) || isNaN(value)) return
+      const { h: hue, s: saturation, v: value } = hsv
+      if (isNaN(hue) || isNaN(saturation) || isNaN(value)) return
       h.value = hue
-      s.value = Saturation
+      s.value = saturation
       v.value = value
-      const alpha = (hsv as any).a
       if (!props.showAlpha) return
+      const alpha = (hsv as any).a
       if (!isNaN(alpha)) {
         a.value = alpha
       } else if (isNaN(alpha)) {
@@ -93,15 +100,11 @@ export default defineComponent({
       }
     }
     const onInputChange = (color: string) => {
-      if (!color.length) return
       if (!checkColor(color.trim(), props.format, props.showAlpha)) return
       handleColorChange(color, props.format, props.showAlpha)
     }
     const onSelectColor = (color: string) => {
-      console.log(color)
       const format = checkColorFormat(color)
-      console.log(format)
-      // if (!checkColor(color.trim(), format, true)) return
       handleColorChange(color, format, true)
     }
     return {
@@ -110,7 +113,6 @@ export default defineComponent({
       v,
       a,
       rgbStr,
-      rgbaStr,
       onSelectSaturation,
       onSelectHue,
       onSelectAlpha,

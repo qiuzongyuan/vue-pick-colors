@@ -1,5 +1,5 @@
 <template>
-  <pick-colors v-model:value="value" theme="dark"/>
+  <pick-colors v-model:value="value"/>
 </template>
 
 <script lang="ts">

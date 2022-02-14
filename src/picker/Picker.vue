@@ -6,19 +6,20 @@
       <alpha class="alpha" :alpha="a" :color="rgbStr" @change="onSelectAlpha" v-if="showAlpha"/>
     </div>
     <input-value :label="label" :color="color" :width="inputWidth" @change="onInputChange"/>
-    <Colors />
+    <Colors class="colors" v-if="colors.length > 0" :colors="colors" @select="onSelectColor"/>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, computed, watch } from 'vue'
 import type { PropType } from 'vue'
-import { hsvFormat, hsv2rgb, checkColor, transformHsv } from './utils'
 import Saturation from './Saturation.vue'
 import Hue from './Hue.vue'
 import Alpha from './Alpha.vue'
 import InputValue from './InputValue.vue'
 import Colors from './Colors.vue'
+import { hsvFormat, hsv2rgb, checkColor, transformHsv, checkColorFormat } from './utils'
+import type { Format } from '../constant'
 export default defineComponent({
   name: 'Picker',
   components: {
@@ -30,7 +31,7 @@ export default defineComponent({
   },
   props: {
     format: {
-      type: String as PropType<'rgb' | 'hex' | 'hsl'>,
+      type: String as PropType<Format>,
       default: 'hex'
     },
     showAlpha: {
@@ -42,7 +43,8 @@ export default defineComponent({
       default: ''
     },
     colors: {
-      type: Array
+      type: Array,
+      default: () => []
     }
   },
   emits: ['change'],
@@ -75,19 +77,32 @@ export default defineComponent({
     const onSelectAlpha = (alpha) => {
       a.value = alpha
     }
-    const onInputChange = (color: string) => {
-      if (!color.length) return
-      if (!checkColor(color.trim(), props.format, props.showAlpha)) return
-      const hsv = transformHsv(color.trim(), props.format, props.showAlpha)
+    const handleColorChange = (color: string, format: Format, showAlpha: boolean) => {
+      const hsv = transformHsv(color.trim(), format, showAlpha)
       const { h: hue, s: Saturation, v: value } = hsv
       if (isNaN(hue) || isNaN(Saturation) || isNaN(value)) return
       h.value = hue
       s.value = Saturation
       v.value = value
       const alpha = (hsv as any).a
-      if (props.showAlpha && !isNaN(alpha)) {
+      if (!props.showAlpha) return
+      if (!isNaN(alpha)) {
         a.value = alpha
+      } else if (isNaN(alpha)) {
+        a.value = 1
       }
+    }
+    const onInputChange = (color: string) => {
+      if (!color.length) return
+      if (!checkColor(color.trim(), props.format, props.showAlpha)) return
+      handleColorChange(color, props.format, props.showAlpha)
+    }
+    const onSelectColor = (color: string) => {
+      console.log(color)
+      const format = checkColorFormat(color)
+      console.log(format)
+      // if (!checkColor(color.trim(), format, true)) return
+      handleColorChange(color, format, true)
     }
     return {
       h,
@@ -102,7 +117,8 @@ export default defineComponent({
       label,
       color,
       inputWidth,
-      onInputChange
+      onInputChange,
+      onSelectColor
     }
   }
 })
@@ -128,5 +144,8 @@ export default defineComponent({
 }
 .hue {
   margin-right: 10px;
+}
+.colors {
+  margin-top: 5px;
 }
 </style>

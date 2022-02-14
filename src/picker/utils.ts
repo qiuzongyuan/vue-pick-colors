@@ -186,13 +186,8 @@ export const hex2rgba = (hex: string) => {
   }
 }
 
-const splitStr = (str: string, start: number, end: number) => {
-  str = str.slice(start, end)
-  return str.split(',')
-}
-
-const pickUpRgba = (rgba:string) => {
-  const [r, g, b, a] = splitStr(rgba, 5, rgba.length - 1)
+const pickUpRgb = (rgb:string) => {
+  const [r, g, b, a] = rgb.match(/(\d(\.\d+)?)+/g)
   return {
     r,
     g,
@@ -201,31 +196,13 @@ const pickUpRgba = (rgba:string) => {
   }
 }
 
-const pickUpRgb = (rgb:string) => {
-  const [r, g, b] = splitStr(rgb, 4, rgb.length - 1)
-  return {
-    r,
-    g,
-    b
-  }
-}
-
-const pickUpHsla = (hsla: string) => {
-  const [h, s, l, a] = splitStr(hsla, 5, hsla.length - 1)
+const pickUpHsl = (hsla: string) => {
+  const [h, s, l, a] = hsla.match(/(\d(\.\d+)?)+/g)
   return {
     h,
     s: parseFloat(s),
     l: parseFloat(l),
     a
-  }
-}
-
-const pickUpHsl = (hsla: string) => {
-  const [h, s, l] = splitStr(hsla, 4, hsla.length - 1)
-  return {
-    h,
-    s: parseFloat(s),
-    l: parseFloat(l)
   }
 }
 
@@ -237,11 +214,11 @@ export const transformHsv = (color: string, format, useAlpha = true) => {
         return { ...rgb2hsv({ r, g, b }), a: +(a / 255).toFixed(2) }
       }
       case 'rgb': {
-        const { r, g, b, a } = pickUpRgba(color)
+        const { r, g, b, a } = pickUpRgb(color)
         return { ...rgb2hsv({ r, g, b }), a: +a }
       }
       case 'hsl': {
-        const { h, s, l, a } = pickUpHsla(color)
+        const { h, s, l, a } = pickUpHsl(color)
         return { ...hsl2hsv({ h, s, l }), a: +a }
       }
     }
@@ -280,4 +257,10 @@ export const checkColor = (color: string, format, useAlpha = true) => {
         return color.match(/^hsl\((((([0-9]|([1-9][0-9])|([0-2][0-9][0-9])|([3][0-5][0-9])|([0]{1}))|360).[0-9]?[0-9])|(([0-9]|([1-9][0-9])|([0-2][0-9][0-9])|([3][0-5][0-9])|([0]{1}))|360)),(\s*)([0-9]?[0-9]|100)%,(\s*)([0-9]?[0-9]|100)%\)/g)
     }
   }
+}
+
+export const checkColorFormat = (color: string) => {
+  if (color.match(/^#/)) return 'hex'
+  if (color.match(/^rgb/)) return 'rgb'
+  if (color.match(/^hsl/)) return 'hsl'
 }

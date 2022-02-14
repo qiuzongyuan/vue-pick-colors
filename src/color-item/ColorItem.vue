@@ -1,12 +1,11 @@
 <template>
-  <div class="color-item" :style="colorItemStyle">
-    <canvas ref="canvas"/>
-  </div>
+  <canvas :style="colorItemStyle" ref="canvas" @click.self="onSelect"/>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch, onMounted, reactive } from 'vue'
+import { defineComponent, ref, watch, onMounted, computed, inject } from 'vue'
 import type { PropType } from 'vue'
+import type { Format } from '../constant'
 export default defineComponent({
   name: 'ColorItem',
   props: {
@@ -19,16 +18,35 @@ export default defineComponent({
       default: ''
     },
     format: {
-      type: String as PropType<'rgb' | 'hex' | 'hsl'>,
+      type: String as PropType<Format>,
       default: 'hex'
+    },
+    border: {
+      type: Boolean,
+      default: true
+    },
+    borderRadius: {
+      type: Number,
+      default: 5
+    },
+    selected: {
+      type: Boolean,
+      default: false
     }
   },
-  setup (props) {
+  setup (props, { emit }) {
     const canvas = ref<HTMLCanvasElement>()
-    const colorItemStyle = reactive({
-      width: `${props.size}px`,
-      height: `${props.size}px`
+    const { theme } = inject('theme', {
+      theme: 'light'
     })
+    const boxShadowColor = theme === 'light' ? '#1890ff' : '#2681ff'
+    const colorItemStyle = computed(() => ({
+      width: `${props.size}px`,
+      height: `${props.size}px`,
+      border: props.border ? '1px solid #d9d9d9' : '',
+      borderRadius: `${props.borderRadius}px`,
+      boxShadow: props.selected ? `0 0 3px 2px ${boxShadowColor}` : ''
+    }))
     const createAlphaSquare = (size: number) => {
       const canvas = document.createElement('canvas')
       const ctx = canvas.getContext('2d')
@@ -58,17 +76,17 @@ export default defineComponent({
     onMounted(() => {
       renderColor()
     })
+    const onSelect = () => {
+      emit('select', props.value)
+    }
     return {
       canvas,
-      colorItemStyle
+      colorItemStyle,
+      onSelect
     }
   }
 })
 </script>
 
 <style scoped lang="less">
-.color-item {
-  border-radius: 5px;
-  border: 1px solid #d9d9d9;
-}
 </style>

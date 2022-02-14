@@ -7,6 +7,7 @@
         :value="value"
         :format="format"
         :show-alpha="showAlpha"
+        :colors="colors"
         v-show="isPickerShow"
         @change="onPickChange"
       />
@@ -15,10 +16,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, onUnmounted } from 'vue'
+import { defineComponent, ref, onMounted, onUnmounted, provide } from 'vue'
 import type { PropType } from 'vue'
 import Picker from './picker'
 import ColorItem from './color-item'
+import type { Theme, Format } from './constant'
 export default defineComponent({
   name: 'ColorPicker',
   components: {
@@ -35,16 +37,33 @@ export default defineComponent({
       default: 'single'
     },
     theme: {
-      type: String as PropType<'light' | 'dark'>,
+      type: String as PropType<Theme>,
       default: 'light'
     },
     format: {
-      type: String as PropType<'rgb' | 'hex' | 'hsl'>,
+      type: String as PropType<Format>,
       default: 'hex'
     },
     showAlpha: {
       type: Boolean,
       default: true
+    },
+    colors: {
+      type: Array,
+      default: () => [
+        '#ff4500',
+        '#ff8c00',
+        '#ffd700',
+        '#90ee90',
+        '#00ced1',
+        '#1e90ff',
+        '#c71585',
+        '#ff4500ad',
+        '#ff7800ff',
+        '#00babdff',
+        '#1f93ffff',
+        '#c7158577'
+      ]
     }
   },
   emits: ['change', 'update:value'],
@@ -57,6 +76,9 @@ export default defineComponent({
       isPickerShow.value = false
     }
     const colorPicker = ref<HTMLElement>()
+    provide('theme', {
+      theme: props.theme
+    })
     onMounted(() => {
       colorPicker.value.setAttribute('pick-colors-theme', props.theme)
       document.addEventListener('click', closePickerShow)

@@ -30,7 +30,7 @@ export default defineComponent({
   props: {
     value: {
       type: String,
-      default: '#FF0000FF'
+      default: '#ff0000'
     },
     mode: {
       type: String as PropType<'single' | 'multiple'>,

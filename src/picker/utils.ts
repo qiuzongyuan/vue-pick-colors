@@ -265,9 +265,13 @@ export const checkColorFormat = (color: string) => {
 }
 
 export const filterHsva = ({ h, s, v, a }: { h?: number, s?:number, v?:number, a?: number }) => {
+  if (!isNaN(h) && !isNaN(s) && !isNaN(v) && isNaN(a)) {
+    a = 1
+  } else {
+    a = 0
+  }
   if (!h || isNaN(h)) h = 0
   if (!s || isNaN(s)) s = 0
   if (!v || isNaN(v)) v = 0
-  if (!a || isNaN(a)) a = 0
   return { h, s, v, a }
 }

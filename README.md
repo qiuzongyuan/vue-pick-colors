@@ -26,7 +26,7 @@ export default defineComponent({
     PickColors
   },
   setup () {
-    const value = ref('#00CED1FF')
+    const value = ref('#00ced1')
     return {
       value
     }
@@ -37,13 +37,13 @@ export default defineComponent({
 
 API：
 
-| 属性             | 说明        | 类型                    | 默认值                                                                                                                                             |
-|----------------|-----------|-----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
-| value(v-model) | 值         | string                | #FF0000FF                                                                                                                                       |
-| format         | 格式        | 'hex' /  'rgb' / 'hsl'                                                                                                                                  | hex                                                                                                                                             |
-| show-alpha     | 是否支持透明度选择 | boolean               | false                                                                                                                                           |
-| theme          | 主题        | 'light' / 'dark'      | light                                                                                                                                           |
-| colors         | 预留颜色组     | string []             | ['#ff4500', '#ff8c00', '#ffd700',<br> '#90ee90', '#00ced1', '#1e90ff',<br> '#c71585', '#ff4500', '#ff7800',<br>'#00babd', '#1f93ff', '#c71585'] |
+| 属性             | 说明      | 类型                    | 默认值                                                                                                                                           |
+|----------------|---------|-----------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| value(v-model) | 值       | string                | #ff0000                                                                                                                                       |
+| format         | 格式      | 'hex' /  'rgb' / 'hsl'                                                                                                                                  | hex                                                                                                                                           |
+| show-alpha     | 展示透明度选择 | boolean               | false                                                                                                                                         |
+| theme          | 主题      | 'light' / 'dark'      | light                                                                                                                                         |
+| colors         | 预留颜色组   | string []             | ['#ff4500', '#ff8c00', '#ffd700',<br> '#90ee90', '#00ced1', '#1e90ff',<br> '#c71585', '#ff4500', '#ff7800',<br>'#00babd', '#1f93ff', '#c71585'] |
 
 
 事件：

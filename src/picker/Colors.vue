@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent } from 'vue'
 import ColorItem from '../color-item'
 export default defineComponent({
   name: 'Colors',
@@ -26,17 +26,18 @@ export default defineComponent({
     colors: {
       type: Array,
       default: () => []
+    },
+    selectIndex: {
+      type: Number,
+      default: -1
     }
   },
   emits: ['select'],
   setup (props, { emit }) {
-    const selectIndex = ref<number>(-1)
     const onSelectColor = (color: string, index: number) => {
-      selectIndex.value = index
-      emit('select', color)
+      emit('select', color, index)
     }
     return {
-      selectIndex,
       onSelectColor
     }
   }

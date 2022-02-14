@@ -6,7 +6,7 @@
       <alpha class="alpha" :alpha="a" :color="rgbStr" @change="onSelectAlpha" v-if="showAlpha"/>
     </div>
     <input-value :label="label" :color="color" :width="inputWidth" @change="onInputChange"/>
-    <Colors class="colors" v-if="colors.length > 0" :colors="colors" @select="onSelectColor"/>
+    <Colors class="colors" v-if="colors.length > 0" :colors="colors" :select-index="selectColorIndex" @select="onSelectColor"/>
   </div>
 </template>
 
@@ -67,14 +67,23 @@ export default defineComponent({
     })
     const inputWidth = computed(() => props.showAlpha ? 168 : 145)
     const label = computed(() => props.format.toLocaleUpperCase())
+    const selectColorIndex = ref(-1)
+    const onSelectColor = (color: string, index: number) => {
+      const format = checkColorFormat(color)
+      selectColorIndex.value = index
+      handleColorChange(color, format, true)
+    }
     const onSelectHue = (hue: number) => {
+      selectColorIndex.value = -1
       h.value = hue
     }
     const onSelectSaturation = (saturation, value) => {
+      selectColorIndex.value = -1
       s.value = saturation
       v.value = value
     }
     const onSelectAlpha = (alpha) => {
+      selectColorIndex.value = -1
       a.value = alpha
     }
     const handleColorChange = (color: string, format: Format, showAlpha: boolean) => {
@@ -103,10 +112,6 @@ export default defineComponent({
       if (!checkColor(color.trim(), props.format, props.showAlpha)) return
       handleColorChange(color, props.format, props.showAlpha)
     }
-    const onSelectColor = (color: string) => {
-      const format = checkColorFormat(color)
-      handleColorChange(color, format, true)
-    }
     return {
       h,
       s,
@@ -120,6 +125,7 @@ export default defineComponent({
       color,
       inputWidth,
       onInputChange,
+      selectColorIndex,
       onSelectColor
     }
   }

@@ -1,7 +1,7 @@
 ### [vue-pick-colors：颜色拾取器](https://github.com/qiuzongyuan/vue-pick-colors)
 
-<img src="./images/effect-light.png" style="zoom:10%;" />
-<img src="./images/effect-dark.png" style="zoom:10%;" />
+<img src="./images/effect-light.png" style="width:100px;" />
+<img src="./images/effect-dark.png" style="width:100px;" />
 
 安装：
 

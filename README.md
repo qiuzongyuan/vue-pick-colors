@@ -1,8 +1,9 @@
 ### [vue-pick-colors：颜色拾取器](https://github.com/qiuzongyuan/vue-pick-colors)
 
-<img src="./images/effect-light.png" style="width:100px;" />
-<img src="./images/effect-dark.png" style="width:100px;" />
-
+<div style="display: flex">
+<img src="./images/effect-light.png" style="width:200px;" />
+<img src="./images/effect-dark.png" style="width:200px;" />
+</div>
 安装：
 
 ```

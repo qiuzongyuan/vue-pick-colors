@@ -26,7 +26,7 @@ export default defineComponent({
     PickColors
   },
   setup () {
-    const value = ref('#00ced1')
+    const value = ref('#00cedf')
     return {
       value
     }

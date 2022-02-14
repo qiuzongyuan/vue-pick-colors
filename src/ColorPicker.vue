@@ -58,11 +58,11 @@ export default defineComponent({
         '#00ced1',
         '#1e90ff',
         '#c71585',
-        '#ff4500ad',
-        '#ff7800ff',
-        '#00babdff',
-        '#1f93ffff',
-        '#c7158577'
+        '#ff4500',
+        '#ff7800',
+        '#00babd',
+        '#1f93ff',
+        '#c71585'
       ]
     }
   },
@@ -115,7 +115,7 @@ export default defineComponent({
 
 .popup-enter-active,
 .popup-leave-active {
-  transition: height 60ms ease-in;
+  transition: height 50ms ease-in;
 }
 
 .popup-enter-from,

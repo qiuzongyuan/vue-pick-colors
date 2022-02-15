@@ -1,6 +1,6 @@
 {
   "name": "vue-pick-colors",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "",
   "main": "dist/index.umd.js",
   "module": "dist/index.esm.js",
@@ -79,8 +79,5 @@
   },
   "peerDependencies": {
     "vue": "^3.2.26"
-  },
-  "dependencies": {
-    "vue-pick-colors": "^1.0.1"
   }
 }

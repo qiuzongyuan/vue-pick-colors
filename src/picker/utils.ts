@@ -173,9 +173,15 @@ export const hex2rgb = (hex: string) => {
 }
 
 export const hex2rgba = (hex: string) => {
-  const temp = []
-  for (let i = 1; i < hex.length; i = i + 2) {
-    temp.push(parseInt('0x' + hex.slice(i, i + 2)))
+  const temp = [] as number []
+  if (hex.match(/^#([0-9a-fA-f]{3,4})$/g)) {
+    for (let i = 1; i < hex.length; i++) {
+      temp.push(parseInt('0x' + hex[i].repeat(2)))
+    }
+  } else if (hex.match(/^#([0-9a-fA-f]{6}|[0-9a-fA-f]{8})$/g)) {
+    for (let i = 1; i < hex.length; i = i + 2) {
+      temp.push(parseInt('0x' + hex.slice(i, i + 2)))
+    }
   }
   const [r, g, b, a] = temp
   return {
@@ -211,7 +217,7 @@ export const transformHsv = (color: string, format, useAlpha = true) => {
     switch (format) {
       case 'hex': {
         const { r, g, b, a } = hex2rgba(color)
-        return { ...rgb2hsv({ r, g, b }), a: +(a / 255).toFixed(2) }
+        return { ...rgb2hsv({ r, g, b }), a: a / 255 }
       }
       case 'rgb': {
         const { r, g, b, a } = pickUpRgb(color)
@@ -267,8 +273,6 @@ export const checkColorFormat = (color: string) => {
 export const filterHsva = ({ h, s, v, a }: { h?: number, s?:number, v?:number, a?: number }) => {
   if (!isNaN(h) && !isNaN(s) && !isNaN(v) && isNaN(a)) {
     a = 1
-  } else {
-    a = 0
   }
   if (!h || isNaN(h)) h = 0
   if (!s || isNaN(s)) s = 0

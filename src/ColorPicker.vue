@@ -59,7 +59,7 @@ export default defineComponent({
         '#1e90ff',
         '#c71585',
         '#ff4500',
-        '#ff7800',
+        '#ff7d4d',
         '#00babd',
         '#1f93ff',
         '#fa64c3'

@@ -44,7 +44,7 @@ API：
 | format         | 格式                                  | 'hex' /  'rgb' / 'hsl'                                                                                                                                  | hex                                                                                                                                       |
 | show-alpha     | 展示透明度选择                             | boolean               | false                                                                                                                                     |
 | theme          | 主题                                  | 'light' / 'dark'      | light                                                                                                                                     |
-| colors         | 预留颜色组，支持 hex、rgb<br>、rgba、hsl、hsla值 | string []             | ['#ff4500', '#ff8c00', '#ffd700',<br> '#90ee90', '#00ced1', '#1e90ff',<br> '#c71585', '#ff4500', '#ff7800',<br>'#00babd', '#1f93ff', '#fa64c3'] |
+| colors         | 预留颜色组，支持 hex、rgb、<br>rgba、hsl、hsla值 | string []             | ['#ff4500', '#ff8c00', '#ffd700',<br> '#90ee90', '#00ced1', '#1e90ff',<br> '#c71585', '#ff4500', '#ff7800',<br>'#00babd', '#1f93ff', '#fa64c3'] |
 <br/>
 事件：
 

@@ -246,7 +246,7 @@ export const checkColor = (color: string, format, useAlpha = true) => {
   if (useAlpha) {
     switch (format) {
       case 'hex':
-        return color.match(/^#[0-9a-fA-F]{8}/g)
+        return color.match(/^#([0-9a-fA-F]{8})$/g)
       case 'rgb':
         return color.match(/^rgba\((25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(0\.\d{1,2}|1|0)\)/g)
       case 'hsl':
@@ -255,7 +255,7 @@ export const checkColor = (color: string, format, useAlpha = true) => {
   } else {
     switch (format) {
       case 'hex':
-        return color.match(/^#[0-9a-fA-F]{6}/g)
+        return color.match(/^#([0-9a-fA-F]{6})$/g)
       case 'rgb':
         return color.match(/^rgb\((25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])\)/g)
       case 'hsl':

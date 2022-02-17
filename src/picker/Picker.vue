@@ -1,12 +1,14 @@
 <template>
   <div class="picker">
-    <div class="picker-header">
-      <saturation class="saturation" :hue="h" :saturation="s" :value="v" @change="onSelectSaturation"/>
-      <hue class="hue" :hue="h" @change="onSelectHue"/>
-      <alpha class="alpha" :alpha="a" :color="rgbStr" @change="onSelectAlpha" v-if="showAlpha"/>
+    <div class="picker-inner">
+      <div class="picker-header">
+        <saturation class="saturation" :hue="h" :saturation="s" :value="v" @change="onSelectSaturation"/>
+        <hue class="hue" :hue="h" @change="onSelectHue"/>
+        <alpha class="alpha" :alpha="a" :color="rgbStr" @change="onSelectAlpha" v-if="showAlpha"/>
+      </div>
+      <input-value :label="label" :color="color" :width="inputWidth" @change="onInputChange"/>
+      <Colors class="colors" v-if="colors.length > 0" :colors="colors" :select-index="selectColorIndex" @select="onSelectColor"/>
     </div>
-    <input-value :label="label" :color="color" :width="inputWidth" @change="onInputChange"/>
-    <Colors class="colors" v-if="colors.length > 0" :colors="colors" :select-index="selectColorIndex" @select="onSelectColor"/>
   </div>
 </template>
 
@@ -137,6 +139,8 @@ export default defineComponent({
   background: #f7f8f9;
   border-radius: 4px;
   box-shadow: 0 0 16px 0 rgb(0 0 0 / 16%);
+}
+.picker-inner {
   padding: 10px;
 }
 [pick-colors-theme='dark'] .picker {

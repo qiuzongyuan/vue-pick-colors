@@ -116,9 +116,9 @@ export default defineComponent({
 
 .popup-enter-active,
 .popup-leave-active {
-  transition: height 50ms ease-in;
-  height: auto;
+  transition: all 60ms ease;
   overflow: hidden;
+  height: 234px;
 }
 
 .popup-enter-from,

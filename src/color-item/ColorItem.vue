@@ -34,6 +34,7 @@ export default defineComponent({
       default: false
     }
   },
+  emits: ['select', 'click'],
   setup (props, { emit }) {
     const canvas = ref<HTMLCanvasElement>()
     const { theme } = inject('theme', {

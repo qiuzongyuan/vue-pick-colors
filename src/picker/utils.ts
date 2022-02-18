@@ -76,7 +76,7 @@ export const hsvFormat = ({ h, s, v, a }, format, useAlpha = true) => {
     switch (format) {
       case 'hsl': {
         const hsl = hsv2hsl(h, s / 100, v / 100)
-        return `hsla(${h}, ${Math.round(hsl[1] * 100)}%, ${Math.round(hsl[2] * 100)}%, ${a})`
+        return `hsla(${(h).toFixed(0)}, ${Math.round(hsl[1] * 100)}%, ${Math.round(hsl[2] * 100)}%, ${a})`
       }
       case 'rgb': {
         const { r, g, b } = hsv2rgb(h, s, v)
@@ -90,7 +90,7 @@ export const hsvFormat = ({ h, s, v, a }, format, useAlpha = true) => {
     switch (format) {
       case 'hsl': {
         const hsl = hsv2hsl(h, s / 100, v / 100)
-        return `hsl(${h}, ${Math.round(hsl[1] * 100)}%, ${Math.round(hsl[2] * 100)}%)`
+        return `hsl(${(h).toFixed(0)}, ${Math.round(hsl[1] * 100)}%, ${Math.round(hsl[2] * 100)}%)`
       }
       case 'rgb': {
         const { r, g, b } = hsv2rgb(h, s, v)
@@ -271,11 +271,9 @@ export const checkColorFormat = (color: string) => {
 }
 
 export const filterHsva = ({ h, s, v, a }: { h?: number, s?:number, v?:number, a?: number }) => {
-  if (!isNaN(h) && !isNaN(s) && !isNaN(v) && isNaN(a)) {
-    a = 1
-  }
   if (!h || isNaN(h)) h = 0
   if (!s || isNaN(s)) s = 0
   if (!v || isNaN(v)) v = 0
+  if (isNaN(a)) a = 1
   return { h, s, v, a }
 }

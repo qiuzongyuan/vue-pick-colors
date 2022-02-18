@@ -1,10 +1,35 @@
 <template>
-  <div class="color-picker" ref="colorPicker" @click.stop="openPickerShow">
-    <color-item :value="value"/>
+  <div class="color-picker" ref="colorPicker" @click.stop>
+    <template v-if="Array.isArray(value)">
+      <div class="color-list">
+        <div
+          v-for="(item, index) in value"
+          :key="item + index"
+          @click="onColorClick($event, index)"
+        >
+          <color-item
+            class="color-item"
+            :style="colorItemStyle"
+            :value="item"
+            :selected="selectedIndex === index && selectHighlight"
+          />
+        </div>
+      </div>
+    </template>
+    <template v-else>
+      <div @click="onColorClick($event, 0)">
+        <color-item
+          :style="colorItemStyle"
+          :value="value"
+          :selected="selectedIndex === 0 && selectHighlight"
+        />
+      </div>
+    </template>
     <transition name="popup">
       <picker
         class="picker"
-        :value="value"
+        :style="pickerStyle"
+        :value="selectedColor"
         :format="format"
         :show-alpha="showAlpha"
         :colors="colors"
@@ -16,7 +41,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, onUnmounted, provide } from 'vue'
+import { defineComponent, ref, onMounted, onUnmounted, provide, computed } from 'vue'
 import type { PropType } from 'vue'
 import Picker from './picker'
 import ColorItem from './color-item'
@@ -29,7 +54,7 @@ export default defineComponent({
   },
   props: {
     value: {
-      type: String,
+      type: [String, Array] as PropType<string | string[]>,
       default: '#ff0000'
     },
     mode: {
@@ -40,6 +65,10 @@ export default defineComponent({
       type: String as PropType<Theme>,
       default: 'light'
     },
+    size: {
+      type: Number,
+      default: 20
+    },
     format: {
       type: String as PropType<Format>,
       default: 'hex'
@@ -47,6 +76,10 @@ export default defineComponent({
     showAlpha: {
       type: Boolean,
       default: false
+    },
+    selectHighlight: {
+      type: Boolean,
+      default: true
     },
     colors: {
       type: Array,
@@ -68,12 +101,31 @@ export default defineComponent({
   },
   emits: ['change', 'update:value'],
   setup (props, { emit }) {
+    const colorItemStyle = computed(() => ({
+      width: `${props.size}px`,
+      height: `${props.size}px`
+    }))
+    const selectedIndex = ref(-1)
     const isPickerShow = ref(false)
     const openPickerShow = () => {
       isPickerShow.value = true
     }
     const closePickerShow = () => {
+      selectedIndex.value = -1
       isPickerShow.value = false
+    }
+    const pickerTop = ref(0)
+    const pickerStyle = computed(() => ({
+      top: `${pickerTop.value}px`
+    }))
+    const selectedColor = ref(Array.isArray(props.value) ? props.value[0] : props.value)
+    const onColorClick = (e: PointerEvent, index: number = -1) => {
+      const target = event.currentTarget as HTMLElement
+      const { offsetHeight, offsetTop } = target
+      pickerTop.value = offsetTop + offsetHeight
+      selectedIndex.value = index
+      selectedColor.value = Array.isArray(props.value) ? props.value[index] : props.value
+      openPickerShow()
     }
     const colorPicker = ref<HTMLElement>()
     provide('theme', {
@@ -86,11 +138,24 @@ export default defineComponent({
     onUnmounted(() => {
       document.removeEventListener('click', closePickerShow)
     })
-    const onPickChange = (value) => {
-      emit('change', value)
+    const onPickChange = (color: string) => {
+      let value: string | string [] = ''
+      if (Array.isArray(props.value)) {
+        const temp = props.value.slice()
+        temp[selectedIndex.value] = color
+        value = temp
+      } else {
+        value = color
+      }
       emit('update:value', value)
+      emit('change', color)
     }
     return {
+      colorItemStyle,
+      selectedColor,
+      selectedIndex,
+      onColorClick,
+      pickerStyle,
       isPickerShow,
       openPickerShow,
       onPickChange,
@@ -102,27 +167,37 @@ export default defineComponent({
 
 <style scoped lang="less">
 .color-picker {
+  display: flow-root;
   position: relative;
-  width: 20px;
-  height: 20px;
+}
+
+.color-list {
+  margin-bottom: 10px;
+  margin-right: 10px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.color-item {
+  margin-top: 10px;
+  margin-left: 10px;
 }
 
 .picker {
   position: absolute;
-  top: 25px;
   left: 0;
   will-change: height;
 }
 
 .popup-enter-active,
 .popup-leave-active {
-  transition: all 60ms ease-out;
+  transition: max-height 60ms ease-out;
   overflow: hidden;
-  height: 234px;
+  max-height: 233px;
 }
 
 .popup-enter-from,
 .popup-leave-to {
-  height:0;
+  max-height:0;
 }
 </style>

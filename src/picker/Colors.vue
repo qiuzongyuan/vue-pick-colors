@@ -7,7 +7,7 @@
         :value="color"
         :border="false"
         :border-radius="3"
-        :selected="selectIndex === index"
+        :selected="selectedIndex === index"
         @select="onSelectColor($event, index)"
       />
     </template>
@@ -27,7 +27,7 @@ export default defineComponent({
       type: Array,
       default: () => []
     },
-    selectIndex: {
+    selectedIndex: {
       type: Number,
       default: -1
     }

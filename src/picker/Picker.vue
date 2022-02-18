@@ -7,7 +7,7 @@
         <alpha class="alpha" :alpha="a" :color="rgbStr" @change="onSelectAlpha" v-if="showAlpha"/>
       </div>
       <input-value :label="label" :color="color" :width="inputWidth" @change="onInputChange"/>
-      <Colors class="colors" v-if="colors.length > 0" :colors="colors" :select-index="selectColorIndex" @select="onSelectColor"/>
+      <Colors class="colors" v-if="colors.length > 0" :colors="colors" :selected-index="selectColorIndex" @select="onSelectColor"/>
     </div>
   </div>
 </template>
@@ -51,11 +51,17 @@ export default defineComponent({
   },
   emits: ['change'],
   setup (props, { emit }) {
-    const hsva = filterHsva(transformHsv(props.value, props.format, props.showAlpha))
-    const h = ref(hsva.h)
-    const s = ref(hsva.s)
-    const v = ref(hsva.v)
-    const a = ref(hsva.a)
+    const hsva = ref()
+    watch(() => props.value, (value: string) => {
+      const format = checkColorFormat(value)
+      hsva.value = filterHsva(transformHsv(value, format, props.showAlpha))
+    }, {
+      immediate: true
+    })
+    const h = computed(() => hsva.value.h)
+    const s = computed(() => hsva.value.s)
+    const v = computed(() => hsva.value.v)
+    const a = computed(() => hsva.value.a)
     const rgb = computed(() => hsv2rgb(h.value, s.value, v.value))
     const rgbStr = computed(() => `rgb(${rgb.value.r}, ${rgb.value.g}, ${rgb.value.b})`)
     const color = computed(() => hsvFormat({
@@ -77,37 +83,49 @@ export default defineComponent({
     }
     const onSelectHue = (hue: number) => {
       selectColorIndex.value = -1
-      h.value = hue
+      hsva.value = {
+        ...hsva.value,
+        h: hue
+      }
     }
     const onSelectSaturation = (saturation, value) => {
       selectColorIndex.value = -1
-      s.value = saturation
-      v.value = value
+      hsva.value = {
+        ...hsva.value,
+        s: saturation,
+        v: value
+      }
     }
     const onSelectAlpha = (alpha) => {
       selectColorIndex.value = -1
-      a.value = alpha
+      hsva.value = {
+        ...hsva.value,
+        a: alpha
+      }
     }
     const handleColorChange = (color: string, format: Format, showAlpha: boolean) => {
       if (!color.length) {
-        h.value = 0
-        s.value = 0
-        v.value = 0
-        a.value = 0
+        hsva.value = {
+          h: 0,
+          s: 0,
+          v: 0,
+          a: 0
+        }
         return
       }
       const hsv = transformHsv(color.trim(), format, showAlpha)
-      const { h: hue, s: saturation, v: value } = hsv
-      if (isNaN(hue) || isNaN(saturation) || isNaN(value)) return
-      h.value = hue
-      s.value = saturation
-      v.value = value
-      if (!props.showAlpha) return
+      const { h, s, v } = hsv
+      if (isNaN(h) || isNaN(s) || isNaN(v)) return
+      let a = 1
       const alpha = (hsv as any).a
       if (!isNaN(alpha)) {
-        a.value = alpha
-      } else if (isNaN(alpha)) {
-        a.value = 1
+        a = alpha
+      }
+      hsva.value = {
+        h,
+        s,
+        v,
+        a
       }
     }
     const onInputChange = (color: string) => {
@@ -139,6 +157,7 @@ export default defineComponent({
   background: #f7f8f9;
   border-radius: 4px;
   box-shadow: 0 0 16px 0 rgb(0 0 0 / 16%);
+  width: 233px;
 }
 .picker-inner {
   padding: 10px;

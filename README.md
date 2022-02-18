@@ -45,7 +45,7 @@ API：
 | show-alpha     | 是否支持透明度选择                         | boolean           | false                                                                                                                               |
 | size           | 色块大小                                   | number            | 20                                                                                                                                  |
 | theme          | 主题                                       | 'light' ｜ 'dark'      | light                                                                                                                               |
-| colors         | 预留颜色组<br>支持hex、rgb、rgba、hsl、hsla | string []         | ['#ff4500', '#ff8c00', '#ffd700','#90ee90', '#00ced1', '#1e90ff','#c71585', '#ff4500', '#ff7800','#00babd', '#1f93ff', '#fa64c3'] |
+| colors         | 预留颜色组<br>支持hex、rgb、rgba、hsl、hsla | string []         | ['#ff4500','#ff8c00','#ffd700',<br>'#90ee90','#00ced1','#1e90ff',<br>'#c71585','#ff4500','#ff7800',<br>'#00babd','#1f93ff','#fa64c3'] |
 | add-color      | 添加颜色                                   | boolean           | false                                                                                                                               |
 | add-max-count  | 添加颜色最大数                             | number            | 13                                                                                                                                  |
 

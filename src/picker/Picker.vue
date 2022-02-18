@@ -53,8 +53,10 @@ export default defineComponent({
   setup (props, { emit }) {
     const hsva = ref()
     watch(() => props.value, (value: string) => {
-      const format = checkColorFormat(value)
-      hsva.value = filterHsva(transformHsv(value, format, props.showAlpha))
+      if (value.length > 0) {
+        const format = checkColorFormat(value)
+        hsva.value = filterHsva(transformHsv(value, format, props.showAlpha))
+      }
     }, {
       immediate: true
     })

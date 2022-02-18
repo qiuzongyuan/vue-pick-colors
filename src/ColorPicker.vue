@@ -1,30 +1,27 @@
 <template>
   <div class="color-picker" ref="colorPicker" @click.stop>
-    <template v-if="Array.isArray(value)">
-      <div class="color-list">
-        <div
-          v-for="(item, index) in value"
-          :key="item + index"
-          @click="onColorClick($event, index)"
-        >
-          <color-item
-            class="color-item"
-            :style="colorItemStyle"
-            :value="item"
-            :selected="selectedIndex === index && selectHighlight"
-          />
-        </div>
-      </div>
-    </template>
-    <template v-else>
-      <div @click="onColorClick($event, 0)">
+    <div class="color-list">
+      <div
+        class="color-item-wrapper"
+        :style="colorItemWrapperStyle"
+        v-for="(item, index) in valueList"
+        :key="item + index"
+        @click="onColorClick($event, index)"
+      >
         <color-item
+          class="color-item"
           :style="colorItemStyle"
-          :value="value"
-          :selected="selectedIndex === 0 && selectHighlight"
+          :value="item"
+          :selected="colorItemSelected(index)"
         />
       </div>
-    </template>
+      <add-color-item
+        class="add-color-item"
+        v-if="addColor && addColorItemShow"
+        @click="onColorClick"
+        :selected="selectedIndex === -1"
+      />
+    </div>
     <transition name="popup">
       <picker
         class="picker"
@@ -45,21 +42,19 @@ import { defineComponent, ref, onMounted, onUnmounted, provide, computed } from 
 import type { PropType } from 'vue'
 import Picker from './picker'
 import ColorItem from './color-item'
+import AddColorItem from './add-color-item'
 import type { Theme, Format } from './constant'
 export default defineComponent({
   name: 'ColorPicker',
   components: {
     ColorItem,
-    Picker
+    Picker,
+    AddColorItem
   },
   props: {
     value: {
       type: [String, Array] as PropType<string | string[]>,
       default: '#ff0000'
-    },
-    mode: {
-      type: String as PropType<'single' | 'multiple'>,
-      default: 'single'
     },
     theme: {
       type: String as PropType<Theme>,
@@ -77,9 +72,13 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
-    selectHighlight: {
+    addColor: {
       type: Boolean,
-      default: true
+      default: false
+    },
+    addMaxCount: {
+      type: Number,
+      default: 13
     },
     colors: {
       type: Array,
@@ -99,32 +98,50 @@ export default defineComponent({
       ]
     }
   },
-  emits: ['change', 'update:value'],
+  emits: ['change', 'update:value', 'arriveMaxCount'],
   setup (props, { emit }) {
+    const valueList = computed(() => Array.isArray(props.value) ? props.value : [props.value])
     const colorItemStyle = computed(() => ({
       width: `${props.size}px`,
       height: `${props.size}px`
     }))
-    const selectedIndex = ref(-1)
+    const colorItemWrapperStyle = computed(() => ({
+      width: `${props.size + 2}px`,
+      height: `${props.size + 2}px`
+    }))
+    // -2 代表什么也不选择
+    const selectedIndex = ref(-2)
+    const colorItemSelected = (index) => {
+      return (props.addColor ? valueList.value.length > 0 : valueList.value.length > 1) && selectedIndex.value === index
+    }
     const isPickerShow = ref(false)
     const openPickerShow = () => {
       isPickerShow.value = true
     }
     const closePickerShow = () => {
-      selectedIndex.value = -1
+      selectedIndex.value = -2
       isPickerShow.value = false
     }
     const pickerTop = ref(0)
+    const pickerLeft = ref(0)
     const pickerStyle = computed(() => ({
-      top: `${pickerTop.value}px`
+      top: `${pickerTop.value}px`,
+      left: `${pickerLeft.value}px`
     }))
-    const selectedColor = ref(Array.isArray(props.value) ? props.value[0] : props.value)
+    const selectedColor = ref(valueList.value[0])
     const onColorClick = (e: PointerEvent, index: number = -1) => {
       const target = event.currentTarget as HTMLElement
-      const { offsetHeight, offsetTop } = target
-      pickerTop.value = offsetTop + offsetHeight
-      selectedIndex.value = index
-      selectedColor.value = Array.isArray(props.value) ? props.value[index] : props.value
+      const { offsetTop, offsetHeight, offsetLeft } = target
+      pickerTop.value = offsetTop + offsetHeight + 5
+      pickerLeft.value = offsetLeft
+      if (index !== -1) {
+        selectedIndex.value = index
+        selectedColor.value = valueList.value[index]
+      } else {
+        // - 1 代表添加
+        selectedIndex.value = index
+        selectedColor.value = ''
+      }
       openPickerShow()
     }
     const colorPicker = ref<HTMLElement>()
@@ -138,20 +155,44 @@ export default defineComponent({
     onUnmounted(() => {
       document.removeEventListener('click', closePickerShow)
     })
+    const addColorItemShow = ref(true)
     const onPickChange = (color: string) => {
-      let value: string | string [] = ''
-      if (Array.isArray(props.value)) {
-        const temp = props.value.slice()
-        temp[selectedIndex.value] = color
-        value = temp
+      const index = selectedIndex.value
+      if (index !== -1) {
+        // 改变数值
+        let value: string | string [] = ''
+        if (Array.isArray(props.value)) {
+          const temp = valueList.value.slice()
+          temp[index] = color
+          value = temp
+        } else {
+          value = color
+        }
+        emit('update:value', value)
+        emit('change', value, color, index)
       } else {
-        value = color
+        const value = valueList.value.slice()
+        if (props.addMaxCount > value.length) {
+          value.push(color)
+          const index = value.length - 1
+          selectedIndex.value = index
+          // 添加
+          emit('update:value', value)
+          emit('change', value, color, index)
+          const isAddColorItemShow = props.addMaxCount >= (value.length + 1)
+          // 达到最大值
+          if (!isAddColorItemShow) {
+            addColorItemShow.value = isAddColorItemShow
+            emit('arriveMaxCount')
+          }
+        }
       }
-      emit('update:value', value)
-      emit('change', color)
     }
     return {
+      valueList,
       colorItemStyle,
+      colorItemWrapperStyle,
+      colorItemSelected,
       selectedColor,
       selectedIndex,
       onColorClick,
@@ -159,7 +200,8 @@ export default defineComponent({
       isPickerShow,
       openPickerShow,
       onPickChange,
-      colorPicker
+      colorPicker,
+      addColorItemShow
     }
   }
 })
@@ -167,20 +209,20 @@ export default defineComponent({
 
 <style scoped lang="less">
 .color-picker {
-  display: flow-root;
+  display: inline-block;
   position: relative;
 }
-
 .color-list {
-  margin-bottom: 10px;
-  margin-right: 10px;
   display: flex;
   flex-wrap: wrap;
 }
 
-.color-item {
-  margin-top: 10px;
-  margin-left: 10px;
+.color-item-wrapper {
+  padding: 5px;
+}
+
+.add-color-item {
+  margin: 5px;
 }
 
 .picker {

@@ -229,6 +229,7 @@ export default defineComponent({
   position: absolute;
   left: 0;
   will-change: height;
+  z-index: 9;
 }
 
 .popup-enter-active,

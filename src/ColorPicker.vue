@@ -98,7 +98,7 @@ export default defineComponent({
       ]
     }
   },
-  emits: ['change', 'update:value', 'arriveMaxCount'],
+  emits: ['change', 'update:value', 'addToMax'],
   setup (props, { emit }) {
     const valueList = computed(() => Array.isArray(props.value) ? props.value : [props.value])
     const colorItemStyle = computed(() => ({
@@ -183,7 +183,7 @@ export default defineComponent({
           // 达到最大值
           if (!isAddColorItemShow) {
             addColorItemShow.value = isAddColorItemShow
-            emit('arriveMaxCount')
+            emit('addToMax')
           }
         }
       }

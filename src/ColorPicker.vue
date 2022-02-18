@@ -1,20 +1,15 @@
 <template>
   <div class="color-picker" ref="colorPicker" @click.stop>
     <div class="color-list">
-      <div
-        class="color-item-wrapper"
-        :style="colorItemWrapperStyle"
+      <color-item
+        class="color-item"
         v-for="(item, index) in valueList"
         :key="item + index"
+        :style="colorItemStyle"
+        :value="item"
+        :selected="colorItemSelected(index)"
         @click="onColorClick($event, index)"
-      >
-        <color-item
-          class="color-item"
-          :style="colorItemStyle"
-          :value="item"
-          :selected="colorItemSelected(index)"
-        />
-      </div>
+      />
       <add-color-item
         class="add-color-item"
         v-if="addColor && addColorItemShow"
@@ -38,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, onUnmounted, provide, computed } from 'vue'
+import { defineComponent, ref, onMounted, onUnmounted, provide, computed, watch } from 'vue'
 import type { PropType } from 'vue'
 import Picker from './picker'
 import ColorItem from './color-item'
@@ -105,10 +100,6 @@ export default defineComponent({
       width: `${props.size}px`,
       height: `${props.size}px`
     }))
-    const colorItemWrapperStyle = computed(() => ({
-      width: `${props.size + 2}px`,
-      height: `${props.size + 2}px`
-    }))
     // -2 代表什么也不选择
     const selectedIndex = ref(-2)
     const colorItemSelected = (index) => {
@@ -145,11 +136,18 @@ export default defineComponent({
       openPickerShow()
     }
     const colorPicker = ref<HTMLElement>()
+    const theme = computed(() => props.theme)
+    const changeTheme = () => {
+      colorPicker.value.setAttribute('pick-colors-theme', theme.value)
+    }
+    watch(() => props.theme, () => {
+      changeTheme()
+    })
     provide('theme', {
-      theme: props.theme
+      theme
     })
     onMounted(() => {
-      colorPicker.value.setAttribute('pick-colors-theme', props.theme)
+      changeTheme()
       document.addEventListener('click', closePickerShow)
     })
     onUnmounted(() => {
@@ -191,7 +189,6 @@ export default defineComponent({
     return {
       valueList,
       colorItemStyle,
-      colorItemWrapperStyle,
       colorItemSelected,
       selectedColor,
       selectedIndex,
@@ -217,8 +214,8 @@ export default defineComponent({
   flex-wrap: wrap;
 }
 
-.color-item-wrapper {
-  padding: 5px;
+.color-item {
+  margin: 5px;
 }
 
 .add-color-item {

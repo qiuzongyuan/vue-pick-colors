@@ -22,14 +22,11 @@ export default defineComponent({
     }
   },
   setup (props) {
-    const { theme } = inject('theme', {
-      theme: 'light'
-    })
-    const boxShadowColor = theme === 'light' ? '#1890ff' : '#2681ff'
+    const { theme } = inject('theme')
     const addColorItemStyle = computed(() => ({
       width: `${props.size}px`,
       height: `${props.size}px`,
-      boxShadow: props.selected ? `0 0 3px 2px ${boxShadowColor}` : ''
+      boxShadow: props.selected ? `0 0 3px 2px ${theme.value === 'dark' ? '#2681ff' : '#1890ff'}` : ''
     }))
     const iconStyle = computed(() => ({
       width: `${props.size - 4}px`

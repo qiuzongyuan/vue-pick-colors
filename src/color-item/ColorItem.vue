@@ -37,16 +37,13 @@ export default defineComponent({
   emits: ['select'],
   setup (props, { emit }) {
     const canvas = ref<HTMLCanvasElement>()
-    const { theme } = inject('theme', {
-      theme: 'light'
-    })
-    const boxShadowColor = theme === 'light' ? '#1890ff' : '#2681ff'
+    const { theme } = inject('theme')
     const colorItemStyle = computed(() => ({
       width: `${props.size}px`,
       height: `${props.size}px`,
       border: props.border ? '1px solid #d9d9d9' : '',
       borderRadius: `${props.borderRadius}px`,
-      boxShadow: props.selected ? `0 0 3px 2px ${boxShadowColor}` : ''
+      boxShadow: props.selected ? `0 0 3px 2px ${theme.value === 'dark' ? '#2681ff' : '#1890ff'}` : ''
     }))
     const createAlphaSquare = (size: number) => {
       const canvas = document.createElement('canvas')

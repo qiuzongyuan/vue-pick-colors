@@ -20,7 +20,7 @@
     <transition name="popup">
       <picker
         class="picker"
-        :style="pickerStyle"
+        ref="picker"
         :value="selectedColor"
         :format="format"
         :show-alpha="showAlpha"
@@ -33,12 +33,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, onUnmounted, provide, computed, watch } from 'vue'
+import { defineComponent, ref, onMounted, onUnmounted, provide, computed, watch, nextTick } from 'vue'
 import type { PropType } from 'vue'
 import Picker from './picker'
 import ColorItem from './color-item'
 import AddColorItem from './add-color-item'
 import type { Theme, Format } from './constant'
+import { createPopper } from '@popperjs/core'
 export default defineComponent({
   name: 'ColorPicker',
   components: {
@@ -71,7 +72,7 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
-    addMaxCount: {
+    max: {
       type: Number,
       default: 13
     },
@@ -93,7 +94,7 @@ export default defineComponent({
       ]
     }
   },
-  emits: ['change', 'update:value', 'addToMax'],
+  emits: ['change', 'update:value', 'overflowMax'],
   setup (props, { emit }) {
     const valueList = computed(() => Array.isArray(props.value) ? props.value : [props.value])
     const colorItemStyle = computed(() => ({
@@ -113,18 +114,14 @@ export default defineComponent({
       selectedIndex.value = -2
       isPickerShow.value = false
     }
-    const pickerTop = ref(0)
-    const pickerLeft = ref(0)
-    const pickerStyle = computed(() => ({
-      top: `${pickerTop.value}px`,
-      left: `${pickerLeft.value}px`
-    }))
     const selectedColor = ref(valueList.value[0])
-    const onColorClick = (e: PointerEvent, index: number = -1) => {
-      const target = event.currentTarget as HTMLElement
-      const { offsetTop, offsetHeight, offsetLeft } = target
-      pickerTop.value = offsetTop + offsetHeight + 5
-      pickerLeft.value = offsetLeft
+    const colorPicker = ref<HTMLElement>()
+    const picker = ref()
+    const onColorClick = async (e: PointerEvent, index: number = -1) => {
+      const target = e.target as HTMLElement
+      nextTick(() => {
+        createPopper(target, picker.value.$el)
+      })
       if (index !== -1) {
         selectedIndex.value = index
         selectedColor.value = valueList.value[index]
@@ -135,7 +132,6 @@ export default defineComponent({
       }
       openPickerShow()
     }
-    const colorPicker = ref<HTMLElement>()
     const theme = computed(() => props.theme)
     const changeTheme = () => {
       colorPicker.value.setAttribute('pick-colors-theme', theme.value)
@@ -153,7 +149,7 @@ export default defineComponent({
     onUnmounted(() => {
       document.removeEventListener('click', closePickerShow)
     })
-    const addColorItemShow = ref(true)
+    const addColorItemShow = ref(props.max > valueList.value.length)
     const onPickChange = (color: string) => {
       const index = selectedIndex.value
       if (index !== -1) {
@@ -170,19 +166,21 @@ export default defineComponent({
         emit('change', value, color, index)
       } else {
         const value = valueList.value.slice()
-        if (props.addMaxCount > value.length) {
+        if (props.max > value.length) {
           value.push(color)
           const index = value.length - 1
           selectedIndex.value = index
           // 添加
           emit('update:value', value)
           emit('change', value, color, index)
-          const isAddColorItemShow = props.addMaxCount >= (value.length + 1)
+          const isAddColorItemShow = props.max >= (value.length + 1)
           // 达到最大值
           if (!isAddColorItemShow) {
             addColorItemShow.value = isAddColorItemShow
-            emit('addToMax')
+            emit('overflowMax')
           }
+        } else {
+          emit('overflowMax')
         }
       }
     }
@@ -193,12 +191,12 @@ export default defineComponent({
       selectedColor,
       selectedIndex,
       onColorClick,
-      pickerStyle,
       isPickerShow,
       openPickerShow,
       onPickChange,
       colorPicker,
-      addColorItemShow
+      addColorItemShow,
+      picker
     }
   }
 })
@@ -207,7 +205,6 @@ export default defineComponent({
 <style scoped lang="less">
 .color-picker {
   display: inline-block;
-  position: relative;
 }
 .color-list {
   display: flex;
@@ -223,21 +220,19 @@ export default defineComponent({
 }
 
 .picker {
-  position: absolute;
-  left: 0;
-  will-change: height;
   z-index: 9;
+  will-change: transform;
 }
 
 .popup-enter-active,
 .popup-leave-active {
-  transition: max-height 60ms ease-out;
+  transition: height 60ms ease-out;
   overflow: hidden;
-  max-height: 233px;
+  height: 233px;
 }
 
 .popup-enter-from,
 .popup-leave-to {
-  max-height:0;
+  height:0;
 }
 </style>

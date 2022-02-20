@@ -49,9 +49,9 @@ export default defineComponent({
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  margin-top: 5px;
 }
 .color-item {
-  margin-top: 10px;
-  margin-left: 10px;
+  margin: 5px;
 }
 </style>

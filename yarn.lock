@@ -1236,6 +1236,11 @@
     "node-gyp" "^7.1.0"
     "read-package-json-fast" "^2.0.1"
 
+"@popperjs/core@^2.11.2":
+  "integrity" "sha512-92FRmppjjqz29VMJ2dn+xdyXZBrMlE42AV6Kq6BwjWV7CNUW1hs2FtxSNLQE+gJhaZ6AAmYuO9y8dshhcBl7vA=="
+  "resolved" "https://registry.npmjs.org/@popperjs/core/-/core-2.11.2.tgz"
+  "version" "2.11.2"
+
 "@rollup/plugin-babel@^5.3.0":
   "integrity" "sha1-nLHFFG3daklorZbyCcUMYvkvmHk="
   "resolved" "https://registry.npmmirror.com/@rollup/plugin-babel/download/@rollup/plugin-babel-5.3.0.tgz"
@@ -7548,11 +7553,6 @@
     "extract-from-css" "^0.4.4"
     "source-map" "0.5.6"
     "tsconfig" "^7.0.0"
-
-"vue-pick-colors@^1.0.1":
-  "integrity" "sha512-GmmQlPoNv91WT2HMWCDVzEpjxoyzdbO8QLfcrg4RTZpwZGgiATO0ttdvyulA1Yo08PzYSMDlx9c4YyvizlEg5A=="
-  "resolved" "https://registry.npmjs.org/vue-pick-colors/-/vue-pick-colors-1.0.1.tgz"
-  "version" "1.0.1"
 
 "vue@^3.0.0-0", "vue@^3.0.1", "vue@^3.2.25", "vue@^3.2.26", "vue@3.2.26":
   "integrity" "sha512-KD4lULmskL5cCsEkfhERVRIOEDrfEL9CwAsLYpzptOGjaGFNWo3BQ9g8MAb7RaIO71rmVOziZ/uEN/rHwcUIhg=="

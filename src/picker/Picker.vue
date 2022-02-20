@@ -1,6 +1,6 @@
 <template>
-  <div class="picker">
-    <div class="picker-inner">
+  <div class="picker" :style="pickerStyle">
+    <div class="picker-inner" ref="picker">
       <div class="picker-header">
         <saturation class="saturation" :hue="h" :saturation="s" :value="v" @change="onSelectSaturation"/>
         <hue class="hue" :hue="h" @change="onSelectHue"/>
@@ -13,14 +13,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, watch, ref } from 'vue'
+import { defineComponent, computed, watch, ref, onMounted } from 'vue'
 import type { PropType } from 'vue'
 import Saturation from './Saturation.vue'
 import Hue from './Hue.vue'
 import Alpha from './Alpha.vue'
 import InputValue from './InputValue.vue'
 import Colors from './Colors.vue'
-import { hsvFormat, hsv2rgb, checkColor, transformHsv, checkColorFormat, filterHsva } from './utils'
+import { hsvFormat, hsv2rgb, checkColor, transformHsv, checkColorFormat, filterHsva } from '../utils'
 import type { Format } from '../constant'
 export default defineComponent({
   name: 'Picker',
@@ -50,8 +50,10 @@ export default defineComponent({
     }
   },
   emits: ['change'],
-  setup (props, { emit }) {
-    const hsva = ref()
+  setup (props, { emit, expose }) {
+    const pickerStyle = computed(() => ({ width: props.showAlpha ? '230px' : '205px' }))
+    const inputWidth = computed(() => props.showAlpha ? 165 : 140)
+    const hsva = ref({ h: 0, s: 0, v: 0, a: 0 })
     watch(() => props.value, (value: string) => {
       if (value.length > 0) {
         const format = checkColorFormat(value)
@@ -75,7 +77,6 @@ export default defineComponent({
     watch(color, (color) => {
       emit('change', color)
     })
-    const inputWidth = computed(() => props.showAlpha ? 168 : 145)
     const label = computed(() => props.format.toLocaleUpperCase())
     const selectColorIndex = ref(-1)
     const onSelectColor = (color: string, index: number) => {
@@ -134,6 +135,17 @@ export default defineComponent({
       if (!checkColor(color.trim(), props.format, props.showAlpha)) return
       handleColorChange(color, props.format, props.showAlpha)
     }
+    const picker = ref()
+    onMounted(() => {
+      const width = (picker.value as HTMLElement).offsetWidth
+      const height = (picker.value as HTMLElement).offsetHeight
+      console.log(width)
+      console.log(height)
+      // expose({
+      //   width,
+      //   height
+      // })
+    })
     return {
       h,
       s,
@@ -145,10 +157,12 @@ export default defineComponent({
       onSelectAlpha,
       label,
       color,
+      pickerStyle,
       inputWidth,
       onInputChange,
       selectColorIndex,
-      onSelectColor
+      onSelectColor,
+      picker
     }
   }
 })
@@ -156,6 +170,7 @@ export default defineComponent({
 
 <style scoped lang="less">
 .picker {
+  margin: 5px 0 !important;
   background: #f7f8f9;
   border-radius: 4px;
   box-shadow: 0 0 16px 0 rgb(0 0 0 / 16%);
@@ -172,11 +187,11 @@ export default defineComponent({
   display: flex;
   margin-bottom: 5px;
 }
-.saturation {
-  margin-right: 10px;
-}
 .hue {
-  margin-right: 10px;
+  margin-left: 10px;
+}
+.alpha {
+  margin-left: 10px;
 }
 .colors {
   margin-top: 5px;

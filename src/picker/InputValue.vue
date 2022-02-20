@@ -51,7 +51,7 @@ export default defineComponent({
 
 <style scoped lang="less">
 .input {
-  display: flex;
+  display: inline-block;
   font-size: 12px;
 }
 .label {

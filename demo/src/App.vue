@@ -1,5 +1,12 @@
 <template>
-  <pick-colors style="width: 200px" v-model:value="value" :format="'rgb'" show-alpha add-color :theme="theme"/>
+  <pick-colors
+    v-model:value="value"
+    :show-alpha="false"
+    :format="'rgb'"
+    add-color
+    :theme="theme"
+    @change="onColorChange"
+  />
   <button @click="onSwitchTheme">切换主题</button>
 </template>
 
@@ -13,6 +20,11 @@ export default defineComponent({
   },
   setup () {
     const value = ref('#00ced1ff')
+    // const value = ref(['#00ced1ff'])
+    // const value = ref(['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc'])
+    const onColorChange = (value: string | string[], color: string, index: number) => {
+      console.log(value, color, index)
+    }
     const theme = ref('light')
     const onSwitchTheme = () => {
       if (theme.value === 'light') {
@@ -22,10 +34,9 @@ export default defineComponent({
       }
       console.log(theme.value)
     }
-    // const value = ref(['#00ced1ff'])
-    // const value = ref(['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc'])
     return {
       value,
+      onColorChange,
       theme,
       onSwitchTheme
     }

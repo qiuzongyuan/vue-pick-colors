@@ -8,13 +8,13 @@
         :style="colorItemStyle"
         :value="item"
         :selected="colorItemSelected(index)"
-        @click="onColorClick($event, index)"
+        @click.self="onColorClick($event, index)"
       />
       <add-color-item
         class="add-color-item"
         v-if="addColor && addColorItemShow"
-        @click="onColorClick"
         :selected="selectedIndex === -1"
+        @click="onColorClick($event, -1)"
       />
     </div>
     <transition name="popup">
@@ -118,9 +118,17 @@ export default defineComponent({
     const colorPicker = ref<HTMLElement>()
     const picker = ref()
     const onColorClick = async (e: PointerEvent, index: number = -1) => {
-      const target = e.target as HTMLElement
+      const target = e.currentTarget as HTMLElement
       nextTick(() => {
-        createPopper(target, picker.value.$el)
+        createPopper(target, picker.value.$el, {
+          modifiers: [{
+            name: 'offset',
+            options: {
+              offset: [0, 5]
+            }
+          }]
+        })
+        openPickerShow()
       })
       if (index !== -1) {
         selectedIndex.value = index
@@ -130,7 +138,6 @@ export default defineComponent({
         selectedIndex.value = index
         selectedColor.value = ''
       }
-      openPickerShow()
     }
     const theme = computed(() => props.theme)
     const changeTheme = () => {

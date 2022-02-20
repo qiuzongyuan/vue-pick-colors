@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, watch, ref, onMounted } from 'vue'
+import { defineComponent, computed, watch, ref } from 'vue'
 import type { PropType } from 'vue'
 import Saturation from './Saturation.vue'
 import Hue from './Hue.vue'
@@ -135,17 +135,6 @@ export default defineComponent({
       if (!checkColor(color.trim(), props.format, props.showAlpha)) return
       handleColorChange(color, props.format, props.showAlpha)
     }
-    const picker = ref()
-    onMounted(() => {
-      const width = (picker.value as HTMLElement).offsetWidth
-      const height = (picker.value as HTMLElement).offsetHeight
-      console.log(width)
-      console.log(height)
-      // expose({
-      //   width,
-      //   height
-      // })
-    })
     return {
       h,
       s,
@@ -161,8 +150,7 @@ export default defineComponent({
       inputWidth,
       onInputChange,
       selectColorIndex,
-      onSelectColor,
-      picker
+      onSelectColor
     }
   }
 })
@@ -170,7 +158,6 @@ export default defineComponent({
 
 <style scoped lang="less">
 .picker {
-  margin: 5px 0 !important;
   background: #f7f8f9;
   border-radius: 4px;
   box-shadow: 0 0 16px 0 rgb(0 0 0 / 16%);

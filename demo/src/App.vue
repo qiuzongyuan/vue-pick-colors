@@ -3,11 +3,10 @@
     v-model:value="value"
     :show-alpha="false"
     :format="'rgb'"
-    add-color
     :theme="theme"
     @change="onColorChange"
   />
-  <button @click="onSwitchTheme">切换主题</button>
+<!--  <button @click="onSwitchTheme">切换主题</button>-->
 </template>
 
 <script lang="ts">

@@ -1,6 +1,6 @@
 <template>
-  <div class="color-picker" ref="colorPicker" @click.stop>
-    <div class="color-list">
+  <div class="color-picker" ref="colorPicker">
+    <div class="color-list" :style="colorListStyle" @click.stop>
       <color-item
         class="color-item"
         v-for="(item, index) in valueList"
@@ -8,7 +8,7 @@
         :style="colorItemStyle"
         :value="item"
         :selected="colorItemSelected(index)"
-        @click.self="onColorClick($event, index)"
+        @click="onColorClick($event, index)"
       />
       <add-color-item
         class="add-color-item"
@@ -101,6 +101,17 @@ export default defineComponent({
       width: `${props.size}px`,
       height: `${props.size}px`
     }))
+    const colorListStyle = computed(() => {
+      if (valueList.value.length > 1) {
+        return {
+          display: 'flex',
+          flexWrap: 'wrap'
+        }
+      }
+      return {
+        display: 'inline-block'
+      }
+    })
     // -2 代表什么也不选择
     const selectedIndex = ref(-2)
     const colorItemSelected = (index) => {
@@ -118,18 +129,6 @@ export default defineComponent({
     const colorPicker = ref<HTMLElement>()
     const picker = ref()
     const onColorClick = async (e: PointerEvent, index: number = -1) => {
-      const target = e.currentTarget as HTMLElement
-      nextTick(() => {
-        createPopper(target, picker.value.$el, {
-          modifiers: [{
-            name: 'offset',
-            options: {
-              offset: [0, 5]
-            }
-          }]
-        })
-        openPickerShow()
-      })
       if (index !== -1) {
         selectedIndex.value = index
         selectedColor.value = valueList.value[index]
@@ -138,6 +137,18 @@ export default defineComponent({
         selectedIndex.value = index
         selectedColor.value = ''
       }
+      openPickerShow()
+      nextTick(() => {
+        const target = e.currentTarget as HTMLElement
+        createPopper(target, picker.value.$el, {
+          modifiers: [{
+            name: 'offset',
+            options: {
+              offset: [0, 5]
+            }
+          }]
+        })
+      })
     }
     const theme = computed(() => props.theme)
     const changeTheme = () => {
@@ -194,6 +205,7 @@ export default defineComponent({
     return {
       valueList,
       colorItemStyle,
+      colorListStyle,
       colorItemSelected,
       selectedColor,
       selectedIndex,
@@ -212,10 +224,6 @@ export default defineComponent({
 <style scoped lang="less">
 .color-picker {
   display: inline-block;
-}
-.color-list {
-  display: flex;
-  flex-wrap: wrap;
 }
 
 .color-item {

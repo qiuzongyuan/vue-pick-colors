@@ -4,6 +4,7 @@
     :show-alpha="false"
     :format="'rgb'"
     :theme="theme"
+    add-color
     @change="onColorChange"
   />
 <!--  <button @click="onSwitchTheme">切换主题</button>-->

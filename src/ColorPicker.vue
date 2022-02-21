@@ -1,7 +1,6 @@
 <template>
-  <div class="color-picker" ref="colorPicker">
-<!--    :style="colorListStyle"-->
-    <div class="color-list">
+  <div class="color-picker" ref="colorPicker" @click.stop>
+    <div class="color-list" @click.self="onClosePickerShow">
       <color-item
         class="color-item"
         v-for="(item, index) in valueList"
@@ -9,13 +8,13 @@
         :style="colorItemStyle"
         :value="item"
         :selected="colorItemSelected(index)"
-        @click.stop="onColorClick($event, index)"
+        @click="onColorClick($event, index)"
       />
       <add-color-item
         class="add-color-item"
         v-if="addColor && addColorItemShow"
         :selected="selectedIndex === -1"
-        @click.stop="onColorClick($event, -1)"
+        @click="onColorClick($event, -1)"
       />
     </div>
     <transition name="popup">
@@ -119,10 +118,10 @@ export default defineComponent({
       return (props.addColor ? valueList.value.length > 0 : valueList.value.length > 1) && selectedIndex.value === index
     }
     const isPickerShow = ref(false)
-    const openPickerShow = () => {
+    const onOpenPickerShow = () => {
       isPickerShow.value = true
     }
-    const closePickerShow = () => {
+    const onClosePickerShow = () => {
       selectedIndex.value = -2
       isPickerShow.value = false
     }
@@ -138,7 +137,7 @@ export default defineComponent({
         selectedIndex.value = index
         selectedColor.value = ''
       }
-      openPickerShow()
+      onOpenPickerShow()
       nextTick(() => {
         const target = e.currentTarget as HTMLElement
         createPopper(target, picker.value.$el, {
@@ -163,10 +162,10 @@ export default defineComponent({
     })
     onMounted(() => {
       changeTheme()
-      document.addEventListener('click', closePickerShow)
+      document.addEventListener('click', onClosePickerShow)
     })
     onUnmounted(() => {
-      document.removeEventListener('click', closePickerShow)
+      document.removeEventListener('click', onClosePickerShow)
     })
     const addColorItemShow = ref(props.max > valueList.value.length)
     const onPickChange = (color: string) => {
@@ -212,7 +211,8 @@ export default defineComponent({
       selectedIndex,
       onColorClick,
       isPickerShow,
-      openPickerShow,
+      onOpenPickerShow,
+      onClosePickerShow,
       onPickChange,
       colorPicker,
       addColorItemShow,

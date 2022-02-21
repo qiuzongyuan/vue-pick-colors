@@ -87,4 +87,8 @@ export default defineComponent({
 </script>
 
 <style scoped lang="less">
+.color-item {
+  display: inline-block;
+  vertical-align: top;
+}
 </style>

@@ -1,6 +1,7 @@
 <template>
   <div class="color-picker" ref="colorPicker">
-    <div class="color-list" :style="colorListStyle" @click.stop>
+<!--    :style="colorListStyle"-->
+    <div class="color-list">
       <color-item
         class="color-item"
         v-for="(item, index) in valueList"
@@ -8,13 +9,13 @@
         :style="colorItemStyle"
         :value="item"
         :selected="colorItemSelected(index)"
-        @click="onColorClick($event, index)"
+        @click.stop="onColorClick($event, index)"
       />
       <add-color-item
         class="add-color-item"
         v-if="addColor && addColorItemShow"
         :selected="selectedIndex === -1"
-        @click="onColorClick($event, -1)"
+        @click.stop="onColorClick($event, -1)"
       />
     </div>
     <transition name="popup">
@@ -223,6 +224,11 @@ export default defineComponent({
 
 <style scoped lang="less">
 .color-picker {
+  display: inline-block;
+  position: relative;
+}
+
+.color-list {
   display: inline-block;
 }
 

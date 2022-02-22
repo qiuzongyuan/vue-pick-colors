@@ -53,7 +53,7 @@ API：
 <br/>
 事件：
 
-| 名称   | 说明       | 回调参数                                                          |
-|------|----------|---------------------------------------------------------------|
-| change | 颜色值变化    | function(value: string｜string [],color: string,index: number) |
-| overflow-max | 颜色添加到最大值 | —                                                             |
+| 名称   | 说明        | 回调参数                                                          |
+|------|-----------|---------------------------------------------------------------|
+| change | 颜色值变化     | function(value: string｜string [],color: string,index: number) |
+| overflow-max | 颜色添加达到最大值 | —                                                             |

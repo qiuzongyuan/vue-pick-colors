@@ -243,6 +243,7 @@ export default defineComponent({
 .picker {
   position: absolute;
   z-index: 9;
+  transition: left 60ms ease-out, top 60ms ease-out;
 }
 
 .v-enter-active,

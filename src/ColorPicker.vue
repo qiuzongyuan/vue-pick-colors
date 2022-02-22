@@ -241,14 +241,15 @@ export default defineComponent({
 }
 
 .picker {
+  will-change: transform;
   position: absolute;
   z-index: 9;
-  transition: left 60ms ease-out, top 60ms ease-out;
+  transition: left 60ms ease-in-out, top 60ms ease-in-out;
 }
 
 .v-enter-active,
 .v-leave-active {
-  transition: opacity .1s ease-out, transform .1s ease-out;
+  transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
   opacity:1;
   transform: scaleY(1);
   transform-origin: center top;

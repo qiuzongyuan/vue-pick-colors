@@ -8,13 +8,13 @@
         :style="colorItemStyle"
         :value="item"
         :selected="colorItemSelected(index)"
-        @click="onColorClick($event, index)"
+        @click.stop="onColorClick($event, index)"
       />
       <add-color-item
         class="add-color-item"
         v-if="addColor && addColorItemShow"
         :selected="selectedIndex === -1"
-        @click="onColorClick($event, -1)"
+        @click.stop="onColorClick($event, -1)"
       />
     </div>
     <transition name="popup">
@@ -128,6 +128,11 @@ export default defineComponent({
     const selectedColor = ref(valueList.value[0])
     const colorPicker = ref<HTMLElement>()
     const picker = ref()
+    let popperInstance = null
+    const handleDestroyPopper = () => {
+      popperInstance?.destroy?.()
+      popperInstance = null
+    }
     const onColorClick = async (e: PointerEvent, index: number = -1) => {
       if (index !== -1) {
         selectedIndex.value = index
@@ -139,8 +144,9 @@ export default defineComponent({
       }
       onOpenPickerShow()
       nextTick(() => {
-        const target = e.currentTarget as HTMLElement
-        createPopper(target, picker.value.$el, {
+        const reference = e.currentTarget as HTMLElement
+        const popper = picker.value.$el as HTMLElement
+        popperInstance = createPopper(reference, popper, {
           modifiers: [{
             name: 'offset',
             options: {
@@ -148,6 +154,7 @@ export default defineComponent({
             }
           }]
         })
+        popperInstance.update()
       })
     }
     const theme = computed(() => props.theme)
@@ -165,6 +172,7 @@ export default defineComponent({
       document.addEventListener('click', onClosePickerShow)
     })
     onUnmounted(() => {
+      handleDestroyPopper()
       document.removeEventListener('click', onClosePickerShow)
     })
     const addColorItemShow = ref(props.max > valueList.value.length)
@@ -228,10 +236,6 @@ export default defineComponent({
   position: relative;
 }
 
-.color-list {
-  display: inline-block;
-}
-
 .color-item {
   margin: 5px;
 }
@@ -241,15 +245,15 @@ export default defineComponent({
 }
 
 .picker {
+  position: absolute;
   z-index: 9;
-  will-change: transform;
 }
 
 .popup-enter-active,
 .popup-leave-active {
   transition: height 60ms ease-out;
   overflow: hidden;
-  height: 233px;
+  height: 220px;
 }
 
 .popup-enter-from,

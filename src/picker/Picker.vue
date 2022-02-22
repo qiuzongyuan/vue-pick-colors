@@ -162,6 +162,7 @@ export default defineComponent({
   border-radius: 4px;
   box-shadow: 0 0 16px 0 rgb(0 0 0 / 16%);
   width: 233px;
+  will-change: transform;
 }
 .picker-inner {
   padding: 10px;

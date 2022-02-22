@@ -8,7 +8,7 @@
 </div>
 <br/>
 
-### installation
+### Installation
 ```
 npm install vue-pick-colors
 ```
@@ -59,7 +59,7 @@ export default defineComponent({
 
 <br/>
 
-### events
+### Events
 
 | 名称   | 说明                 | 回调参数                                                          |
 |------|--------------------|---------------------------------------------------------------|

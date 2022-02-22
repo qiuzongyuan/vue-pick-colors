@@ -1,6 +1,6 @@
 <template>
   <div class="picker" :style="pickerStyle">
-    <div class="picker-inner" ref="picker">
+    <div class="picker-inner">
       <div class="picker-header">
         <saturation class="saturation" :hue="h" :saturation="s" :value="v" @change="onSelectSaturation"/>
         <hue class="hue" :hue="h" @change="onSelectHue"/>
@@ -161,7 +161,6 @@ export default defineComponent({
   background: #f7f8f9;
   border-radius: 4px;
   box-shadow: 0 0 16px 0 rgb(0 0 0 / 16%);
-  width: 233px;
   will-change: transform;
 }
 .picker-inner {

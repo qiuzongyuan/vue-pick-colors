@@ -49,4 +49,7 @@ export default defineComponent({
   align-content: center;
   vertical-align: top;
 }
+[pick-colors-theme='dark'] .icon path {
+  fill: #ffffff;
+}
 </style>

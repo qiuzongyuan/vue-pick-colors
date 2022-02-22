@@ -17,7 +17,7 @@
         @click.stop="onColorClick($event, -1)"
       />
     </div>
-    <transition name="popup">
+    <transition>
       <picker
         class="picker"
         ref="picker"
@@ -40,6 +40,7 @@ import ColorItem from './color-item'
 import AddColorItem from './add-color-item'
 import type { Theme, Format } from './constant'
 import { createPopper } from '@popperjs/core'
+import { defaultModifiers } from './constant'
 export default defineComponent({
   name: 'ColorPicker',
   components: {
@@ -134,6 +135,8 @@ export default defineComponent({
       popperInstance = null
     }
     const onColorClick = async (e: PointerEvent, index: number = -1) => {
+      const reference = e.target as HTMLElement
+      const popper = picker.value.$el as HTMLElement
       if (index !== -1) {
         selectedIndex.value = index
         selectedColor.value = valueList.value[index]
@@ -142,19 +145,12 @@ export default defineComponent({
         selectedIndex.value = index
         selectedColor.value = ''
       }
+      popperInstance = createPopper(reference, popper, {
+        modifiers: defaultModifiers
+      })
       onOpenPickerShow()
       nextTick(() => {
-        const reference = e.currentTarget as HTMLElement
-        const popper = picker.value.$el as HTMLElement
-        popperInstance = createPopper(reference, popper, {
-          modifiers: [{
-            name: 'offset',
-            options: {
-              offset: [0, 5]
-            }
-          }]
-        })
-        popperInstance.update()
+        popperInstance?.update()
       })
     }
     const theme = computed(() => props.theme)
@@ -249,15 +245,21 @@ export default defineComponent({
   z-index: 9;
 }
 
-.popup-enter-active,
-.popup-leave-active {
-  transition: height 60ms ease-out;
-  overflow: hidden;
-  height: 220px;
+.v-enter-active,
+.v-leave-active {
+  transition: opacity .1s ease-out, transform .1s ease-out;
+  opacity:1;
+  transform: scaleY(1);
+  transform-origin: center top;
 }
 
-.popup-enter-from,
-.popup-leave-to {
-  height:0;
+[data-popper-placement='top'] {
+  transform-origin: center bottom;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+  transform: scaleY(0);
 }
 </style>

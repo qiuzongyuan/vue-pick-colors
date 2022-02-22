@@ -1,4 +1,5 @@
 ### [vue-pick-colors](https://github.com/qiuzongyuan/vue-pick-colors)
+****
 >  🎉 A Color picker for Vue.js 3
 
 > [🇨🇳中文版](https://github.com/qiuzongyuan/vue-pick-colors/blob/main/README-zh_CN.md)
@@ -9,6 +10,7 @@
 <br/>
 
 ### installation
+****
 ```
 npm install vue-pick-colors
 ```
@@ -19,6 +21,7 @@ yarn add vue-pick-colors
 <br/>
 
 ### Usage
+****
 ```vue
 <template>
   <pick-colors v-model:value="value" show-alpha/>
@@ -44,6 +47,7 @@ export default defineComponent({
 <br/>
 
 ### API
+****
 
 | 属性   | 说明                                        | 类型            | 默认值                                                                                                                                 |
 | ---- |-------------------------------------------|---------------|-------------------------------------------------------------------------------------------------------------------------------------|
@@ -60,6 +64,7 @@ export default defineComponent({
 <br/>
 
 ### events
+****
 
 | 名称   | 说明                 | 回调参数                                                          |
 |------|--------------------|---------------------------------------------------------------|

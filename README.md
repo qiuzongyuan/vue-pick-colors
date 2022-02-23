@@ -45,23 +45,23 @@ export default defineComponent({
 
 ### API
 
-| 属性   | 说明                                        | 类型            | 默认值                                                                                                                                 |
-| ---- |-------------------------------------------|---------------|-------------------------------------------------------------------------------------------------------------------------------------|
-| value(v-model) | binding value<br>support hex、rgb、rgba、hsl、hsla | string ｜ string[] | #ff0000                                                                                                                             |
-| format | color format                              | hex ｜ rgb ｜ hsl | hex                                                                                                                                 |
-| show-alpha | whether to display the alpha slider       | boolean       | false                                                                                                                               |
-| size | color block size                          | number        | 20                                                                                                                                  |
-| theme | component theme                           | light ｜ dark  | light                                                                                                                               |
-| colors | predefined color options<br>support hex、rgb、rgba、hsl、hsla        | string []     | ['#ff4500','#ff8c00','#ffd700',<br>'#90ee90','#00ced1','#1e90ff',<br>'#c71585','#ff4500','#ff7800',<br>'#00babd','#1f93ff','#fa64c3'] |
-| add-color | support for adding colors                 | boolean       | false                                                                                                                               |
-| max  | maximum number of colors to add           | number        | 13                                                                                                                                  |
+| Property       | Description                                               | Type              | Default                                                                                                                               |
+|----------------|-----------------------------------------------------------|-------------------|---------------------------------------------------------------------------------------------------------------------------------------|
+| value(v-model) | binding value<br>support hex、rgb、rgba、hsl、hsla            | string ｜ string[] | #ff0000                                                                                                                               |
+| format         | color format                                              | hex ｜ rgb ｜ hsl   | hex                                                                                                                                   |
+| show-alpha     | whether to display the alpha slider                       | boolean           | false                                                                                                                                 |
+| size           | color block size                                          | number            | 20                                                                                                                                    |
+| theme          | component theme                                           | light ｜ dark      | light                                                                                                                                 |
+| colors         | predefined color options<br>support hex、rgb、rgba、hsl、hsla | string []         | ['#ff4500','#ff8c00','#ffd700',<br>'#90ee90','#00ced1','#1e90ff',<br>'#c71585','#ff4500','#ff7800',<br>'#00babd','#1f93ff','#fa64c3'] |
+| add-color      | support for adding colors                                 | boolean           | false                                                                                                                                 |
+| max            | maximum number of colors to add                           | number            | 13                                                                                                                                    |
 
 
 <br/>
 
 ### Events
 
-| 名称   | 说明                 | 回调参数                                                          |
-|------|--------------------|---------------------------------------------------------------|
-| change | color value change | function(value: string｜string [],color: string,index: number) |
+| Events Name  | Description        | Arguments                                                          |
+|--------------|--------------------|---------------------------------------------------------------|
+| change       | color value change | function(value: string｜string [],color: string,index: number) |
 | overflow-max | color added to max | —                                                             |

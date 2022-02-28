@@ -42,6 +42,7 @@ export default defineComponent({
 
 <style scoped lang="less">
 .add-color-item {
+  background: #ffffff;
   border: 1px solid #d9d9d9;
   border-radius: 5px;
   display: inline-flex;
@@ -49,6 +50,15 @@ export default defineComponent({
   align-content: center;
   vertical-align: top;
 }
+[pick-colors-theme='dark'] .add-color-item {
+  background: #000000;
+  border: 1px solid #434343;
+}
+
+.icon path {
+  fill: #000000;
+}
+
 [pick-colors-theme='dark'] .icon path {
   fill: #ffffff;
 }

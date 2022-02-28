@@ -1,6 +1,6 @@
 {
   "name": "vue-pick-colors",
-  "version": "1.2.5",
+  "version": "1.2.7",
   "description": "A Color picker for Vue.js 3",
   "main": "dist/index.umd.js",
   "module": "dist/index.esm.js",
@@ -32,7 +32,7 @@
     "component"
   ],
   "author": "ayuan",
-  "license": "ISC",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/qiuzongyuan/vue-pick-colors"

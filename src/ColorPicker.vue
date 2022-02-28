@@ -102,17 +102,6 @@ export default defineComponent({
       width: `${props.size}px`,
       height: `${props.size}px`
     }))
-    const colorListStyle = computed(() => {
-      if (valueList.value.length > 1) {
-        return {
-          display: 'flex',
-          flexWrap: 'wrap'
-        }
-      }
-      return {
-        display: 'inline-block'
-      }
-    })
     // -2 代表什么也不选择
     const selectedIndex = ref(-2)
     const colorItemSelected = (index) => {
@@ -145,11 +134,11 @@ export default defineComponent({
         selectedIndex.value = index
         selectedColor.value = ''
       }
-      popperInstance = createPopper(reference, popper, {
-        modifiers: defaultModifiers
-      })
       onOpenPickerShow()
       nextTick(() => {
+        popperInstance = createPopper(reference, popper, {
+          modifiers: defaultModifiers
+        })
         popperInstance?.update()
       })
     }
@@ -209,7 +198,6 @@ export default defineComponent({
     return {
       valueList,
       colorItemStyle,
-      colorListStyle,
       colorItemSelected,
       selectedColor,
       selectedIndex,

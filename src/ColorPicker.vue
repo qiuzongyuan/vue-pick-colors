@@ -40,7 +40,6 @@ import ColorItem from './color-item'
 import AddColorItem from './add-color-item'
 import type { Theme, Format } from './constant'
 import { createPopper } from '@popperjs/core'
-import { defaultModifiers } from './constant'
 export default defineComponent({
   name: 'ColorPicker',
   components: {
@@ -134,10 +133,25 @@ export default defineComponent({
         selectedIndex.value = index
         selectedColor.value = ''
       }
-      onOpenPickerShow()
       nextTick(() => {
+        onOpenPickerShow()
         popperInstance = createPopper(reference, popper, {
-          modifiers: defaultModifiers
+          strategy: 'fixed',
+          modifiers: [
+            {
+              name: 'offset',
+              options: {
+                offset: [0, 5]
+              }
+            },
+            {
+              name: 'computeStyles',
+              options: {
+                gpuAcceleration: false,
+                adaptive: false
+              }
+            }
+          ]
         })
         popperInstance?.update()
       })
@@ -217,7 +231,6 @@ export default defineComponent({
 <style scoped lang="less">
 .color-picker {
   display: inline-block;
-  position: relative;
 }
 
 .color-item {
@@ -230,7 +243,6 @@ export default defineComponent({
 
 .picker {
   will-change: transform;
-  position: absolute;
   z-index: 9;
   transition: left 60ms ease-in-out, top 60ms ease-in-out;
 }

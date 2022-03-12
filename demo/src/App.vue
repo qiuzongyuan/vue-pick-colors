@@ -2,7 +2,6 @@
   <pick-colors
     v-model:value="value"
     :show-alpha="false"
-    :format="'rgb'"
     :theme="theme"
     add-color
     @change="onColorChange"
@@ -19,7 +18,7 @@ export default defineComponent({
     PickColors
   },
   setup () {
-    const value = ref('#00ced1ff')
+    const value = ref('')
     // const value = ref(['#00ced1ff'])
     // const value = ref(['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc'])
     const onColorChange = (value: string | string[], color: string, index: number) => {

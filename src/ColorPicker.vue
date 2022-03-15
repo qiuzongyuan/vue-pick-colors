@@ -1,6 +1,6 @@
 <template>
-  <div class="color-picker" ref="colorPicker" @click.stop>
-    <div class="color-list" @click.self="onClosePickerShow">
+  <div class="color-picker" ref="colorPicker">
+    <div class="color-list">
       <color-item
         class="color-item"
         v-for="(item, index) in valueList"
@@ -8,13 +8,14 @@
         :style="colorItemStyle"
         :value="item"
         :selected="colorItemSelected(index)"
-        @click.stop="onColorClick($event, index)"
+        :data-index="index"
       />
       <add-color-item
         class="add-color-item"
+        ref="addColorItem"
         v-if="addColor && addColorItemShow"
         :selected="selectedIndex === -1"
-        @click.stop="onColorClick($event, -1)"
+        :data-index="-1"
       />
     </div>
     <transition>
@@ -33,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, onUnmounted, provide, computed, watch, nextTick } from 'vue'
+import { defineComponent, ref, onMounted, onUnmounted, provide, computed, watch, nextTick, unref } from 'vue'
 import type { PropType } from 'vue'
 import Picker from './picker'
 import ColorItem from './color-item'
@@ -122,21 +123,35 @@ export default defineComponent({
       popperInstance?.destroy?.()
       popperInstance = null
     }
-    const onColorClick = async (e: PointerEvent, index: number = -1) => {
-      const reference = e.target as HTMLElement
-      const popper = picker.value.$el as HTMLElement
-      if (index !== -1) {
-        selectedIndex.value = index
-        selectedColor.value = valueList.value[index]
-      } else {
-        // - 1 代表添加
-        selectedIndex.value = index
-        selectedColor.value = ''
+    const onColorClick = (e: Event) => {
+      console.log(e.target)
+      const target = e.target as HTMLElement
+      const index = target?.dataset?.index ? +(target?.dataset?.index) : -2
+      const isColorContains = unref(colorPicker)?.contains(target) || false
+      const popper = unref(picker).$el as HTMLElement
+      const isPopperContains = popper?.contains(target) || false
+      if (isPopperContains) {
+        // 修改颜色
+        selectedColor.value = valueList.value[unref(selectedIndex)]
+        return
       }
+      if (index === -2 || !isColorContains) {
+        // 关闭弹窗
+        onClosePickerShow()
+        return
+      }
+      if (index === -1) {
+        // - 1 代表添加
+        selectedIndex.value = -1
+        selectedColor.value = ''
+      } else {
+        // 修改
+        selectedIndex.value = index
+        selectedColor.value = valueList.value[unref(selectedIndex)]
+      }
+      onOpenPickerShow()
       nextTick(() => {
-        onOpenPickerShow()
-        popperInstance = createPopper(reference, popper, {
-          strategy: 'fixed',
+        popperInstance = createPopper(target, popper, {
           modifiers: [
             {
               name: 'offset',
@@ -158,7 +173,7 @@ export default defineComponent({
     }
     const theme = computed(() => props.theme)
     const changeTheme = () => {
-      colorPicker.value.setAttribute('pick-colors-theme', theme.value)
+      unref(colorPicker)?.setAttribute('pick-colors-theme', unref(theme))
     }
     watch(() => props.theme, () => {
       changeTheme()
@@ -168,20 +183,20 @@ export default defineComponent({
     })
     onMounted(() => {
       changeTheme()
-      document.addEventListener('click', onClosePickerShow)
+      document.addEventListener('click', onColorClick)
     })
     onUnmounted(() => {
       handleDestroyPopper()
-      document.removeEventListener('click', onClosePickerShow)
+      document.removeEventListener('click', onColorClick)
     })
-    const addColorItemShow = ref(props.max > valueList.value.length)
+    const addColorItemShow = ref(props.max > unref(valueList).length)
     const onPickChange = (color: string) => {
-      const index = selectedIndex.value
+      const index = unref(selectedIndex)
       if (index !== -1) {
         // 改变数值
         let value: string | string [] = ''
         if (Array.isArray(props.value)) {
-          const temp = valueList.value.slice()
+          const temp = unref(valueList).slice()
           temp[index] = color
           value = temp
         } else {
@@ -215,14 +230,12 @@ export default defineComponent({
       colorItemSelected,
       selectedColor,
       selectedIndex,
-      onColorClick,
       isPickerShow,
-      onOpenPickerShow,
-      onClosePickerShow,
       onPickChange,
       colorPicker,
       addColorItemShow,
-      picker
+      picker,
+      onColorClick
     }
   }
 })

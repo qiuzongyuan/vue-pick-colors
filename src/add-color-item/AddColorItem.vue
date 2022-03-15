@@ -1,14 +1,13 @@
 <template>
-    <div class="add-color-item" :style="addColorItemStyle">
-      <svg class="icon" :style="iconStyle" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
-        <path d="M474 152m8 0l60 0q8 0 8 8l0 704q0 8-8 8l-60 0q-8 0-8-8l0-704q0-8 8-8Z"></path>
-        <path d="M168 474m8 0l672 0q8 0 8 8l0 60q0 8-8 8l-672 0q-8 0-8-8l0-60q0-8 8-8Z"></path>
-      </svg>
-  </div>
+  <svg class="add-color-item" :style="addColorItemStyle" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+    <g class="container">
+      <path d="M544 464V160h-80v304H160v80h304v304h80V544h304v-80z"></path>
+    </g>
+  </svg>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, inject } from 'vue'
+import { computed, defineComponent, inject, unref } from 'vue'
 export default defineComponent({
   name: 'AddColorItem',
   props: {
@@ -27,14 +26,10 @@ export default defineComponent({
       width: `${props.size}px`,
       height: `${props.size}px`,
       lineHeight: `${props.size}px`,
-      boxShadow: props.selected ? `0 0 3px 2px ${theme.value === 'dark' ? '#2681ff' : '#1890ff'}` : ''
-    }))
-    const iconStyle = computed(() => ({
-      width: `${props.size - 4}px`
+      boxShadow: props.selected ? `0 0 3px 2px ${unref(theme) === 'dark' ? '#2681ff' : '#1890ff'}` : ''
     }))
     return {
-      addColorItemStyle,
-      iconStyle
+      addColorItemStyle
     }
   }
 })
@@ -42,24 +37,28 @@ export default defineComponent({
 
 <style scoped lang="less">
 .add-color-item {
-  background: #ffffff;
-  border: 1px solid #d9d9d9;
-  border-radius: 5px;
-  display: inline-flex;
-  justify-content: center;
-  align-content: center;
+  background: #fff;
   vertical-align: top;
-}
-[pick-colors-theme='dark'] .add-color-item {
-  background: #000000;
-  border: 1px solid #434343;
+  border-radius: 5px;
+  border: 1px solid #d9d9d9;
 }
 
-.icon path {
+.container {
+  transform: scale(0.9);
+  transform-origin: center;
+  pointer-events: none;
+}
+
+[pick-colors-theme='dark'] .add-color-item {
+  border: 1px solid #434343;
+  background: #141414;
+}
+
+path {
   fill: #000000;
 }
 
-[pick-colors-theme='dark'] .icon path {
+[pick-colors-theme='dark'] path {
   fill: #ffffff;
 }
 </style>

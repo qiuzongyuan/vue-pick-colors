@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch, onMounted, computed, inject } from 'vue'
+import { defineComponent, ref, watch, onMounted, computed, inject, unref } from 'vue'
 import type { PropType } from 'vue'
 import type { Format } from '../constant'
 export default defineComponent({
@@ -41,9 +41,9 @@ export default defineComponent({
     const colorItemStyle = computed(() => ({
       width: `${props.size}px`,
       height: `${props.size}px`,
-      border: props.border ? '1px solid #d9d9d9' : '',
+      border: props.border ? `1px solid ${unref(theme) === 'dark' ? '#434345' : '#d9d9d9'}` : '',
       borderRadius: `${props.borderRadius}px`,
-      boxShadow: props.selected ? `0 0 3px 2px ${theme.value === 'dark' ? '#2681ff' : '#1890ff'}` : ''
+      boxShadow: props.selected ? `0 0 3px 2px ${unref(theme) === 'dark' ? '#2681ff' : '#1890ff'}` : ''
     }))
     const createAlphaSquare = (size: number) => {
       const canvas = document.createElement('canvas')

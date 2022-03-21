@@ -47,7 +47,7 @@ export default defineComponent({
 
 | Property       | Description                                               | Type              | Default                                                                                                                             |
 |----------------|-----------------------------------------------------------|-------------------|-------------------------------------------------------------------------------------------------------------------------------------|
-| value(v-model) | binding value<br>support hex、rgb、rgba、hsl、hsla            | string ｜ string[] | -                                                                                                                                    |
+| value(v-model) | binding value<br>support hex、rgb、rgba、hsl、hsla            | string ｜ string[] | —                                                                                                                                    |
 | format         | color format                                              | hex ｜ rgb ｜ hsl   | hex                                                                                                                                 |
 | show-alpha     | whether to display the alpha slider                       | boolean           | false                                                                                                                               |
 | size           | color block size                                          | number            | 20                                                                                                                                  |

@@ -50,7 +50,7 @@ export default defineComponent({
 
 | 属性   | 说明                                | 类型              | 默认值                                                                                                                                 |
 | ---- |-----------------------------------|-----------------|-------------------------------------------------------------------------------------------------------------------------------------|
-| value(v-model) | 值，<br/>支持hex、rgb、rgba、hsl、hsla    | string ｜ string[] | -                                                                                                                                    |
+| value(v-model) | 值，<br/>支持hex、rgb、rgba、hsl、hsla    | string ｜ string[] | —                                                                                                                                    |
 | format | 格式                                | hex ｜ rgb ｜ hsl | hex                                                                                                                                 |
 | show-alpha | 是否支持透明度选择                         | boolean         | false                                                                                                                               |
 | size | 颜色块大小                             | number          | 20                                                                                                                                  |

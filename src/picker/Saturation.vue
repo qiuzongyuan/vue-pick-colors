@@ -58,8 +58,6 @@ export default defineComponent({
         if (y < 0) y = 0
         if (x > props.size) x = props.size
         if (y > props.size) y = props.size
-        // sliderStyle.left = `${x - sliderRadius}px`
-        // sliderStyle.top = `${y - sliderRadius}px`
         const saturation = (x / props.size) * 100
         const value = 100 - (y / props.size) * 100
         emit('change', saturation, value)

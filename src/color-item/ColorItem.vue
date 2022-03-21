@@ -1,5 +1,5 @@
 <template>
-  <canvas class="color-item" :style="colorItemStyle" ref="canvas" @click.self="onSelect"/>
+  <canvas class="color-item" :style="colorItemStyle" ref="canvas"/>
 </template>
 
 <script lang="ts">
@@ -35,7 +35,7 @@ export default defineComponent({
     }
   },
   emits: ['select'],
-  setup (props, { emit }) {
+  setup (props) {
     const canvas = ref<HTMLCanvasElement>()
     const { theme } = inject('theme')
     const colorItemStyle = computed(() => ({
@@ -74,13 +74,9 @@ export default defineComponent({
     onMounted(() => {
       renderColor()
     })
-    const onSelect = (event) => {
-      emit('select', props.value)
-    }
     return {
       canvas,
-      colorItemStyle,
-      onSelect
+      colorItemStyle
     }
   }
 })

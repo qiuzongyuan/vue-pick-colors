@@ -50,8 +50,7 @@ export default defineComponent({
   },
   props: {
     value: {
-      type: [String, Array] as PropType<string | string[]>,
-      default: '#ff0000'
+      type: [String, Array] as PropType<string | string[]>
     },
     theme: {
       type: String as PropType<Theme>,
@@ -97,7 +96,14 @@ export default defineComponent({
   },
   emits: ['change', 'update:value', 'overflowMax'],
   setup (props, { emit }) {
-    const valueList = computed(() => Array.isArray(props.value) ? props.value : [props.value])
+    const handleValueList = () => {
+      if (props.value == null) {
+        return ref([''])
+      } else {
+        return computed(() => Array.isArray(props.value) ? props.value : [props.value])
+      }
+    }
+    const valueList = handleValueList()
     const colorItemStyle = computed(() => ({
       width: `${props.size}px`,
       height: `${props.size}px`
@@ -124,7 +130,6 @@ export default defineComponent({
       popperInstance = null
     }
     const onColorClick = (e: Event) => {
-      console.log(e.target)
       const target = e.target as HTMLElement
       const index = target?.dataset?.index ? +(target?.dataset?.index) : -2
       const isColorContains = unref(colorPicker)?.contains(target) || false
@@ -137,7 +142,7 @@ export default defineComponent({
       }
       if (index === -2 || !isColorContains) {
         // 关闭弹窗
-        onClosePickerShow()
+        if (unref(isPickerShow)) onClosePickerShow()
         return
       }
       if (index === -1) {
@@ -149,8 +154,8 @@ export default defineComponent({
         selectedIndex.value = index
         selectedColor.value = valueList.value[unref(selectedIndex)]
       }
-      onOpenPickerShow()
       nextTick(() => {
+        onOpenPickerShow()
         popperInstance = createPopper(target, popper, {
           modifiers: [
             {
@@ -171,39 +176,24 @@ export default defineComponent({
         popperInstance?.update()
       })
     }
-    const theme = computed(() => props.theme)
-    const changeTheme = () => {
-      unref(colorPicker)?.setAttribute('pick-colors-theme', unref(theme))
-    }
-    watch(() => props.theme, () => {
-      changeTheme()
-    })
-    provide('theme', {
-      theme
-    })
-    onMounted(() => {
-      changeTheme()
-      document.addEventListener('click', onColorClick)
-    })
-    onUnmounted(() => {
-      handleDestroyPopper()
-      document.removeEventListener('click', onColorClick)
-    })
     const addColorItemShow = ref(props.max > unref(valueList).length)
     const onPickChange = (color: string) => {
       const index = unref(selectedIndex)
       if (index !== -1) {
         // 改变数值
         let value: string | string [] = ''
-        if (Array.isArray(props.value)) {
+        const isArr = Array.isArray(props.value)
+        if (isArr) {
           const temp = unref(valueList).slice()
           temp[index] = color
           value = temp
         } else {
           value = color
         }
-        emit('update:value', value)
-        emit('change', value, color, index)
+        const valueArr = (isArr ? value : [value]) as string []
+        if (props.value == null) valueList.value = valueArr
+        emit('update:value', props.addColor ? valueArr : value)
+        emit('change', props.addColor ? valueArr : value, color, index)
       } else {
         const value = valueList.value.slice()
         if (props.max > value.length) {
@@ -211,6 +201,7 @@ export default defineComponent({
           const index = value.length - 1
           selectedIndex.value = index
           // 添加
+          if (props.value == null) valueList.value = value
           emit('update:value', value)
           emit('change', value, color, index)
           const isAddColorItemShow = props.max >= (value.length + 1)
@@ -224,6 +215,24 @@ export default defineComponent({
         }
       }
     }
+    const theme = computed(() => props.theme)
+    const changeTheme = () => {
+      unref(colorPicker)?.setAttribute('pick-colors-theme', unref(theme))
+    }
+    watch(() => props.theme, () => {
+      changeTheme()
+    })
+    provide('theme', {
+      theme
+    })
+    onMounted(() => {
+      changeTheme()
+      document.addEventListener('click', onColorClick, false)
+    })
+    onUnmounted(() => {
+      handleDestroyPopper()
+      document.removeEventListener('click', onColorClick, false)
+    })
     return {
       valueList,
       colorItemStyle,
@@ -231,11 +240,11 @@ export default defineComponent({
       selectedColor,
       selectedIndex,
       isPickerShow,
+      addColorItemShow,
       onPickChange,
       colorPicker,
-      addColorItemShow,
-      picker,
-      onColorClick
+      onColorClick,
+      picker
     }
   }
 })

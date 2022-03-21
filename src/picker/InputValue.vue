@@ -6,7 +6,7 @@
     <input
       class="value"
       :style="valueStyle"
-      :value="color"
+      :value="value"
       @input="onInput"
     />
   </div>
@@ -21,7 +21,7 @@ export default defineComponent({
       type: String,
       default: 'RGBA'
     },
-    color: {
+    value: {
       type: String,
       default: ''
     },

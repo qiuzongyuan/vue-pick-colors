@@ -6,7 +6,13 @@
     add-color
     @change="onColorChange"
   />
-  <pick-colors v-model:value="value2"/>
+  <br />
+  <pick-colors v-model:value="value2" format="hsl" show-alpha :theme="theme" @change="onColorChange2"/>
+  <br />
+  <pick-colors value="#333" show-alpha :theme="theme"/>
+  <br />
+  <pick-colors :theme="theme"/>
+  <br />
   <button @click="onSwitchTheme">切换主题</button>
 </template>
 
@@ -26,6 +32,9 @@ export default defineComponent({
     const onColorChange = (value: string | string[], color: string, index: number) => {
       console.log(value, color, index)
     }
+    const onColorChange2 = (value: string | string[], color: string, index: number) => {
+      console.log(value, color, index)
+    }
     const theme = ref('light')
     const onSwitchTheme = () => {
       if (theme.value === 'light') {
@@ -38,6 +47,7 @@ export default defineComponent({
     return {
       value,
       onColorChange,
+      onColorChange2,
       theme,
       onSwitchTheme,
       value2

@@ -8,7 +8,7 @@
         :border="false"
         :border-radius="3"
         :selected="selectedIndex === index"
-        @select="onSelectColor($event, index)"
+        @click.stop="onSelectColor(color, index)"
       />
     </template>
   </div>
@@ -32,10 +32,10 @@ export default defineComponent({
       default: -1
     }
   },
-  emits: ['select'],
+  emits: ['change'],
   setup (props, { emit }) {
     const onSelectColor = (color: string, index: number) => {
-      emit('select', color, index)
+      emit('change', color, index)
     }
     return {
       onSelectColor

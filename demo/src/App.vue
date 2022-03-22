@@ -25,10 +25,10 @@ export default defineComponent({
     PickColors
   },
   setup () {
-    const value = ref('')
-    const value2 = ref('')
+    const value = ref('#333')
     // const value = ref(['#00ced1ff'])
     // const value = ref(['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc'])
+    const value2 = ref('')
     const onColorChange = (value: string | string[], color: string, index: number) => {
       console.log(value, color, index)
     }

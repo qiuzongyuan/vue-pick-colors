@@ -160,19 +160,6 @@ export const hsl2hsv = ({ h, s, l }) => {
 }
 
 export const hex2rgb = (hex: string) => {
-  const rgbArr = []
-  for (let i = 1; i < hex.length; i = i + 2) {
-    rgbArr.push(parseInt('0x' + hex.slice(i, i + 2)))
-  }
-  const [r, g, b] = rgbArr
-  return {
-    r,
-    g,
-    b
-  }
-}
-
-export const hex2rgba = (hex: string) => {
   const temp = [] as number []
   if (hex.match(/^#([0-9a-fA-f]{3,4})$/g)) {
     for (let i = 1; i < hex.length; i++) {
@@ -216,7 +203,7 @@ export const transformHsv = (color: string, format, useAlpha = true) => {
   if (useAlpha) {
     switch (format) {
       case 'hex': {
-        const { r, g, b, a } = hex2rgba(color)
+        const { r, g, b, a } = hex2rgb(color)
         return { ...rgb2hsv({ r, g, b }), a: a / 255 }
       }
       case 'rgb': {

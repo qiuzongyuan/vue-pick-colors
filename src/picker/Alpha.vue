@@ -1,5 +1,5 @@
 <template>
-  <div class="alpha" @mousedown.stop.prevent="onSelect">
+  <div class="alpha" @mousedown.prevent.stop="onSelect">
     <canvas ref="canvas"/>
     <div class="slider" :style="sliderStyle"/>
   </div>

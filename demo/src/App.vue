@@ -1,17 +1,18 @@
 <template>
   <pick-colors
     v-model:value="value"
-    :show-alpha="false"
     :theme="theme"
     add-color
+    :show-alpha="false"
     @change="onColorChange"
+    :colors="['', 'rgba(0,0,0,1)', 'hsla(0, 52%, 31%, 1)', '#333']"
   />
   <br />
   <pick-colors v-model:value="value2" format="hsl" show-alpha :theme="theme" @change="onColorChange2"/>
   <br />
   <pick-colors value="#333" show-alpha :theme="theme"/>
   <br />
-  <pick-colors :theme="theme"/>
+  <pick-colors :theme="theme" show-alpha/>
   <br />
   <button @click="onSwitchTheme">切换主题</button>
 </template>

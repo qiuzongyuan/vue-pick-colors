@@ -2,7 +2,7 @@
   <div
     class="saturation"
     :style="saturationStyle"
-    @mousedown.stop.prevent="onSelect"
+    @mousedown.prevent.stop="onSelect"
   >
     <div class="saturation-white"></div>
     <div class="saturation-black"></div>

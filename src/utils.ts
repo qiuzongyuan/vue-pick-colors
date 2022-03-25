@@ -199,7 +199,7 @@ const pickUpHsl = (hsla: string) => {
   }
 }
 
-export const transformHsv = (color: string, format, useAlpha = true) => {
+export const transformHsva = (color: string, format, useAlpha = true) => {
   if (useAlpha) {
     switch (format) {
       case 'hex': {
@@ -218,36 +218,48 @@ export const transformHsv = (color: string, format, useAlpha = true) => {
   } else {
     switch (format) {
       case 'hex':
-        return rgb2hsv(hex2rgb(color))
+        return { ...rgb2hsv(hex2rgb(color)), a: 1 }
       case 'rgb': {
-        return rgb2hsv(pickUpRgb(color))
+        return { ...rgb2hsv(pickUpRgb(color)), a: 1 }
       }
       case 'hsl': {
-        return hsl2hsv(pickUpHsl(color))
+        return { ...hsl2hsv(pickUpHsl(color)), a: 1 }
       }
     }
   }
 }
 
-export const checkColor = (color: string, format, useAlpha = true) => {
-  if (useAlpha) {
-    switch (format) {
-      case 'hex':
-        return color.match(/^#([0-9a-fA-F]{8})$/g)
-      case 'rgb':
-        return color.match(/^rgba\((25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(0\.\d{1,2}|1|0)\)/g)
-      case 'hsl':
-        return color.match(/^hsla\((((([0-9]|([1-9][0-9])|([0-2][0-9][0-9])|([3][0-5][0-9])|([0]{1}))|360).[0-9]?[0-9])|(([0-9]|([1-9][0-9])|([0-2][0-9][0-9])|([3][0-5][0-9])|([0]{1}))|360)),(\s*)([0-9]?[0-9]|100)%,(\s*)([0-9]?[0-9]|100)%,(\s*)(0\.\d{1,2}|1|0)\)/g)
-    }
-  } else {
-    switch (format) {
-      case 'hex':
-        return color.match(/^#([0-9a-fA-F]{6})$/g)
-      case 'rgb':
-        return color.match(/^rgb\((25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])\)/g)
-      case 'hsl':
-        return color.match(/^hsl\((((([0-9]|([1-9][0-9])|([0-2][0-9][0-9])|([3][0-5][0-9])|([0]{1}))|360).[0-9]?[0-9])|(([0-9]|([1-9][0-9])|([0-2][0-9][0-9])|([3][0-5][0-9])|([0]{1}))|360)),(\s*)([0-9]?[0-9]|100)%,(\s*)([0-9]?[0-9]|100)%\)/g)
-    }
+// export const checkColor = (color: string, format, useAlpha = true) => {
+//   if (useAlpha) {
+//     switch (format) {
+//       case 'hex':
+//         return color.match(/^#([0-9a-fA-F]{8})$/g)
+//       case 'rgb':
+//         return color.match(/^rgba\((25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(0\.\d{1,2}|1|0)\)/g)
+//       case 'hsl':
+//         return color.match(/^hsla\((((([0-9]|([1-9][0-9])|([0-2][0-9][0-9])|([3][0-5][0-9])|([0]{1}))|360).[0-9]?[0-9])|(([0-9]|([1-9][0-9])|([0-2][0-9][0-9])|([3][0-5][0-9])|([0]{1}))|360)),(\s*)([0-9]?[0-9]|100)%,(\s*)([0-9]?[0-9]|100)%,(\s*)(0\.\d{1,2}|1|0)\)/g)
+//     }
+//   } else {
+//     switch (format) {
+//       case 'hex':
+//         return color.match(/^#([0-9a-fA-F]{6})$/g)
+//       case 'rgb':
+//         return color.match(/^rgb\((25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])\)/g)
+//       case 'hsl':
+//         return color.match(/^hsl\((((([0-9]|([1-9][0-9])|([0-2][0-9][0-9])|([3][0-5][0-9])|([0]{1}))|360).[0-9]?[0-9])|(([0-9]|([1-9][0-9])|([0-2][0-9][0-9])|([3][0-5][0-9])|([0]{1}))|360)),(\s*)([0-9]?[0-9]|100)%,(\s*)([0-9]?[0-9]|100)%\)/g)
+//     }
+//   }
+// }
+
+export const checkColorValue = (color: string, format) => {
+  switch (format) {
+    case 'hex':
+      return color.match(/^#([0-9a-fA-f]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/g)
+      // return color.match(/^#([0-9a-fA-F]{6})$/g)
+    case 'rgb':
+      return color.match(/^rgb(\((25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])\)|(a\((25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(0\.\d{1,2}|1|0)\)))/g)
+    case 'hsl':
+      return color.match(/^hsl(\((((([0-9]|([1-9][0-9])|([0-2][0-9][0-9])|([3][0-5][0-9])|([0]{1}))|360).[0-9]?[0-9])|(([0-9]|([1-9][0-9])|([0-2][0-9][0-9])|([3][0-5][0-9])|([0]{1}))|360)),(\s*)([0-9]?[0-9]|100)%,(\s*)([0-9]?[0-9]|100)%\)|a\((((([0-9]|([1-9][0-9])|([0-2][0-9][0-9])|([3][0-5][0-9])|([0]{1}))|360).[0-9]?[0-9])|(([0-9]|([1-9][0-9])|([0-2][0-9][0-9])|([3][0-5][0-9])|([0]{1}))|360)),(\s*)([0-9]?[0-9]|100)%,(\s*)([0-9]?[0-9]|100)%,(\s*)(0\.\d{1,2}|1|0)\))/g)
   }
 }
 
@@ -255,12 +267,25 @@ export const checkColorFormat = (color: string) => {
   if (color.match(/^#/)) return 'hex'
   if (color.match(/^rgb/)) return 'rgb'
   if (color.match(/^hsl/)) return 'hsl'
+  return undefined
 }
 
-export const filterHsva = ({ h, s, v, a }: { h?: number, s?:number, v?:number, a?: number }) => {
+export const filterHsva = ({ h, s, v, a }: { h: number, s:number, v:number, a: number }) => {
   if (isNaN(h)) h = 0
   if (isNaN(s)) s = 0
   if (isNaN(v)) v = 0
   if (isNaN(a)) a = 1
   return { h, s, v, a }
+}
+
+export function debounce (fn, delay = 100) {
+  let timer = null
+  return function () {
+    if (timer) {
+      clearTimeout(timer)
+    }
+    timer = setTimeout(() => {
+      fn.apply(this, arguments)
+    }, delay)
+  }
 }

@@ -1,23 +1,21 @@
 <template>
   <div class="color-picker" ref="colorPicker">
-    <div class="color-list">
-      <color-item
-        class="color-item"
-        v-for="(item, index) in valueList"
-        :key="item + index"
-        :style="colorItemStyle"
-        :value="item"
-        :selected="colorItemSelected(index)"
-        :data-index="index"
-      />
-      <add-color-item
-        class="add-color-item"
-        ref="addColorItem"
-        v-if="addColor && addColorItemShow"
-        :selected="selectedIndex === -1"
-        :data-index="-1"
-      />
-    </div>
+    <color-item
+      class="color-item"
+      v-for="(item, index) in valueList"
+      :key="item + index"
+      :style="colorItemStyle"
+      :value="item"
+      :selected="colorItemSelected(index)"
+      :data-index="index"
+    />
+    <add-color-item
+      class="add-color-item"
+      v-if="addColor && addColorItemShow"
+      ref="addColorItem"
+      :selected="colorItemSelected(-1)"
+      :data-index="-1"
+    />
     <transition>
       <picker
         class="picker"
@@ -108,20 +106,26 @@ export default defineComponent({
       width: `${props.size}px`,
       height: `${props.size}px`
     }))
-    // -2 代表什么也不选择
-    const selectedIndex = ref(-2)
+    const selectedIndex = ref<undefined|number>(props.addColor ? undefined : 0)
+    // 设置添加初始值
+    const selectedColor = computed<undefined|string>(() => unref(valueList)[unref(selectedIndex)])
     const colorItemSelected = (index) => {
-      return (props.addColor ? valueList.value.length > 0 : valueList.value.length > 1) && selectedIndex.value === index
+      return (props.addColor ? unref(valueList).length > 0 : unref(valueList).length > 1) && unref(selectedIndex) === index
     }
     const isPickerShow = ref(false)
+    const isInitPickColor = ref(props.addColor)
     const onOpenPickerShow = () => {
       isPickerShow.value = true
+      isInitPickColor.value = false
     }
+    watch(() => selectedIndex.value, () => {
+      if (props.addColor) isInitPickColor.value = true
+    })
     const onClosePickerShow = () => {
-      selectedIndex.value = -2
+      if (props.addColor) selectedIndex.value = undefined
       isPickerShow.value = false
+      picker.value?.resetValue()
     }
-    const selectedColor = ref(valueList.value[0])
     const colorPicker = ref<HTMLElement>()
     const picker = ref()
     let popperInstance = null
@@ -130,30 +134,22 @@ export default defineComponent({
       popperInstance = null
     }
     const onColorClick = (e: Event) => {
+      e?.stopPropagation()
       const target = e.target as HTMLElement
-      const index = target?.dataset?.index ? +(target?.dataset?.index) : -2
-      const isColorContains = unref(colorPicker)?.contains(target) || false
       const popper = unref(picker).$el as HTMLElement
       const isPopperContains = popper?.contains(target) || false
+      // 点击卡片区域
       if (isPopperContains) {
-        // 修改颜色
-        selectedColor.value = valueList.value[unref(selectedIndex)]
         return
       }
-      if (index === -2 || !isColorContains) {
-        // 关闭弹窗
+      const index = target.dataset?.index
+      const isColorItem = !unref(colorPicker)?.isEqualNode(target) && unref(colorPicker)?.contains(target)
+      if (!isColorItem || index == null) {
+        // 关闭卡片
         if (unref(isPickerShow)) onClosePickerShow()
         return
       }
-      if (index === -1) {
-        // - 1 代表添加
-        selectedIndex.value = -1
-        selectedColor.value = ''
-      } else {
-        // 修改
-        selectedIndex.value = index
-        selectedColor.value = valueList.value[unref(selectedIndex)]
-      }
+      selectedIndex.value = +index
       nextTick(() => {
         onOpenPickerShow()
         popperInstance = createPopper(target, popper, {
@@ -177,8 +173,16 @@ export default defineComponent({
       })
     }
     const addColorItemShow = ref(props.max > unref(valueList).length)
+    const oldColorValue = ref(undefined)
     const onPickChange = (color: string) => {
+      if (unref(isInitPickColor)) {
+        return
+      }
       const index = unref(selectedIndex)
+      if (unref(oldColorValue) === color) {
+        return
+      }
+      oldColorValue.value = color
       if (index !== -1) {
         // 改变数值
         let value: string | string [] = ''
@@ -191,23 +195,31 @@ export default defineComponent({
           value = color
         }
         const valueArr = (isArr ? value : [value]) as string []
-        if (props.value == null) valueList.value = valueArr
-        emit('update:value', props.addColor ? valueArr : value)
-        emit('change', props.addColor ? valueArr : value, color, index)
+        if (props.value == null) {
+          valueList.value = valueArr
+        } else {
+          emit('update:value', props.addColor ? valueArr : value)
+          emit('change', props.addColor ? valueArr : value, color, index)
+        }
       } else {
-        const value = valueList.value.slice()
-        if (props.max > value.length) {
-          value.push(color)
-          const index = value.length - 1
-          selectedIndex.value = index
+        const values = unref(valueList).slice()
+        if (props.max > values.length) {
+          values.push(color)
+          const index = values.length - 1
           // 添加
-          if (props.value == null) valueList.value = value
-          emit('update:value', value)
-          emit('change', value, color, index)
-          const isAddColorItemShow = props.max >= (value.length + 1)
+          if (props.value == null) {
+            valueList.value = values
+          } else {
+            emit('update:value', values)
+            emit('change', values, '', index)
+          }
+          selectedIndex.value = index
+          nextTick(() => {
+            isInitPickColor.value = false
+          })
           // 达到最大值
-          if (!isAddColorItemShow) {
-            addColorItemShow.value = isAddColorItemShow
+          if (props.max <= values.length) {
+            addColorItemShow.value = false
             emit('overflowMax')
           }
         } else {

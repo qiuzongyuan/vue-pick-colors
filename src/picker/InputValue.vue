@@ -6,8 +6,10 @@
     <input
       class="value"
       :style="valueStyle"
-      :value="value"
+      :value.prop="value"
+      @focus="onFocus"
       @input="onInput"
+      @blur="onBlur"
     />
   </div>
 </template>
@@ -30,7 +32,7 @@ export default defineComponent({
       default: 168
     }
   },
-  emits: ['change'],
+  emits: ['change', 'focus', 'blur'],
   setup (props, { emit }) {
     const valueStyle = computed(() => ({
       minWidth: `${props.width}px`,
@@ -38,12 +40,19 @@ export default defineComponent({
       width: `${props.width}px`
     }))
     const onInput = (e) => {
-      const value = (e.target as any).value
-      emit('change', value)
+      emit('change', e.target?.value)
+    }
+    const onFocus = () => {
+      emit('focus')
+    }
+    const onBlur = () => {
+      emit('blur')
     }
     return {
       onInput,
-      valueStyle
+      valueStyle,
+      onFocus,
+      onBlur
     }
   }
 })

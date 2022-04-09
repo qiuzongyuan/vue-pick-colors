@@ -1,5 +1,11 @@
 <template>
-  <div class="color-picker" ref="colorPicker">
+  <div
+    class="color-picker"
+    ref="colorPicker"
+    @dragstart.stop="onColorItemDragStart"
+    @dragover.prevent.stop="onColorItemDragOver"
+    @drop.prevent.stop="onColorItemDrop"
+  >
     <color-item
       class="color-item"
       v-for="(item, index) in valueList"
@@ -8,6 +14,7 @@
       :value="item"
       :selected="colorItemSelected(index)"
       :data-index="index"
+      :draggable="valueList.length > 1"
     />
     <add-color-item
       class="add-color-item"
@@ -106,7 +113,7 @@ export default defineComponent({
       width: `${props.size}px`,
       height: `${props.size}px`
     }))
-    const selectedIndex = ref<undefined|number>(props.addColor ? undefined : 0)
+    const selectedIndex = ref<undefined|number>(undefined)
     // 设置添加初始值
     const selectedColor = computed<undefined|string>(() => unref(valueList)[unref(selectedIndex)])
     const colorItemSelected = (index) => {
@@ -119,10 +126,10 @@ export default defineComponent({
       isInitPickColor.value = false
     }
     watch(() => selectedIndex.value, () => {
-      if (props.addColor) isInitPickColor.value = true
+      isInitPickColor.value = true
     })
     const onClosePickerShow = () => {
-      if (props.addColor) selectedIndex.value = undefined
+      selectedIndex.value = undefined
       isPickerShow.value = false
       picker.value?.resetValue()
     }
@@ -211,7 +218,7 @@ export default defineComponent({
             valueList.value = values
           } else {
             emit('update:value', values)
-            emit('change', values, '', index)
+            emit('change', values, color, index)
           }
           selectedIndex.value = index
           nextTick(() => {
@@ -226,6 +233,25 @@ export default defineComponent({
           emit('overflowMax')
         }
       }
+    }
+    let dragTargetIndex: undefined | number
+    const onColorItemDragStart = (e) => {
+      e.dataTransfer.effectAllowed = 'move'
+      const target = e.target as HTMLElement
+      dragTargetIndex = +target.dataset.index
+    }
+    const onColorItemDragOver = (e: DragEvent) => {}
+    const onColorItemDrop = (e) => {
+      const target = e.target as HTMLElement
+      const insertIndex = +target.dataset.index
+      const colorList = [...unref(valueList)]
+      const targetColor = colorList[dragTargetIndex]
+      colorList.splice(dragTargetIndex, 1)
+      const firstColorList = colorList.slice(0, insertIndex)
+      const lastColorList = colorList.splice(insertIndex)
+      const values = firstColorList.concat([targetColor]).concat(lastColorList)
+      emit('update:value', values)
+      emit('change', values, values[dragTargetIndex], dragTargetIndex)
     }
     const theme = computed(() => props.theme)
     const changeTheme = () => {
@@ -256,7 +282,10 @@ export default defineComponent({
       onPickChange,
       colorPicker,
       onColorClick,
-      picker
+      picker,
+      onColorItemDragStart,
+      onColorItemDragOver,
+      onColorItemDrop
     }
   }
 })

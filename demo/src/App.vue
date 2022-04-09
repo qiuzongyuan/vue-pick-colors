@@ -2,17 +2,17 @@
   <pick-colors
     v-model:value="value"
     :theme="theme"
+    show-alpha
     add-color
-    :show-alpha="false"
     @change="onColorChange"
-    :colors="['', 'rgba(0,0,0,1)', 'hsla(0, 52%, 31%, 1)', '#333']"
+    :colors="['', 'rgba(0,0,0,1)', 'hsla(0, 52%, 31%, 1)', '#3333']"
   />
   <br />
-  <pick-colors v-model:value="value2" format="hsl" show-alpha :theme="theme" @change="onColorChange2"/>
+  <pick-colors v-model:value="value2" format="hsl" :theme="theme" @change="onColorChange2"/>
   <br />
   <pick-colors value="#333" show-alpha :theme="theme"/>
   <br />
-  <pick-colors :theme="theme" show-alpha/>
+  <pick-colors :theme="theme"/>
   <br />
   <button @click="onSwitchTheme">切换主题</button>
 </template>
@@ -26,7 +26,7 @@ export default defineComponent({
     PickColors
   },
   setup () {
-    const value = ref('#333')
+    const value = ref('#222')
     // const value = ref(['#00ced1ff'])
     // const value = ref(['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc'])
     const value2 = ref('')

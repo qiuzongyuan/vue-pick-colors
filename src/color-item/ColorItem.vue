@@ -1,5 +1,5 @@
 <template>
-  <canvas class="color-item" :style="colorItemStyle" ref="canvas"/>
+  <canvas class="color-item" :style="colorItemStyle" ref="canvas" :draggable="draggable"/>
 </template>
 
 <script lang="ts">
@@ -30,6 +30,10 @@ export default defineComponent({
       default: 5
     },
     selected: {
+      type: Boolean,
+      default: false
+    },
+    draggable: {
       type: Boolean,
       default: false
     }

@@ -1,11 +1,18 @@
 ### [vue-pick-colors](https://github.com/qiuzongyuan/vue-pick-colors)
+
 >  🎉 A Color picker for Vue.js 3
 
 > [🇨🇳中文版](https://github.com/qiuzongyuan/vue-pick-colors/blob/main/README-zh_CN.md)
+
+<br/>
+
+#### [Online Demo](https://qiuzongyuan.github.io/vue-pick-colors/)
+
 <div style="display: flex">
     <img src="./images/effect-light.png" style="width:200px;" />
     <img src="./images/effect-dark.png" style="width:200px;" />
 </div>
+
 <br/>
 
 ### Installation

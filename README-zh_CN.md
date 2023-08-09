@@ -2,10 +2,14 @@
 >  🎉 vue3 颜色拾取器
 
 > [English ](https://github.com/qiuzongyuan/vue-pick-colors)
+
+## [在线演示](https://qiuzongyuan.github.io/vue-pick-colors/)
+
 <div style="display: flex">
     <img src="./images/effect-light.png" style="width:200px;" />
     <img src="./images/effect-dark.png" style="width:200px;" />
 </div>
+
 <br/>
 
 ### 安装

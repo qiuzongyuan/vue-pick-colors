@@ -12,14 +12,14 @@
   <br />
   <pick-colors value="#333" show-alpha :theme="theme"/>
   <br />
-  <pick-colors :theme="theme"/>
+  <pick-colors v-model:value="value3" :theme="theme"/>
   <br />
   <button @click="onSwitchTheme">切换主题</button>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-import PickColors from '../../src/index'
+import PickColors, { Theme } from '../../src/index'
 export default defineComponent({
   name: 'App',
   components: {
@@ -27,16 +27,15 @@ export default defineComponent({
   },
   setup () {
     const value = ref('#222')
-    // const value = ref(['#00ced1ff'])
-    // const value = ref(['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc'])
     const value2 = ref('')
+    const value3 = ref(['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc'])
     const onColorChange = (value: string | string[], color: string, index: number) => {
       console.log(value, color, index)
     }
     const onColorChange2 = (value: string | string[], color: string, index: number) => {
       console.log(value, color, index)
     }
-    const theme = ref('light')
+    const theme = ref<Theme>('light')
     const onSwitchTheme = () => {
       if (theme.value === 'light') {
         theme.value = 'dark'
@@ -51,7 +50,8 @@ export default defineComponent({
       onColorChange2,
       theme,
       onSwitchTheme,
-      value2
+      value2,
+      value3
     }
   }
 })

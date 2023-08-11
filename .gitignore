@@ -3,6 +3,7 @@ node_modules
 dist
 lerna.json
 lerna-debug.log
+coverage
 
 # local env files
 .env.local

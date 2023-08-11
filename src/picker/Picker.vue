@@ -7,14 +7,13 @@
         <alpha class="alpha" :alpha="a" :color="rgbStr" @change="onSelectAlpha" v-if="showAlpha"/>
       </div>
       <input-value :label="label" :value="colorValue" :width="inputWidth" @change="onInputChange" @focus="onInputFocus" @blur="onInputBlur"/>
-      <colors class="colors" v-if="colors.length > 0" :colors="colors" :selected-index="selectColorIndex" @change="onSelectColor"/>
+      <Colors class="colors" v-if="colors.length > 0" :colors="colors" :selected-index="selectColorIndex" @change="onSelectColor"/>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, watch, ref, unref, nextTick } from 'vue'
-import type { PropType } from 'vue'
+import { defineComponent, computed, watch, ref, unref, nextTick, PropType } from 'vue'
 import Saturation from './Saturation.vue'
 import Hue from './Hue.vue'
 import Alpha from './Alpha.vue'
@@ -46,7 +45,7 @@ export default defineComponent({
     },
     // 定义颜色列表
     colors: {
-      type: Array,
+      type: Array as PropType<string []>,
       default: () => []
     }
   },

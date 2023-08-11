@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import ColorItem from '../color-item'
 export default defineComponent({
   name: 'Colors',
@@ -24,7 +24,7 @@ export default defineComponent({
   },
   props: {
     colors: {
-      type: Array,
+      type: Array as PropType<string []>,
       default: () => []
     },
     selectedIndex: {

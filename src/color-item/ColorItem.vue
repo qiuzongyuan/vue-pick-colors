@@ -41,7 +41,9 @@ export default defineComponent({
   emits: ['select'],
   setup (props) {
     const canvas = ref<HTMLCanvasElement>()
-    const { theme } = inject('theme')
+    const { theme } = inject('theme', {
+      theme: 'light'
+    })
     const colorItemStyle = computed(() => ({
       width: `${props.size}px`,
       height: `${props.size}px`,

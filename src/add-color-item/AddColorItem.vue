@@ -21,7 +21,9 @@ export default defineComponent({
     }
   },
   setup (props) {
-    const { theme } = inject('theme')
+    const { theme } = inject('theme', {
+      theme: 'light'
+    })
     const addColorItemStyle = computed(() => ({
       width: `${props.size}px`,
       height: `${props.size}px`,

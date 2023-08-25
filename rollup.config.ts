@@ -11,7 +11,6 @@ import { terser } from 'rollup-plugin-terser'
 import filesize from 'rollup-plugin-filesize'
 const inputPath = resolve(__dirname, './src/index.ts')
 const outputPath = (t) => resolve(__dirname, `./dist/index.${t}.js`)
-const pathResolve = (p) => resolve(__dirname, p)
 const extensions = [
   '.js',
   '.jsx',

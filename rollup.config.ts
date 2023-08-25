@@ -3,7 +3,7 @@ import { nodeResolve } from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import babel from '@rollup/plugin-babel'
 import json from '@rollup/plugin-json'
-import typescript from 'rollup-plugin-typescript2'
+import dts from 'vite-plugin-dts'
 import vue from 'rollup-plugin-vue'
 import postcss from 'rollup-plugin-postcss'
 import cssnano from 'cssnano'
@@ -21,7 +21,7 @@ const extensions = [
 ]
 const exclude = [
   '**/node_modules/**',
-  '**/dist/**',
+  '**/dist/**'
 ]
 
 const globals = {
@@ -44,25 +44,23 @@ module.exports = {
     globals
   }],
   plugins: [
-    typescript({
-      tsconfig: pathResolve('./tsconfig.json')
+    vue({
+      preprocessStyles: true,
+      postcssPlugins: [cssnano()]
     }),
-    vue(),
     nodeResolve({
       extensions
     }),
     commonjs(),
-    postcss({
-      plugins: [
-        cssnano()
-      ],
-      extensions: ['.less', '.css']
-    }),
+    postcss(),
     json(),
     babel({
       exclude,
       babelHelpers: 'runtime',
       extensions
+    }),
+    dts({
+      rollupTypes: true
     }),
     terser(),
     filesize()

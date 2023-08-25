@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, onUnmounted, provide, computed, watch, nextTick, unref, toRaw, shallowRef } from 'vue'
+import { defineComponent, ref, onMounted, onUnmounted, provide, computed, watch, nextTick, unref, toRaw } from 'vue'
 import type { RendererElement, PropType } from 'vue'
 import { createPopper } from '@popperjs/core'
 import Picker from './picker'
@@ -121,7 +121,7 @@ export default defineComponent({
   },
   emits: ['change', 'update:value', 'update:showPicker', 'overflowMax', 'closePicker'],
   setup (props, { emit }) {
-    const valueList = shallowRef<string []>()
+    const valueList = ref<string []>()
     watch(
       () => props.value,
       () => {

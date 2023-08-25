@@ -5,8 +5,6 @@
   <br />
   <pick-colors v-model:value="value3" :theme="theme" @closePicker="closePicker"/>
   <br />
-  <div :style="{ height: '200px'}"/>
-
   <pick-colors
     :theme="theme"
     show-alpha
@@ -22,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, unref, watch } from 'vue'
+import { defineComponent, ref } from 'vue'
 import PickColors, { Theme } from '../../src/index'
 export default defineComponent({
   name: 'App',
@@ -49,7 +47,6 @@ export default defineComponent({
       console.log(theme.value)
     }
     const showPicker = ref(true)
-    watch(value2, () => console.log('=--', unref(value2)))
     const divRef = ref()
     const closePicker = (e) => {
       console.log(e)

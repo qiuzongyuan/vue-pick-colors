@@ -8,10 +8,13 @@
   >
     <color-item
       class="color-item"
-      v-for="(item, index) in valueList"
-      :key="item + index"
-      :style="colorItemStyle"
-      :value="item"
+      v-for="(value, index) in valueList"
+      :ref="(el) => colorItemsRef[index] = el"
+      :key="value + index"
+      :size="size"
+      :width="width"
+      :height="height"
+      :value="value"
       :selected="colorItemSelected(index)"
       :data-index="index"
       :draggable="valueList.length > 1"
@@ -23,29 +26,32 @@
       :selected="colorItemSelected(-1)"
       :data-index="-1"
     />
-    <transition>
-      <picker
-        class="picker"
-        ref="picker"
-        :value="selectedColor"
-        :format="format"
-        :show-alpha="showAlpha"
-        :colors="colors"
-        v-show="isPickerShow"
-        @change="onPickChange"
-      />
+    <teleport :to="popupContainer == null ?  'body' :  popupContainer">
+      <transition>
+        <picker
+          class="picker"
+          ref="picker"
+          v-model:value="selectedColor"
+          :format="format"
+          :show-alpha="showAlpha"
+          :colors="colors"
+          v-show="isShowPicker"
+          @change="onPickerChange"
+        />
     </transition>
+    </teleport>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, onUnmounted, provide, computed, watch, nextTick, unref } from 'vue'
-import type { PropType } from 'vue'
+import { defineComponent, ref, onMounted, onUnmounted, provide, computed, watch, nextTick, unref, toRaw, shallowRef } from 'vue'
+import type { RendererElement, PropType } from 'vue'
+import { createPopper } from '@popperjs/core'
 import Picker from './picker'
 import ColorItem from './color-item'
 import AddColorItem from './add-color-item'
 import type { Theme, Format } from './constant'
-import { createPopper } from '@popperjs/core'
+import { popperOptions } from './utils'
 export default defineComponent({
   name: 'ColorPicker',
   components: {
@@ -54,6 +60,7 @@ export default defineComponent({
     AddColorItem
   },
   props: {
+    // 由外层属性控制
     value: {
       type: [String, Array] as PropType<string | string[]>
     },
@@ -62,12 +69,22 @@ export default defineComponent({
       default: 'light'
     },
     size: {
-      type: Number,
+      type: [Number, String],
       default: 20
+    },
+    width: {
+      type: [Number, String]
+    },
+    height: {
+      type: [Number, String]
     },
     format: {
       type: String as PropType<Format>,
       default: 'hex'
+    },
+    showPicker: {
+      type: Boolean,
+      default: undefined
     },
     showAlpha: {
       type: Boolean,
@@ -97,41 +114,61 @@ export default defineComponent({
         '#1f93ff',
         '#fa64c3'
       ]
+    },
+    popupContainer: {
+      type: [String, Object] as PropType<string | RendererElement>
     }
   },
-  emits: ['change', 'update:value', 'overflowMax'],
+  emits: ['change', 'update:value', 'update:showPicker', 'overflowMax', 'closePicker'],
   setup (props, { emit }) {
-    const handleValueList = () => {
-      if (props.value == null) {
-        return ref([''])
-      } else {
-        return computed(() => Array.isArray(props.value) ? props.value : [props.value])
+    const valueList = shallowRef<string []>()
+    watch(
+      () => props.value,
+      () => {
+        const value = props.value == null ? '' : props.value
+        valueList.value = Array.isArray(value) ? value : [value]
+      },
+      {
+        immediate: true
       }
-    }
-    const valueList = handleValueList()
-    const colorItemStyle = computed(() => ({
-      width: `${props.size}px`,
-      height: `${props.size}px`
-    }))
+    )
     const selectedIndex = ref<undefined|number>(undefined)
     // 设置添加初始值
-    const selectedColor = computed<undefined|string>(() => unref(valueList)[unref(selectedIndex)])
+    const selectedColor = computed<undefined|string>({
+      get: () => unref(valueList)[unref(selectedIndex)],
+      set: (value) => {
+        unref(valueList)[unref(selectedIndex)] = value
+      }
+    })
     const colorItemSelected = (index) => {
       return (props.addColor ? unref(valueList).length > 0 : unref(valueList).length > 1) && unref(selectedIndex) === index
     }
-    const isPickerShow = ref(false)
-    const isInitPickColor = ref(props.addColor)
+    const isShowPicker = ref()
+    watch(
+      () => props.showPicker,
+      () => {
+        isShowPicker.value = props.showPicker
+      },
+      {
+        immediate: true
+      }
+    )
     const onOpenPickerShow = () => {
-      isPickerShow.value = true
-      isInitPickColor.value = false
+      if (props.showPicker === undefined) {
+        isShowPicker.value = true
+      } else {
+        emit('update:showPicker', true)
+      }
     }
-    watch(() => selectedIndex.value, () => {
-      isInitPickColor.value = true
-    })
+
     const onClosePickerShow = () => {
       selectedIndex.value = undefined
-      isPickerShow.value = false
-      picker.value?.resetValue()
+      if (!props.showPicker) {
+        isShowPicker.value = false
+      } else {
+        emit('update:showPicker', false)
+      }
+      emit('closePicker', toRaw(Array.isArray(props.value) || props.addColor ? unref(valueList) : unref(valueList)[0]))
     }
     const colorPicker = ref<HTMLElement>()
     const picker = ref()
@@ -140,6 +177,7 @@ export default defineComponent({
       popperInstance?.destroy?.()
       popperInstance = null
     }
+
     const onColorClick = (e: Event) => {
       e?.stopPropagation()
       const target = e.target as HTMLElement
@@ -151,97 +189,68 @@ export default defineComponent({
       }
       const index = target.dataset?.index
       const isColorItem = !unref(colorPicker)?.isEqualNode(target) && unref(colorPicker)?.contains(target)
+
       if (!isColorItem || index == null) {
         // 关闭卡片
-        if (unref(isPickerShow)) onClosePickerShow()
+        if (unref(isShowPicker)) onClosePickerShow()
         return
       }
+
       selectedIndex.value = +index
+      onOpenPickerShow()
+
       nextTick(() => {
-        onOpenPickerShow()
-        popperInstance = createPopper(target, popper, {
-          modifiers: [
-            {
-              name: 'offset',
-              options: {
-                offset: [0, 5]
-              }
-            },
-            {
-              name: 'computeStyles',
-              options: {
-                gpuAcceleration: false,
-                adaptive: false
-              }
-            }
-          ]
-        })
+        popperInstance = createPopper(target, popper, popperOptions)
         popperInstance?.update()
       })
     }
     const addColorItemShow = ref(props.max > unref(valueList).length)
-    const oldColorValue = ref(undefined)
-    const onPickChange = (color: string) => {
-      if (unref(isInitPickColor)) {
-        return
-      }
+    const onPickerChange = (color: string) => {
       const index = unref(selectedIndex)
-      if (unref(oldColorValue) === color) {
+      const values = unref(valueList).slice()
+      const len = unref(valueList).length
+      if (index == null) {
         return
       }
-      oldColorValue.value = color
-      if (index !== -1) {
-        // 改变数值
-        let value: string | string [] = ''
-        const isArr = Array.isArray(props.value)
-        if (isArr) {
-          const temp = unref(valueList).slice()
-          temp[index] = color
-          value = temp
-        } else {
-          value = color
-        }
-        const valueArr = (isArr ? value : [value]) as string []
-        if (props.value == null) {
-          valueList.value = valueArr
-        } else {
-          emit('update:value', props.addColor ? valueArr : value)
-          emit('change', props.addColor ? valueArr : value, color, index)
-        }
+      if (index >= 0) {
+        // 修改
+        values[index] = color
       } else {
-        const values = unref(valueList).slice()
-        if (props.max > values.length) {
-          values.push(color)
-          const index = values.length - 1
-          // 添加
-          if (props.value == null) {
-            valueList.value = values
-          } else {
-            emit('update:value', values)
-            emit('change', values, color, index)
-          }
-          selectedIndex.value = index
-          nextTick(() => {
-            isInitPickColor.value = false
-          })
-          // 达到最大值
-          if (props.max <= values.length) {
-            addColorItemShow.value = false
-            emit('overflowMax')
-          }
-        } else {
-          emit('overflowMax')
-        }
+        // 添加
+        selectedIndex.value = len
+        values.push(color)
+      }
+
+      let value: string | string [] = ''
+      const isArr = Array.isArray(props.value)
+      // 满足传入数组或添加
+      if (isArr || props.addColor) {
+        value = values
+      } else {
+        value = color
+      }
+
+      if (props.value === undefined) {
+        valueList.value = Array.isArray(value) ? value : [value]
+      } else {
+        emit('update:value', value)
+        emit('change', value, color, index)
+      }
+
+      // 添加到最大
+      if (props.addColor && len >= props.max) {
+        addColorItemShow.value = false
+        emit('overflowMax')
       }
     }
     let dragTargetIndex: undefined | number
-    const onColorItemDragStart = (e) => {
+    const onColorItemDragStart = (e: DragEvent) => {
       e.dataTransfer.effectAllowed = 'move'
       const target = e.target as HTMLElement
       dragTargetIndex = +target.dataset.index
     }
     const onColorItemDragOver = (e: DragEvent) => {}
-    const onColorItemDrop = (e) => {
+    const onColorItemDrop = (e: DragEvent) => {
       const target = e.target as HTMLElement
       const insertIndex = +target.dataset.index
       const colorList = [...unref(valueList)]
@@ -259,13 +268,22 @@ export default defineComponent({
     }
     watch(() => props.theme, () => {
       changeTheme()
+    }, {
+      immediate: true
     })
     provide('theme', {
       theme
     })
+    const colorItemsRef = ref([])
     onMounted(() => {
-      changeTheme()
       document.addEventListener('click', onColorClick, false)
+      const target = unref(colorItemsRef)[0].$el as HTMLElement
+      const popper = unref(picker).$el as HTMLElement
+      if (props.showPicker && target && popper) {
+        popperInstance = createPopper(target, popper, popperOptions)
+        popperInstance?.update()
+        selectedIndex.value = 0
+      }
     })
     onUnmounted(() => {
       handleDestroyPopper()
@@ -273,19 +291,19 @@ export default defineComponent({
     })
     return {
       valueList,
-      colorItemStyle,
       colorItemSelected,
       selectedColor,
       selectedIndex,
-      isPickerShow,
+      isShowPicker,
       addColorItemShow,
-      onPickChange,
+      onPickerChange,
       colorPicker,
       onColorClick,
       picker,
       onColorItemDragStart,
       onColorItemDragOver,
-      onColorItemDrop
+      onColorItemDrop,
+      colorItemsRef
     }
   }
 })
@@ -307,7 +325,8 @@ export default defineComponent({
 .picker {
   will-change: transform;
   z-index: 9;
-  transition: left 60ms ease-in-out, top 60ms ease-in-out;
+  transition: left 60ms ease-in-out;
+  // transition: all 60ms ease-in-out;
 }
 
 .v-enter-active,

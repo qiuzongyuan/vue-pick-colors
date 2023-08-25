@@ -1,24 +1,28 @@
 <template>
+  <pick-colors v-model:value="value2" format="hsl" :theme="theme" @change="onColorChange2" :showPicker="true" @closePicker="closePicker"/>
+  <br />
+  <pick-colors value="#333" show-alpha :theme="theme" :width="40" :size="60" @closePicker="closePicker"/>
+  <br />
+  <pick-colors v-model:value="value3" :theme="theme" @closePicker="closePicker"/>
+  <br />
+  <div :style="{ height: '200px'}"/>
+
   <pick-colors
-    v-model:value="value"
     :theme="theme"
     show-alpha
     add-color
     @change="onColorChange"
     :colors="['', 'rgba(0,0,0,1)', 'hsla(0, 52%, 31%, 1)', '#3333']"
+    :max="3"
+    @closePicker="closePicker"
   />
   <br />
-  <pick-colors v-model:value="value2" format="hsl" :theme="theme" @change="onColorChange2"/>
-  <br />
-  <pick-colors value="#333" show-alpha :theme="theme"/>
-  <br />
-  <pick-colors v-model:value="value3" :theme="theme"/>
-  <br />
   <button @click="onSwitchTheme">切换主题</button>
+  <div ref="divRef"></div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, unref, watch } from 'vue'
 import PickColors, { Theme } from '../../src/index'
 export default defineComponent({
   name: 'App',
@@ -27,7 +31,7 @@ export default defineComponent({
   },
   setup () {
     const value = ref('#222')
-    const value2 = ref('')
+    const value2 = ref('#333')
     const value3 = ref(['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc'])
     const onColorChange = (value: string | string[], color: string, index: number) => {
       console.log(value, color, index)
@@ -44,6 +48,12 @@ export default defineComponent({
       }
       console.log(theme.value)
     }
+    const showPicker = ref(true)
+    watch(value2, () => console.log('=--', unref(value2)))
+    const divRef = ref()
+    const closePicker = (e) => {
+      console.log(e)
+    }
     return {
       value,
       onColorChange,
@@ -51,7 +61,10 @@ export default defineComponent({
       theme,
       onSwitchTheme,
       value2,
-      value3
+      value3,
+      showPicker,
+      divRef,
+      closePicker
     }
   }
 })

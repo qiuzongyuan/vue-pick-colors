@@ -289,3 +289,21 @@ export function debounce (fn, delay = 100) {
     }, delay)
   }
 }
+
+export const popperOptions = {
+  modifiers: [
+    {
+      name: 'offset',
+      options: {
+        offset: [0, 5]
+      }
+    },
+    {
+      name: 'computeStyles',
+      options: {
+        gpuAcceleration: false,
+        adaptive: false
+      }
+    }
+  ]
+}

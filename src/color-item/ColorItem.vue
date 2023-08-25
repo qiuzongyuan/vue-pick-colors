@@ -10,8 +10,14 @@ export default defineComponent({
   name: 'ColorItem',
   props: {
     size: {
-      type: Number,
+      type: [Number, String],
       default: 20
+    },
+    width: {
+      type: [Number, String]
+    },
+    height: {
+      type: [Number, String]
     },
     value: {
       type: String,
@@ -44,13 +50,17 @@ export default defineComponent({
     const { theme } = inject('theme', {
       theme: 'light'
     })
-    const colorItemStyle = computed(() => ({
-      width: `${props.size}px`,
-      height: `${props.size}px`,
-      border: props.border ? `1px solid ${unref(theme) === 'dark' ? '#434345' : '#d9d9d9'}` : '',
-      borderRadius: `${props.borderRadius}px`,
-      boxShadow: props.selected ? `0 0 3px 2px ${unref(theme) === 'dark' ? '#2681ff' : '#1890ff'}` : ''
-    }))
+    const width = computed(() => parseFloat((props.width || props.size) + ''))
+    const height = computed(() => parseFloat((props.height || props.size) + ''))
+    const colorItemStyle = computed(() => {
+      return {
+        width: `${unref(width)}px`,
+        height: `${unref(height)}px`,
+        border: props.border ? `1px solid ${unref(theme) === 'dark' ? '#434345' : '#d9d9d9'}` : '',
+        borderRadius: `${props.borderRadius}px`,
+        boxShadow: props.selected ? `0 0 3px 2px ${unref(theme) === 'dark' ? '#2681ff' : '#1890ff'}` : ''
+      }
+    })
     const createAlphaSquare = (size: number) => {
       const canvas = document.createElement('canvas')
       const ctx = canvas.getContext('2d')
@@ -66,13 +76,13 @@ export default defineComponent({
     }
     const renderColor = () => {
       const ctx = canvas.value.getContext('2d')
-      canvas.value.width = props.size
-      canvas.value.height = props.size
+      canvas.value.width = unref(width)
+      canvas.value.height = unref(height)
       const canvasSquare = createAlphaSquare(5)
       ctx.fillStyle = ctx.createPattern(canvasSquare, 'repeat')
-      ctx.fillRect(0, 0, props.size, props.size)
+      ctx.fillRect(0, 0, unref(width), unref(height))
       ctx.fillStyle = props.value
-      ctx.fillRect(0, 0, props.size, props.size)
+      ctx.fillRect(0, 0, unref(width), unref(height))
     }
     watch(() => props.value, () => {
       renderColor()

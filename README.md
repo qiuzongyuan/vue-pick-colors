@@ -68,6 +68,7 @@ export default defineComponent({
 | max                  | maximum number of colors to add                              | number                        | 13                                                           |         |
 
 <br/>
+
 ### Events
 
 | Events Name  | Description        | Arguments                                                    | version |

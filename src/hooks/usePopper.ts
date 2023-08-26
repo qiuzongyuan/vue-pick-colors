@@ -6,6 +6,9 @@ const usePopper = (target: Ref<any>, popper: Ref<any>) => {
   const options: Options = {
     strategy: 'absolute',
     placement: 'auto',
+    onFirstUpdate: () => {
+      instance.update()
+    },
     modifiers: [
       {
         name: 'offset',
@@ -17,7 +20,7 @@ const usePopper = (target: Ref<any>, popper: Ref<any>) => {
         name: 'computeStyles',
         options: {
           gpuAcceleration: false,
-          adaptive: false
+          adaptive: true
         }
       },
       {
@@ -40,8 +43,6 @@ const usePopper = (target: Ref<any>, popper: Ref<any>) => {
           const { styles, placement } = state
           const { popper } = styles
           style.value = {
-            left: '0',
-            top: '0',
             ...popper,
             transformOrigin: placement === 'top' ? 'center bottom' : ''
           }
@@ -56,7 +57,6 @@ const usePopper = (target: Ref<any>, popper: Ref<any>) => {
     const _target = target.$el || target
     const _popper = popper.$el || popper
     instance = createPopper(_target, _popper, options)
-    instance.update()
   })
   onBeforeUnmount(() => {
     instance.destroy()

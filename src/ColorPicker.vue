@@ -166,10 +166,13 @@ export default defineComponent({
       // color value 让 color item 重新渲染，必须重新挂载
       // 否则 picker 定位会异常
       nextTick(() => {
-        const target = unref(colorItemsRef)[unref(selectedIndex)]
-        if (target !== unref(target.value)) {
-          targetRef.value = target
-        }
+        const colorItems = unref(colorItemsRef)
+        if (colorItems?.length <= 0) return
+        const index = unref(selectedIndex)
+        if (index < 0) return
+        const target = colorItems[index]
+        if (!target) return
+        targetRef.value = target
       })
     }
 

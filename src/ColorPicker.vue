@@ -26,7 +26,7 @@
       :selected="colorItemSelected(-1)"
       :data-index="-1"
     />
-    <!-- <teleport :to="popupContainer == null ?  'body' :  popupContainer"> -->
+    <teleport :to="popupContainer == null ?  'body' :  popupContainer">
       <transition>
         <picker
           class="picker"
@@ -40,7 +40,7 @@
           @format="onPickerFormat"
         />
     </transition>
-    <!-- </teleport> -->
+    </teleport>
   </div>
 </template>
 

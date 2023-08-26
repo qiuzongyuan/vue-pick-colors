@@ -64,5 +64,5 @@ module.exports = {
     terser(),
     filesize()
   ],
-  external: ['vue']
+  external: ['vue', '@popperjs/core']
 }

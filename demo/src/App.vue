@@ -1,11 +1,12 @@
 <template>
-  <pick-colors v-model:value="value2" format="hsl" :theme="theme" @change="onColorChange2" @closePicker="closePicker"/>
+  <div style="height: 200vh;">
+    <pick-colors v-model:value="value2" format="hsl" :theme="theme" @change="onColorChange2" @closePicker="closePicker"/>
   <br />
   <pick-colors value="#333" show-alpha :theme="theme" :width="40" :size="60" @closePicker="closePicker"/>
   <br />
-  <pick-colors v-model:value="value3" :theme="theme" @closePicker="closePicker"/>
+  <pick-colors v-model:value="value3" format="hsv" showAlpha :theme="theme" @closePicker="closePicker"/>
   <br />
-  <div style="height: 400px;"/>
+  <div style="height: 400px;" />
   <pick-colors
     :theme="theme"
     show-alpha
@@ -18,6 +19,7 @@
   <br />
   <button @click="onSwitchTheme">切换主题</button>
   <div ref="divRef"></div>
+  </div>
 </template>
 
 <script lang="ts">

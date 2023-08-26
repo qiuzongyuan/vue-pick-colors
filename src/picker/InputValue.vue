@@ -10,6 +10,7 @@
       @focus="onFocus"
       @input="onInput"
       @blur="onBlur"
+      @keydown.enter="onEnter"
     />
   </div>
 </template>
@@ -32,7 +33,7 @@ export default defineComponent({
       default: 168
     }
   },
-  emits: ['change', 'focus', 'blur'],
+  emits: ['change', 'focus', 'blur', 'enter'],
   setup (props, { emit }) {
     const valueStyle = computed(() => ({
       minWidth: `${props.width}px`,
@@ -48,11 +49,15 @@ export default defineComponent({
     const onBlur = () => {
       emit('blur')
     }
+    const onEnter = () => {
+      emit('enter')
+    }
     return {
       onInput,
       valueStyle,
       onFocus,
-      onBlur
+      onBlur,
+      onEnter
     }
   }
 })
@@ -70,6 +75,7 @@ export default defineComponent({
   display: flex;
   justify-content: center;
   align-items: center;
+  font-weight: 500;
   color: #999999;
   background: #e7e8e9;
 }

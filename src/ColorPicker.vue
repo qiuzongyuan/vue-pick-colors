@@ -8,7 +8,7 @@
   >
     <color-item
       class="color-item"
-      v-for="(value, index) in valueList"
+      v-for="(value, index) in values"
       :ref="(el) => colorItemsRef[index] = el"
       :key="value + index"
       :size="size"
@@ -18,6 +18,7 @@
       :selected="colorItemSelected(index)"
       :data-index="index"
       :draggable="valueList.length > 1"
+      :format="format"
     />
     <add-color-item
       class="add-color-item"
@@ -30,14 +31,14 @@
       <transition>
         <picker
           class="picker"
-          ref="picker"
-          :value="selectedColor"
+          :style="pickerStyle"
+          ref="pickerRef"
+          v-model:value="selectedColor"
           :format="format"
           :show-alpha="showAlpha"
           :colors="colors"
-          v-show="isShowPicker"
+          v-if="isShowPicker"
           @change="onPickerChange"
-          @format="onPickerFormat"
         />
     </transition>
     </teleport>
@@ -45,14 +46,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, onUnmounted, provide, computed, watch, nextTick, unref, toRaw } from 'vue'
+import { defineComponent, ref, onMounted, onUnmounted, provide, computed, watch, unref, toRaw, nextTick } from 'vue'
 import type { RendererElement, PropType } from 'vue'
-import { createPopper } from '@popperjs/core'
 import Picker from './picker'
 import ColorItem from './color-item'
 import AddColorItem from './add-color-item'
 import type { Theme, Format } from './constant'
-import { colorFormat, popperOptions } from './utils'
+import usePopper from './hooks/usePopper'
+import { colorFormat } from './utils'
 export default defineComponent({
   name: 'ColorPicker',
   components: {
@@ -100,7 +101,7 @@ export default defineComponent({
       default: 13
     },
     colors: {
-      type: Array,
+      type: Array as PropType<string []>,
       default: () => [
         '#ff4500',
         '#ff8c00',
@@ -123,25 +124,25 @@ export default defineComponent({
   emits: ['change', 'update:value', 'update:showPicker', 'overflowMax', 'closePicker'],
   setup (props, { emit }) {
     const valueList = ref<string []>([])
+    const values = computed(() => unref(valueList).map((value) => colorFormat(value, 'hex', props.showAlpha)))
     watch(
       () => props.value,
       () => {
-        const value = props.value
+        const value = props.value || ''
         const values = Array.isArray(value) ? value : [value]
-        const formatValues = values?.map((value) => {
-          const formatValue = colorFormat(value, props.format, props.showAlpha)
-          return formatValue
-        })
-        console.log('formatValues', formatValues)
-        valueList.value = formatValues
-      },
-      {
+        valueList.value = values.map(value => colorFormat(value, props.format, props.showAlpha))
+      }, {
         immediate: true
-      }
-    )
+      })
     const selectedIndex = ref<undefined|number>(undefined)
     // 设置添加初始值
-    const selectedColor = computed<undefined|string>(() => unref(valueList)[unref(selectedIndex)])
+    const selectedColor = computed<undefined|string>({
+      get: () => unref(valueList)[unref(selectedIndex)],
+      set: (value) => {
+        unref(valueList)[unref(selectedIndex)] = value
+        mountPicker()
+      }
+    })
 
     const colorItemSelected = (index) => {
       return (props.addColor ? unref(valueList).length > 0 : unref(valueList).length > 1) && unref(selectedIndex) === index
@@ -156,7 +157,23 @@ export default defineComponent({
         immediate: true
       }
     )
-    const onOpenPickerShow = () => {
+    const targetRef = ref(null)
+    const pickerRef = ref(null)
+
+    const { style: pickerStyle } = usePopper(targetRef, pickerRef)
+
+    const mountPicker = () => {
+      // color value 让 color item 重新渲染，必须重新挂载
+      // 否则 picker 定位会异常
+      nextTick(() => {
+        const target = unref(colorItemsRef)[unref(selectedIndex)]
+        if (target !== unref(target.value)) {
+          targetRef.value = target
+        }
+      })
+    }
+
+    const onOpenPicker = () => {
       if (props.showPicker === undefined) {
         isShowPicker.value = true
       } else {
@@ -164,7 +181,7 @@ export default defineComponent({
       }
     }
 
-    const onClosePickerShow = () => {
+    const onClosePicker = () => {
       selectedIndex.value = undefined
       if (!props.showPicker) {
         isShowPicker.value = false
@@ -174,20 +191,11 @@ export default defineComponent({
       emit('closePicker', toRaw(Array.isArray(props.value) || props.addColor ? unref(valueList) : unref(valueList)[0]))
     }
     const colorPicker = ref<HTMLElement>()
-    const picker = ref()
-    let popperInstance = null
-    const handleDestroyPopper = () => {
-      popperInstance?.destroy?.()
-      popperInstance = null
-    }
 
-    const onPickerFormat = (value: string) => {
-      unref(valueList)[unref(selectedIndex)] = value
-    }
     const onColorClick = async (e: Event) => {
       e?.stopPropagation()
       const target = e.target as HTMLElement
-      const popper = unref(picker).$el as HTMLElement
+      const popper = unref(pickerRef)?.$el as HTMLElement
       const isPopperContains = popper?.contains(target) || false
       // 点击卡片区域
       if (isPopperContains) {
@@ -198,17 +206,13 @@ export default defineComponent({
 
       if (!isColorItem || index == null) {
         // 关闭卡片
-        if (unref(isShowPicker)) onClosePickerShow()
+        if (unref(isShowPicker)) onClosePicker()
         return
       }
 
       selectedIndex.value = +index
-
-      nextTick(() => {
-        onOpenPickerShow()
-        popperInstance = createPopper(target, popper, popperOptions)
-        popperInstance?.update()
-      })
+      onOpenPicker()
+      mountPicker()
     }
     const addColorItemShow = ref(props.max > unref(valueList).length)
     const onPickerChange = (color: string) => {
@@ -248,6 +252,7 @@ export default defineComponent({
         addColorItemShow.value = false
         emit('overflowMax')
       }
+      mountPicker()
     }
     let dragTargetIndex: undefined | number
     const onColorItemDragStart = (e: DragEvent) => {
@@ -283,16 +288,11 @@ export default defineComponent({
     const colorItemsRef = ref([])
     onMounted(() => {
       document.addEventListener('click', onColorClick, false)
-      const target = unref(colorItemsRef)[0].$el as HTMLElement
-      const popper = unref(picker).$el as HTMLElement
-      if (props.showPicker && target && popper) {
-        popperInstance = createPopper(target, popper, popperOptions)
-        popperInstance?.update()
-        selectedIndex.value = 0
+      if (props.showPicker) {
+        targetRef.value = unref(colorItemsRef)[0]
       }
     })
     onUnmounted(() => {
-      handleDestroyPopper()
       document.removeEventListener('click', onColorClick, false)
     })
     return {
@@ -303,14 +303,15 @@ export default defineComponent({
       isShowPicker,
       addColorItemShow,
       onPickerChange,
-      onPickerFormat,
       colorPicker,
       onColorClick,
-      picker,
+      pickerRef,
       onColorItemDragStart,
       onColorItemDragOver,
       onColorItemDrop,
-      colorItemsRef
+      colorItemsRef,
+      pickerStyle,
+      values
     }
   }
 })
@@ -332,20 +333,16 @@ export default defineComponent({
 .picker {
   will-change: transform;
   z-index: 9;
+  overflow: hidden;
   transition: left 60ms ease-in-out;
-  // transition: all 60ms ease-in-out;
 }
 
 .v-enter-active,
 .v-leave-active {
-  transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
+  transition: opacity 200ms ease-in-out, transform 200ms ease-in-out, ;
   opacity:1;
   transform: scaleY(1);
   transform-origin: center top;
-}
-
-[data-popper-placement='top'] {
-  transform-origin: center bottom;
 }
 
 .v-enter-from,

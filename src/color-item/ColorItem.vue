@@ -1,11 +1,9 @@
 <template>
-  <canvas class="color-item" :style="colorItemStyle" ref="canvas" :draggable="draggable"/>
+    <canvas class="color-item" :style="colorItemStyle" ref="canvas" :draggable="draggable"/>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, watch, onMounted, computed, inject, unref } from 'vue'
-import type { PropType } from 'vue'
-import type { Format } from '../constant'
 export default defineComponent({
   name: 'ColorItem',
   props: {
@@ -22,10 +20,6 @@ export default defineComponent({
     value: {
       type: String,
       default: ''
-    },
-    format: {
-      type: String as PropType<Format>,
-      default: 'hex'
     },
     border: {
       type: Boolean,

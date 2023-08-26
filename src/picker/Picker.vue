@@ -6,7 +6,7 @@
         <hue class="hue" :hue="h" @change="onSelectHue"/>
         <alpha class="alpha" :alpha="a" :color="rgbStr" @change="onSelectAlpha" v-if="showAlpha"/>
       </div>
-      <input-value :label="label" :value="colorValue" :width="inputWidth" @change="onInputChange" @focus="onInputFocus" @blur="onInputBlur"/>
+      <input-value :label="label" :value="colorValue" :width="inputWidth" @change="onInputChange"  @blur="handleChange" @enter="handleChange"/>
       <Colors class="colors" v-if="colors.length > 0" :colors="colors" :selected-index="selectColorIndex" @change="onSelectColor"/>
     </div>
   </div>
@@ -19,7 +19,7 @@ import Hue from './Hue.vue'
 import Alpha from './Alpha.vue'
 import InputValue from './InputValue.vue'
 import Colors from './Colors.vue'
-import { hsvFormat, hsv2rgb, checkColorValue, transformHsva, checkColorFormat } from '../utils'
+import { hsvFormat, hsv2rgb, checkColorValue, transformHsva, checkColorFormat, filterHsva } from '../utils'
 import type { Format } from '../constant'
 export default defineComponent({
   name: 'Picker',
@@ -48,33 +48,36 @@ export default defineComponent({
     colors: {
       type: Array as PropType<string []>,
       default: () => []
+    },
+    style: {
+      type: Object as PropType<Partial<CSSStyleDeclaration>>,
+      default: () => ({})
     }
   },
-  emits: ['change', 'format'],
+  emits: ['change', 'update:value'],
   setup (props, { emit }) {
-    const pickerStyle = computed(() => ({ width: props.showAlpha ? '230px' : '205px' }))
+    const pickerStyle = computed(() => ({ ...props.style, width: props.showAlpha ? '230px' : '205px' }))
     const inputWidth = computed(() => props.showAlpha ? 165 : 140)
     const hsva = ref()
-    const colorValue = ref(unref(hsva) != null ? hsvFormat({ ...unref(hsva) }, props.format, props.showAlpha) : '')
-    // const handleTransformValue = () => {
-    //   const value = props.value?.trim()
-    //   if (value != null && value !== '') {
-    //     const format = checkColorFormat(value)
-    //     return filterHsva(transformHsva(value, format, props.showAlpha))
-    //   }
-    //   return null
-    // }
-    // watch(() => props.value, () => {
-    //   if (props.value !== unref(colorValue)) {
-    //     hsva.value = handleTransformValue()
-    //   }
-    // }, {
-    //   immediate: true
-    // })
-    watch(() => hsva.value, (hsva, oldHsva) => {
-      if (props.value === unref(colorValue)) {
-        return
+    const cacheHsva = ref()
+
+    const colorValue = ref()
+    const handleTransformValue = () => {
+      const value = props.value?.trim()
+      if (value != null && value !== '') {
+        const format = checkColorFormat(value)
+        return filterHsva(transformHsva(value, format, props.showAlpha))
       }
+      return null
+    }
+    watch(() => props.value, () => {
+      if (props.value !== unref(colorValue)) {
+        hsva.value = handleTransformValue()
+      }
+    }, {
+      immediate: true
+    })
+    watch(hsva, (hsva, oldHsva) => {
       let color = ''
       if (hsva != null) {
         color = hsvFormat({ ...hsva }, props.format, props.showAlpha)
@@ -83,10 +86,11 @@ export default defineComponent({
         cacheHsva.value = null
       }
       colorValue.value = color
-
       if (JSON.stringify(hsva) !== JSON.stringify(oldHsva)) {
         emit('change', color)
       }
+    }, {
+      immediate: true
     })
     const h = computed(() => unref(hsva)?.h || 0)
     const s = computed(() => unref(hsva)?.s || 0)
@@ -94,7 +98,33 @@ export default defineComponent({
     const a = computed(() => unref(hsva)?.a != null ? unref(hsva)?.a : 1)
     const rgb = computed(() => hsv2rgb(unref(h), unref(s), unref(v)))
     const rgbStr = computed(() => `rgb(${unref(rgb).r}, ${unref(rgb).g}, ${unref(rgb).b})`)
-    const label = computed(() => props.format.toLocaleUpperCase())
+    const label = computed(() => {
+      const format = props.format
+      const showAlpha = props.showAlpha
+      if (showAlpha) {
+        switch (format) {
+          case 'hsv':
+            return 'HSVA'
+          case 'hsl':
+            return 'HSLA'
+          case 'rgb':
+            return 'RGBA'
+          default:
+            return 'HEX'
+        }
+      } else {
+        switch (format) {
+          case 'hsv':
+            return 'HSV'
+          case 'hsl':
+            return 'HSL'
+          case 'rgb':
+            return 'RGB'
+          default:
+            return 'HEX'
+        }
+      }
+    })
     const onSelectHue = (hue: number) => {
       selectColorIndex.value = -1
       if (unref(hsva) == null) {
@@ -143,8 +173,6 @@ export default defineComponent({
         }
       }
     }
-    const isInputFocus = ref(false)
-    const cacheHsva = ref(unref(hsva) != null ? { ...unref(hsva) } : null)
     const selectColorIndex = ref(-1)
     const handleColorChange = (color: string, format: Format, showAlpha: boolean) => {
       if (color.length === 0) return
@@ -178,16 +206,18 @@ export default defineComponent({
         }
       }
     }
-    const onInputFocus = () => {
-      isInputFocus.value = true
-    }
-    const onInputBlur = () => {
-      isInputFocus.value = false
-      const color = unref(colorValue).trim()
+    const handleChange = () => {
+      const color = unref(colorValue)?.trim()
       if (color === '') {
         hsva.value = null
-      } else if (checkColorValue(color, props.format)) {
-        handleColorChange(color, props.format, props.showAlpha)
+        return
+      }
+      const showAlpha = props.showAlpha
+      const format = props.format
+      const isCheck = checkColorValue(color, format, showAlpha)
+      console.log(isCheck)
+      if (isCheck) {
+        handleColorChange(color, format, showAlpha)
       } else {
         // 无效值
         if (unref(cacheHsva) != null) {
@@ -215,8 +245,7 @@ export default defineComponent({
       pickerStyle,
       inputWidth,
       onInputChange,
-      onInputFocus,
-      onInputBlur,
+      handleChange,
       selectColorIndex,
       onSelectColor
     }

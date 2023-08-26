@@ -24,7 +24,7 @@
   },
   "include": [
     "src/*"
-  ],
+, "src/hooks/usePopper.ts"  ],
   "exclude": [
     "node_modules/**",
     "**/__tests__/**",

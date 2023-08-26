@@ -1,10 +1,11 @@
 <template>
-  <pick-colors v-model:value="value2" format="hsl" :theme="theme" @change="onColorChange2" v-model:show-picker="showPicker" @closePicker="closePicker"/>
+  <pick-colors v-model:value="value2" format="hsl" :theme="theme" @change="onColorChange2" @closePicker="closePicker"/>
   <br />
   <pick-colors value="#333" show-alpha :theme="theme" :width="40" :size="60" @closePicker="closePicker"/>
   <br />
   <pick-colors v-model:value="value3" :theme="theme" @closePicker="closePicker"/>
   <br />
+  <div style="height: 400px;"/>
   <pick-colors
     :theme="theme"
     show-alpha

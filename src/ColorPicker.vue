@@ -26,20 +26,21 @@
       :selected="colorItemSelected(-1)"
       :data-index="-1"
     />
-    <teleport :to="popupContainer == null ?  'body' :  popupContainer">
+    <!-- <teleport :to="popupContainer == null ?  'body' :  popupContainer"> -->
       <transition>
         <picker
           class="picker"
           ref="picker"
-          v-model:value="selectedColor"
+          :value="selectedColor"
           :format="format"
           :show-alpha="showAlpha"
           :colors="colors"
           v-show="isShowPicker"
           @change="onPickerChange"
+          @format="onPickerFormat"
         />
     </transition>
-    </teleport>
+    <!-- </teleport> -->
   </div>
 </template>
 
@@ -51,7 +52,7 @@ import Picker from './picker'
 import ColorItem from './color-item'
 import AddColorItem from './add-color-item'
 import type { Theme, Format } from './constant'
-import { popperOptions } from './utils'
+import { colorFormat, popperOptions } from './utils'
 export default defineComponent({
   name: 'ColorPicker',
   components: {
@@ -121,12 +122,18 @@ export default defineComponent({
   },
   emits: ['change', 'update:value', 'update:showPicker', 'overflowMax', 'closePicker'],
   setup (props, { emit }) {
-    const valueList = ref<string []>()
+    const valueList = ref<string []>([])
     watch(
       () => props.value,
       () => {
-        const value = props.value == null ? '' : props.value
-        valueList.value = Array.isArray(value) ? value : [value]
+        const value = props.value
+        const values = Array.isArray(value) ? value : [value]
+        const formatValues = values?.map((value) => {
+          const formatValue = colorFormat(value, props.format, props.showAlpha)
+          return formatValue
+        })
+        console.log('formatValues', formatValues)
+        valueList.value = formatValues
       },
       {
         immediate: true
@@ -134,12 +141,8 @@ export default defineComponent({
     )
     const selectedIndex = ref<undefined|number>(undefined)
     // 设置添加初始值
-    const selectedColor = computed<undefined|string>({
-      get: () => unref(valueList)[unref(selectedIndex)],
-      set: (value) => {
-        unref(valueList)[unref(selectedIndex)] = value
-      }
-    })
+    const selectedColor = computed<undefined|string>(() => unref(valueList)[unref(selectedIndex)])
+
     const colorItemSelected = (index) => {
       return (props.addColor ? unref(valueList).length > 0 : unref(valueList).length > 1) && unref(selectedIndex) === index
     }
@@ -178,7 +181,10 @@ export default defineComponent({
       popperInstance = null
     }
 
-    const onColorClick = (e: Event) => {
+    const onPickerFormat = (value: string) => {
+      unref(valueList)[unref(selectedIndex)] = value
+    }
+    const onColorClick = async (e: Event) => {
       e?.stopPropagation()
       const target = e.target as HTMLElement
       const popper = unref(picker).$el as HTMLElement
@@ -197,9 +203,9 @@ export default defineComponent({
       }
 
       selectedIndex.value = +index
-      onOpenPickerShow()
 
       nextTick(() => {
+        onOpenPickerShow()
         popperInstance = createPopper(target, popper, popperOptions)
         popperInstance?.update()
       })
@@ -297,6 +303,7 @@ export default defineComponent({
       isShowPicker,
       addColorItemShow,
       onPickerChange,
+      onPickerFormat,
       colorPicker,
       onColorClick,
       picker,

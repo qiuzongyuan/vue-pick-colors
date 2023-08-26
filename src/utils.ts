@@ -1,3 +1,6 @@
+import { Options } from '@popperjs/core'
+import { Format } from './constant'
+
 export const hsv2hsl = (h: number, s: number, v: number) => {
   return [
     h,
@@ -35,17 +38,14 @@ const bound01 = (value: number | string, max: number | string) => {
   const processPercent = isPercentage(value)
   value = Math.min(max as number, Math.max(0, parseFloat(`${value}`)))
 
-  // Automatically convert percentage into number
   if (processPercent) {
     value = parseInt(`${value * (max as number)}`, 10) / 100
   }
 
-  // Handle floating point rounding errors
   if (Math.abs(value - (max as number)) < 0.000001) {
     return 1
   }
 
-  // Convert into [0, 1] range if it isn't already
   return (value % (max as number)) / parseFloat(max as string)
 }
 
@@ -71,7 +71,7 @@ export const hsv2rgb = (h, s, v) => {
   }
 }
 
-export const hsvFormat = ({ h, s, v, a }, format, useAlpha = true) => {
+export const hsvFormat = ({ h, s, v, a }, format: Format, useAlpha: boolean) => {
   if (useAlpha) {
     switch (format) {
       case 'hsl': {
@@ -179,6 +179,15 @@ export const hex2rgb = (hex: string) => {
   }
 }
 
+export const colorFormat = (color: unknown, format: Format, useAlpha: boolean) => {
+  if (typeof color === 'string') {
+    const hsv = transformHsva(color, format, useAlpha)
+    const filterHsv = filterHsva(hsv)
+    return hsvFormat(filterHsv, format, useAlpha)
+  }
+  return ''
+}
+
 const pickUpRgb = (rgb:string) => {
   const [r, g, b, a] = rgb.match(/(\d(\.\d+)?)+/g)
   return {
@@ -229,27 +238,27 @@ export const transformHsva = (color: string, format, useAlpha = true) => {
   }
 }
 
-// export const checkColor = (color: string, format, useAlpha = true) => {
-//   if (useAlpha) {
-//     switch (format) {
-//       case 'hex':
-//         return color.match(/^#([0-9a-fA-F]{8})$/g)
-//       case 'rgb':
-//         return color.match(/^rgba\((25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(0\.\d{1,2}|1|0)\)/g)
-//       case 'hsl':
-//         return color.match(/^hsla\((((([0-9]|([1-9][0-9])|([0-2][0-9][0-9])|([3][0-5][0-9])|([0]{1}))|360).[0-9]?[0-9])|(([0-9]|([1-9][0-9])|([0-2][0-9][0-9])|([3][0-5][0-9])|([0]{1}))|360)),(\s*)([0-9]?[0-9]|100)%,(\s*)([0-9]?[0-9]|100)%,(\s*)(0\.\d{1,2}|1|0)\)/g)
-//     }
-//   } else {
-//     switch (format) {
-//       case 'hex':
-//         return color.match(/^#([0-9a-fA-F]{6})$/g)
-//       case 'rgb':
-//         return color.match(/^rgb\((25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])\)/g)
-//       case 'hsl':
-//         return color.match(/^hsl\((((([0-9]|([1-9][0-9])|([0-2][0-9][0-9])|([3][0-5][0-9])|([0]{1}))|360).[0-9]?[0-9])|(([0-9]|([1-9][0-9])|([0-2][0-9][0-9])|([3][0-5][0-9])|([0]{1}))|360)),(\s*)([0-9]?[0-9]|100)%,(\s*)([0-9]?[0-9]|100)%\)/g)
-//     }
-//   }
-// }
+export const checkColor = (color: string, format, useAlpha = true) => {
+  if (useAlpha) {
+    switch (format) {
+      case 'hex':
+        return color.match(/^#([0-9a-fA-F]{8})$/g)
+      case 'rgb':
+        return color.match(/^rgba\((25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(0\.\d{1,2}|1|0)\)/g)
+      case 'hsl':
+        return color.match(/^hsla\((((([0-9]|([1-9][0-9])|([0-2][0-9][0-9])|([3][0-5][0-9])|([0]{1}))|360).[0-9]?[0-9])|(([0-9]|([1-9][0-9])|([0-2][0-9][0-9])|([3][0-5][0-9])|([0]{1}))|360)),(\s*)([0-9]?[0-9]|100)%,(\s*)([0-9]?[0-9]|100)%,(\s*)(0\.\d{1,2}|1|0)\)/g)
+    }
+  } else {
+    switch (format) {
+      case 'hex':
+        return color.match(/^#([0-9a-fA-F]{6})$/g)
+      case 'rgb':
+        return color.match(/^rgb\((25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9]),(\s*)(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])\)/g)
+      case 'hsl':
+        return color.match(/^hsl\((((([0-9]|([1-9][0-9])|([0-2][0-9][0-9])|([3][0-5][0-9])|([0]{1}))|360).[0-9]?[0-9])|(([0-9]|([1-9][0-9])|([0-2][0-9][0-9])|([3][0-5][0-9])|([0]{1}))|360)),(\s*)([0-9]?[0-9]|100)%,(\s*)([0-9]?[0-9]|100)%\)/g)
+    }
+  }
+}
 
 export const checkColorValue = (color: string, format) => {
   switch (format) {
@@ -290,7 +299,9 @@ export function debounce (fn, delay = 100) {
   }
 }
 
-export const popperOptions = {
+export const popperOptions: Options = {
+  strategy: 'absolute',
+  placement: 'bottom',
   modifiers: [
     {
       name: 'offset',

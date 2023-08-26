@@ -301,7 +301,7 @@ export function debounce (fn, delay = 100) {
 
 export const popperOptions: Options = {
   strategy: 'absolute',
-  placement: 'bottom',
+  placement: 'auto',
   modifiers: [
     {
       name: 'offset',
@@ -313,7 +313,14 @@ export const popperOptions: Options = {
       name: 'computeStyles',
       options: {
         gpuAcceleration: false,
-        adaptive: false
+        adaptive: true
+      }
+    },
+    {
+      name: 'flip',
+      options: {
+        fallbackPlacements: ['top'],
+        allowedAutoPlacements: ['top', 'bottom']
       }
     }
   ]

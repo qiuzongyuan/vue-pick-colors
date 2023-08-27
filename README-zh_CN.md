@@ -6,7 +6,7 @@
 
 > [English ](https://github.com/qiuzongyuan/vue-pick-colors)
 
-### [文档](https://qiuzongyuan.github.io/vue-pick-colors/)
+### [Demo](https://qiuzongyuan.github.io/vue-pick-colors/zh/use.html)
 
 <div style="display: flex">
     <img src="./images/effect-light.png" style="width:200px;" />

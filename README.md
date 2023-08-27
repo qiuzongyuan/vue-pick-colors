@@ -7,7 +7,7 @@
 > [🇨🇳中文版](https://github.com/qiuzongyuan/vue-pick-colors/blob/main/README-zh_CN.md)
 
 
-### [document](https://qiuzongyuan.github.io/vue-pick-colors/)
+### [Demo] (https://qiuzongyuan.github.io/vue-pick-colors/use.html)
 
 <div style="display: flex">
     <img src="./images/effect-light.png" style="width:200px;" />

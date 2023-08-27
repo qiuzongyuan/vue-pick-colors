@@ -1,4 +1,4 @@
-import { Ref, onBeforeUnmount, ref, unref, watch } from 'vue'
+import { Ref, nextTick, onBeforeUnmount, ref, unref, watch } from 'vue'
 import { Options, Instance, createPopper } from '@popperjs/core'
 let instance: Instance = null
 const usePopper = (target: Ref<any>, popper: Ref<any>) => {
@@ -56,7 +56,9 @@ const usePopper = (target: Ref<any>, popper: Ref<any>) => {
     instance?.destroy()
     const _target = target.$el || target
     const _popper = popper.$el || popper
-    instance = createPopper(_target, _popper, options)
+    nextTick(() => {
+      instance = createPopper(_target, _popper, options)
+    })
   })
   onBeforeUnmount(() => {
     instance.destroy()

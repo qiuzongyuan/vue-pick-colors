@@ -7,10 +7,10 @@
     @drop.prevent.stop="onColorItemDrop"
   >
     <color-item
-      class="color-item"
       v-for="(value, index) in values"
+      :key="index"
+      class="color-item"
       :ref="(el) => colorItemsRef[index] = el"
-      :key="value + index"
       :size="size"
       :width="width"
       :height="height"
@@ -46,7 +46,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, onUnmounted, provide, computed, watch, unref, toRaw, nextTick } from 'vue'
+import { defineComponent, ref, onMounted, onUnmounted, provide, computed, watch, unref, toRaw } from 'vue'
 import type { RendererElement, PropType } from 'vue'
 import Picker from './picker'
 import ColorItem from './color-item'
@@ -162,20 +162,6 @@ export default defineComponent({
 
     const { style: pickerStyle } = usePopper(targetRef, pickerRef)
 
-    const mountPicker = () => {
-      // color value 让 color item 重新渲染，必须重新挂载
-      // 否则 picker 定位会异常
-      nextTick(() => {
-        const colorItems = unref(colorItemsRef)
-        if (colorItems?.length <= 0) return
-        const index = unref(selectedIndex)
-        if (index < 0) return
-        const target = colorItems[index]
-        if (!target) return
-        targetRef.value = target
-      })
-    }
-
     const onOpenPicker = () => {
       if (props.showPicker === undefined) {
         isShowPicker.value = true
@@ -214,8 +200,8 @@ export default defineComponent({
       }
 
       selectedIndex.value = +index
+      targetRef.value = target
       onOpenPicker()
-      mountPicker()
     }
     const addColorItemShow = ref(props.max > unref(valueList).length)
     const onPickerChange = (color: string) => {
@@ -255,7 +241,6 @@ export default defineComponent({
         addColorItemShow.value = false
         emit('overflowMax')
       }
-      mountPicker()
     }
     let dragTargetIndex: undefined | number
     const onColorItemDragStart = (e: DragEvent) => {

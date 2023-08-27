@@ -320,7 +320,7 @@ export const checkColorFormat = (color: string) => {
   if (color.match(/^rgb/)) return 'rgb'
   if (color.match(/^hsl/)) return 'hsl'
   if (color.match(/^hsv/)) return 'hsv'
-  return undefined
+  return 'hex'
 }
 
 export const filterHsva = ({ h, s, v, a }: { h: number, s:number, v:number, a: number }) => {

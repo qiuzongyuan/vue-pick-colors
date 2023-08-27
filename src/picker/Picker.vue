@@ -13,7 +13,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, watch, ref, unref, PropType } from 'vue'
+import { defineComponent, computed, watch, ref, unref } from 'vue'
+import type { CSSProperties, PropType } from 'vue'
 import Saturation from './Saturation.vue'
 import Hue from './Hue.vue'
 import Alpha from './Alpha.vue'
@@ -50,13 +51,13 @@ export default defineComponent({
       default: () => []
     },
     style: {
-      type: Object as PropType<Partial<CSSStyleDeclaration>>,
+      type: Object as PropType<Partial<CSSProperties>>,
       default: () => ({})
     }
   },
   emits: ['change', 'update:value'],
   setup (props, { emit }) {
-    const pickerStyle = computed(() => ({ ...props.style, width: props.showAlpha ? '230px' : '205px' }))
+    const pickerStyle = computed<Partial<CSSProperties>>(() => ({ ...props.style, width: props.showAlpha ? '230px' : '205px' }))
     const inputWidth = computed(() => props.showAlpha ? 165 : 140)
     const hsva = ref()
     const cacheHsva = ref()

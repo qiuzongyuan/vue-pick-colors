@@ -51,6 +51,7 @@ const colors = ref([
 
 ## Alpha
 Use `show-alpha` <pick-colors v-model:value="showAlphaValue" show-alpha/>
+
 ```vue
 <template>
   <pick-colors v-model:value="value" show-alpha/>
@@ -144,14 +145,12 @@ Use `theme`  <pick-colors v-model:value="themeValue" show-alpha theme="dark" />
 ```
 
 ## Control Picker
-Use `show-picker`
-<button @click="toggleShowPicker">{{ showPicker ? '关闭' : '打开' }}</button>
-<pick-colors v-model:value="value" v-model:show-picker="showPicker"/>
+Use `show-picker`<pick-colors v-model:value="value" v-model:show-picker="showPicker"/><button class="primary-button"  @click="toggleShowPicker">{{ showPicker ? '关闭' : '打开' }}</button>
 
 ```vue
 <template>
-  <button @click="toggleShowPicker">{{ showPicker ? '关闭' : '打开' }}</button>
   <pick-colors v-model:value="value" v-model:show-picker="showPicker"/>
+  <button @click="toggleShowPicker">{{ showPicker ? '关闭' : '打开' }}</button>
 </template>
 <script lang="ts" setup>
   import pickColors from 'vue-pick-colors'

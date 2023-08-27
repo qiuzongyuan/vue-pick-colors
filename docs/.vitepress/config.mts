@@ -4,6 +4,7 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: "vue-pick-colors",
   description: "A Color picker for Vue.js 3",
+  base: '/vue-pick-colors/',
   locales: {
     root: {
       label: 'English',

@@ -144,14 +144,12 @@ const colors = ref([
 ```
 
 ## 控制拾取器
-使用 `show-picker`
-<button @click="toggleShowPicker">{{ showPicker ? '关闭' : '打开' }}</button>
-<pick-colors v-model:value="value" v-model:show-picker="showPicker"/>
+使用 `show-picker`<pick-colors v-model:value="value" v-model:show-picker="showPicker"/><button class="primary-button" @click="toggleShowPicker">{{ showPicker ? '关闭' : '打开' }}</button>
 
 ```vue
 <template>
-  <button @click="toggleShowPicker">{{ showPicker ? '关闭' : '打开' }}</button>
   <pick-colors v-model:value="value" v-model:show-picker="showPicker"/>
+  <button @click="toggleShowPicker">{{ showPicker ? '关闭' : '打开' }}</button>
 </template>
 <script lang="ts" setup>
   import pickColors from 'vue-pick-colors'

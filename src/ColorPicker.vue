@@ -33,7 +33,7 @@
           class="picker"
           :style="pickerStyle"
           ref="pickerRef"
-          v-model:value="selectedColor"
+          :value="selectedColor"
           :format="format"
           :show-alpha="showAlpha"
           :colors="colors"
@@ -124,7 +124,13 @@ export default defineComponent({
   emits: ['change', 'update:value', 'update:showPicker', 'overflowMax', 'closePicker'],
   setup (props, { emit }) {
     const valueList = ref<string []>([])
-    const values = computed(() => unref(valueList).map((value) => colorFormat(value, 'hex', props.showAlpha)))
+    const values = computed(() => {
+      if (props.format === 'hsv') {
+        return unref(valueList).map((value) => colorFormat(value, 'hex', props.showAlpha))
+      } else {
+        return unref(valueList)
+      }
+    })
     watch(
       () => props.value,
       () => {
@@ -136,13 +142,7 @@ export default defineComponent({
       })
     const selectedIndex = ref<undefined|number>(undefined)
     // 设置添加初始值
-    const selectedColor = computed<undefined|string>({
-      get: () => unref(valueList)[unref(selectedIndex)],
-      set: (value) => {
-        unref(valueList)[unref(selectedIndex)] = value
-        mountPicker()
-      }
-    })
+    const selectedColor = computed<undefined|string>(() => unref(valueList)[unref(selectedIndex)])
 
     const colorItemSelected = (index) => {
       return (props.addColor ? unref(valueList).length > 0 : unref(valueList).length > 1) && unref(selectedIndex) === index

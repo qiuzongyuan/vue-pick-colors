@@ -86,7 +86,8 @@ export default defineComponent({
         cacheHsva.value = null
       }
       colorValue.value = color
-      if (JSON.stringify(hsva) !== JSON.stringify(oldHsva)) {
+      const originValue = handleTransformValue()
+      if (JSON.stringify(hsva) !== JSON.stringify(originValue) && JSON.stringify(hsva) !== JSON.stringify(oldHsva)) {
         emit('change', color)
       }
     }, {
@@ -215,7 +216,6 @@ export default defineComponent({
       const showAlpha = props.showAlpha
       const format = props.format
       const isCheck = checkColorValue(color, format, showAlpha)
-      console.log(isCheck)
       if (isCheck) {
         handleColorChange(color, format, showAlpha)
       } else {

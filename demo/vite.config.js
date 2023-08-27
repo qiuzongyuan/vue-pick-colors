@@ -5,7 +5,7 @@ import eslintPlugin from 'vite-plugin-eslint'
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
-    port: 5000,
+    port: 3000,
     host: true
   },
   plugins: [

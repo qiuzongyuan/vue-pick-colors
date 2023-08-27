@@ -185,9 +185,8 @@ export const hex2rgb = (hex: string) => {
 }
 
 export const colorFormat = (color: unknown, format: Format, useAlpha: boolean) => {
-  if (typeof color === 'string') {
+  if (typeof color === 'string' && color !== '') {
     const hsv = transformHsva(color, checkColorFormat(color), useAlpha)
-    if (hsv == null) return ''
     const filterHsv = filterHsva(hsv)
     return hsvFormat(filterHsv, format, useAlpha)
   }

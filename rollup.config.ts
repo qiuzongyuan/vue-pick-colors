@@ -61,7 +61,11 @@ module.exports = {
     dts({
       rollupTypes: true
     }),
-    terser(),
+    terser({
+      compress: {
+        drop_console: true
+      }
+    }),
     filesize()
   ],
   external: ['vue', '@popperjs/core']

@@ -8,33 +8,42 @@ export default defineConfig({
     root: {
       label: 'English',
       lang: 'en',
-      link: '/en/start' ,
+      link: '/' ,
+      themeConfig: {
+        nav: [
+          { text: 'Guide', link: '/start' },
+        ],
+      }
     },
     zh: {
       label: '中文',
       lang: 'zh',
-      link: '/zh/start' 
-      // docFooter: { prev: "上一页", next: "下一页" }
+      link: '/zh/',
+      themeConfig: {
+        docFooter: { prev: "上一页", next: "下一页" },
+        nav: [
+          { text: '指南', link: '/zh/start' },
+        ],
+      }
     }
   },
   themeConfig: {
     outlineTitle: " ",
-    docFooter: { prev: "上一页", next: "下一页" },
+   
     sidebar: {
-      '/en': [
+      '/': [
         {
           text: 'Guide',
-          base: '/en',
           items: [
             { text: 'Get Started', link: '/start' },
             { text: 'Usage', link: '/use' }
           ]
         }
       ],
-      '/zh': [
+      '/zh/': [
         {
           text: '指南',
-          base: '/zh',
+          base: '/zh/',
           items: [
             { text: '开始', link: '/start' },
             { text: '快速上手', link: '/use' }

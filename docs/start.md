@@ -9,7 +9,7 @@ npm install vue-pick-colors -S
 yarn add vue-pick-colors
 ```
 
-### Usage
+## Usage
 
 ```vue
 <template>

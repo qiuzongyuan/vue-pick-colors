@@ -1,6 +1,6 @@
 # 开始
 
-## 使用包管理器
+## 安装
 ```
 # 使用 NPM
 npm install vue-pick-colors -S
@@ -9,7 +9,7 @@ npm install vue-pick-colors -S
 yarn add vue-pick-colors
 ```
 
-### 使用
+## 使用
 
 ```vue
 <template>

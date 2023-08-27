@@ -61,8 +61,10 @@ const usePopper = (target: Ref<any>, popper: Ref<any>) => {
     })
   })
   onBeforeUnmount(() => {
-    instance.destroy()
-    instance = null
+    if (instance) {
+      instance?.destroy()
+      instance = null
+    }
   })
   return {
     instance,

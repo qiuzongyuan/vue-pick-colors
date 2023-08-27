@@ -1,6 +1,6 @@
 <template>
   <div class="colors">
-    <template v-for="(color, index) in colors" :key="color + index">
+    <template v-for="(color, index) in useColors" :key="index">
       <color-item
         class="color-item"
         :size="16"
@@ -15,7 +15,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { colorFormat } from '../utils'
+import { computed, defineComponent, PropType } from 'vue'
 import ColorItem from '../color-item'
 export default defineComponent({
   name: 'Colors',
@@ -37,8 +38,10 @@ export default defineComponent({
     const onSelectColor = (color: string, index: number) => {
       emit('change', color, index)
     }
+    const useColors = computed(() => props.colors.map((color) => colorFormat(color, 'hex', true)))
     return {
-      onSelectColor
+      onSelectColor,
+      useColors
     }
   }
 })

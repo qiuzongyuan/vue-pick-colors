@@ -30,30 +30,21 @@ yarn add vue-pick-colors
 ### 使用
 
 ```vue
+```vue
 <template>
-  <pick-colors v-model:value="value" show-alpha/>
+  <pick-colors v-model:value="value"/>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
-import PickColors from 'vue-pick-colors'
-export default defineComponent({
-  name: 'App',
-  components: {
-    PickColors
-  },
-  setup () {
-    const value = ref('#00cedf')
-    return {
-      value
-    }
-  }
-})
+<script lang="ts" setup>
+  import pickColors from 'vue-pick-colors'
+  const value = ref('#ff4500')
 </script>
 ```
 <br/>
 
+
 ### API
+
 | 属性                 | 说明                                                    | 类型                          | 默认值                                                       | 版本  |
 | -------------------- | ------------------------------------------------------- | ----------------------------- | ------------------------------------------------------------ | ----- |
 | value(v-model)       | 值，<br/>支持hex、rgb、rgba、hsl、hsla、hsv、hsva       | string ｜ string[]            | —                                                            |       |
@@ -73,8 +64,9 @@ export default defineComponent({
 
 ### 事件
 
-| Events Name  | Description        | Arguments                                                    | version |
-| ------------ | ------------------ | ------------------------------------------------------------ | ------- |
-| change       | 颜色值变化         | function(value: string｜string [],color: string,index: number) |         |
-| close-picker  | 关闭拾取器         | function(value: string｜string [])                           | 1.5.0   |
-| overflow-max | 颜色添加达到最大值 | —                                                            |         |
+| 事件名       | 描述               | 参数                                                         | 版本  |
+| ------------ | ------------------ | ------------------------------------------------------------ | ----- |
+| change       | 颜色值变化         | function(value: string｜string [],color: string,index: number) |       |
+| close-picker | 关闭拾取器         | function(value: string｜string [])                           | 1.5.0 |
+| overflow-max | 颜色添加达到最大值 | —                                                            |       |
+

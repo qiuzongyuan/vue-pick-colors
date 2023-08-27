@@ -24,7 +24,6 @@ import { hsvFormat, hsv2rgb, checkColorValue, transformHsva, checkColorFormat, f
 import type { Format } from '../constant'
 export default defineComponent({
   name: 'Picker',
-  inheritAttrs: false,
   components: {
     Colors,
     Saturation,
@@ -51,7 +50,7 @@ export default defineComponent({
       default: () => []
     },
     style: {
-      type: Object as PropType<Partial<CSSProperties>>,
+      type: Object as PropType<CSSProperties>,
       default: () => ({})
     }
   },
@@ -263,7 +262,7 @@ export default defineComponent({
 .picker-inner {
   padding: 10px;
 }
-[pick-colors-theme='dark'] .picker {
+[pick-colors-theme='dark'] .picker-inner  {
   background: #1d2024;
   box-shadow: 0 0 16px 0 rgb(0 0 0 / 16%);
 }

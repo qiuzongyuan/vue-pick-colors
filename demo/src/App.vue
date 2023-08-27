@@ -2,7 +2,8 @@
   <div style="height: 200vh;">
     <pick-colors v-model:value="value2" format="hsl" :theme="theme" @change="onColorChange2" @closePicker="closePicker"/>
   <br />
-  <pick-colors value="#333" show-alpha :theme="theme" :width="40" :size="60" @closePicker="closePicker"/>
+  <button @click="toggleShowPicker">{{ showPicker ? '关闭' : '打开' }}</button>
+  <pick-colors v-model:show-picker="showPicker" value="#333" show-alpha :theme="theme" :width="40" :size="60" @closePicker="closePicker"/>
   <br />
   <pick-colors v-model:value="value3" format="hsv" showAlpha :theme="theme" @closePicker="closePicker"/>
   <br />
@@ -23,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, unref } from 'vue'
 import PickColors, { Theme } from '../../src/index'
 export default defineComponent({
   name: 'App',
@@ -49,10 +50,14 @@ export default defineComponent({
       }
       console.log(theme.value)
     }
-    const showPicker = ref(true)
+    const showPicker = ref(false)
     const divRef = ref()
     const closePicker = (e) => {
       console.log(e)
+    }
+    const toggleShowPicker = () => {
+      showPicker.value = true
+      console.log('showPicker', showPicker.value);
     }
     return {
       value,
@@ -64,7 +69,8 @@ export default defineComponent({
       value3,
       showPicker,
       divRef,
-      closePicker
+      closePicker,
+      toggleShowPicker
     }
   }
 })

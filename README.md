@@ -7,7 +7,7 @@
 > [🇨🇳中文版](https://github.com/qiuzongyuan/vue-pick-colors/blob/main/README-zh_CN.md)
 
 
-### [Online Demo](https://qiuzongyuan.github.io/vue-pick-colors/)
+### [document](https://qiuzongyuan.github.io/vue-pick-colors/)
 
 <div style="display: flex">
     <img src="./images/effect-light.png" style="width:200px;" />
@@ -29,26 +29,15 @@ yarn add vue-pick-colors
 ### Usage
 ```vue
 <template>
-  <pick-colors v-model:value="value" show-alpha/>
+  <pick-colors v-model:value="value"/>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
-import PickColors from 'vue-pick-colors'
-export default defineComponent({
-  name: 'App',
-  components: {
-    PickColors
-  },
-  setup () {
-    const value = ref('#00cedf')
-    return {
-      value
-    }
-  }
-})
+<script lang="ts" setup>
+  import pickColors from 'vue-pick-colors'
+  const value = ref('#ff4500')
 </script>
 ```
+
 <br/>
 
 ### API

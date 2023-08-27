@@ -13,7 +13,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, watch, ref, unref, PropType } from 'vue'
+import { defineComponent, computed, watch, ref, unref } from 'vue'
+import type { CSSProperties, PropType } from 'vue'
 import Saturation from './Saturation.vue'
 import Hue from './Hue.vue'
 import Alpha from './Alpha.vue'
@@ -23,7 +24,6 @@ import { hsvFormat, hsv2rgb, checkColorValue, transformHsva, checkColorFormat, f
 import type { Format } from '../constant'
 export default defineComponent({
   name: 'Picker',
-  inheritAttrs: false,
   components: {
     Colors,
     Saturation,
@@ -50,13 +50,13 @@ export default defineComponent({
       default: () => []
     },
     style: {
-      type: Object as PropType<Partial<CSSStyleDeclaration>>,
+      type: Object as PropType<CSSProperties>,
       default: () => ({})
     }
   },
   emits: ['change', 'update:value'],
   setup (props, { emit }) {
-    const pickerStyle = computed(() => ({ ...props.style, width: props.showAlpha ? '230px' : '205px' }))
+    const pickerStyle = computed<Partial<CSSProperties>>(() => ({ ...props.style, width: props.showAlpha ? '230px' : '205px' }))
     const inputWidth = computed(() => props.showAlpha ? 165 : 140)
     const hsva = ref()
     const cacheHsva = ref()
@@ -262,7 +262,7 @@ export default defineComponent({
 .picker-inner {
   padding: 10px;
 }
-[pick-colors-theme='dark'] .picker {
+[pick-colors-theme='dark'] .picker-inner  {
   background: #1d2024;
   box-shadow: 0 0 16px 0 rgb(0 0 0 / 16%);
 }

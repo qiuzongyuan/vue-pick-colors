@@ -147,15 +147,15 @@ export const rgb2hsv = ({ r, g, b }) => {
 export const hsl2hsv = ({ h, s, l }) => {
   s = s / 100
   l = l / 100
-  let smin = s
-  const lmin = Math.max(l, 0.01)
+  let sMin = s
+  const lMin = Math.max(l, 0.01)
 
   l *= 2
   s *= l <= 1 ? l : 2 - l
-  smin *= lmin <= 1 ? lmin : 2 - lmin
+  sMin *= lMin <= 1 ? lMin : 2 - lMin
   const v = (l + s) / 2
   const sv =
-    l === 0 ? (2 * smin) / (lmin + smin) : (2 * s) / (l + s)
+    l === 0 ? (2 * sMin) / (lMin + sMin) : (2 * s) / (l + s)
 
   return {
     h: +h,
@@ -320,7 +320,7 @@ export const checkColorFormat = (color: string) => {
   if (color.match(/^rgb/)) return 'rgb'
   if (color.match(/^hsl/)) return 'hsl'
   if (color.match(/^hsv/)) return 'hsv'
-  return undefined
+  return 'hex'
 }
 
 export const filterHsva = ({ h, s, v, a }: { h: number, s:number, v:number, a: number }) => {

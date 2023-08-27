@@ -1,9 +1,0 @@
-{
-  "presets": [
-    ["@babel/preset-env"]
-  ],
-  "plugins": [
-    "@babel/transform-typescript",
-    "@babel/transform-runtime"
-  ]
-}

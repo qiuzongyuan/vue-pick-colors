@@ -35,6 +35,7 @@ const colors = ref([
 # Usage
 
 ## Basic Usage
+
 `value` is set to `#ff4500` <pick-colors v-model:value="value"/>
 
 ```vue
@@ -50,6 +51,7 @@ const colors = ref([
 
 
 ## Alpha
+
 Use `show-alpha` <pick-colors v-model:value="showAlphaValue" show-alpha/>
 
 ```vue
@@ -145,18 +147,32 @@ Use `theme`  <pick-colors v-model:value="themeValue" show-alpha theme="dark" />
 ```
 
 ## Control Picker
-Use `show-picker`<pick-colors v-model:value="value" v-model:show-picker="showPicker"/><button class="primary-button"  @click="toggleShowPicker">{{ showPicker ? '关闭' : '打开' }}</button>
+Use `show-picker`<pick-colors v-model:value="value" v-model:show-picker="showPicker"/><button class="primary-button"  @click="toggleShowPicker">{{ showPicker ? 'close' : 'open' }}</button>
 
 ```vue
 <template>
   <pick-colors v-model:value="value" v-model:show-picker="showPicker"/>
-  <button @click="toggleShowPicker">{{ showPicker ? '关闭' : '打开' }}</button>
+  <button class="primary-button" @click="toggleShowPicker">{{ showPicker ? 'close' : 'open' }}</button>
 </template>
 <script lang="ts" setup>
   import pickColors from 'vue-pick-colors'
   const value = ref('#fa64c3')
-  const showPicker = ref('false')
+  const showPicker = ref(false)
 </script>
+<style scoped>
+  .primary-button {
+    color: #fff;
+    border-color: #1890ff;
+    background: #1890ff;
+    text-shadow: 0 -1px 0 rgba(0,0,0,.12);
+    box-shadow: 0 2px #0000000b;
+    padding: 0 20px;
+    border-radius: 5px;
+    display: inline;
+    font-weight: 500;
+    margin:0 10px;
+  }
+</style>
 ```
 
 

@@ -79,6 +79,7 @@ const colors = ref([
 ```
 
 ## 设置尺寸
+
 使用 `size` <pick-colors v-model:value="sizeValue" :size="size"/>
 
 如果 `width` 或者 `height` 为空，则使用 `size`

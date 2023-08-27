@@ -82,6 +82,7 @@ Use `show-alpha` <pick-colors v-model:value="showAlphaValue" show-alpha/>
 ```
 
 ## Size
+
 Use `size` <pick-colors v-model:value="sizeValue" :size="size"/>
 
 If `width` or `height` is empty, use `size`
@@ -134,6 +135,7 @@ Use `colors` <pick-colors v-model:value="colorsValue" show-alpha :colors="colors
 ```
 
 ## Theme
+
 Use `theme`  <pick-colors v-model:value="themeValue" show-alpha theme="dark" />
 ```vue
 <template>
@@ -147,6 +149,7 @@ Use `theme`  <pick-colors v-model:value="themeValue" show-alpha theme="dark" />
 ```
 
 ## Control Picker
+
 Use `show-picker`<pick-colors v-model:value="value" v-model:show-picker="showPicker"/><button class="primary-button"  @click="toggleShowPicker">{{ showPicker ? 'close' : 'open' }}</button>
 
 ```vue
@@ -177,6 +180,7 @@ Use `show-picker`<pick-colors v-model:value="value" v-model:show-picker="showPic
 
 
 ## Add Color
+
 Use `add-color`  <pick-colors v-model:value="addColorValue" add-color />
 ```vue
 <template>

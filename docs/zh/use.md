@@ -131,6 +131,7 @@ const colors = ref([
 ```
 
 ## 使用主题
+
 使用 `theme`  <pick-colors v-model:value="themeValue" show-alpha theme="dark" />
 ```vue
 <template>
@@ -144,7 +145,8 @@ const colors = ref([
 ```
 
 ## 控制拾取器
-使用 `show-picker`<pick-colors v-model:value="value" v-model:show-picker="showPicker"/><button class="primary-button" @click="toggleShowPicker">{{ showPicker ? '关闭' : '打开' }}</button>
+
+使用 `show-picker`<pick-colors v-model:value="value" v-model:show-picker="showPicker"/> <button class="primary-button" @click="toggleShowPicker">{{ showPicker ? '关闭' : '打开' }}</button>
 
 ```vue
 <template>
@@ -174,6 +176,7 @@ const colors = ref([
 
 
 ## 添加颜色
+
 使用 `add-color`  <pick-colors v-model:value="addColorValue" add-color />
 ```vue
 <template>

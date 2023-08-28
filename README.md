@@ -33,7 +33,7 @@ yarn add vue-pick-colors
 </template>
 
 <script lang="ts" setup>
-  import pickColors from 'vue-pick-colors'
+  import PickColors from 'vue-pick-colors'
   const value = ref('#ff4500')
 </script>
 ```

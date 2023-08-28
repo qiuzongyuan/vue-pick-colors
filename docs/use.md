@@ -44,7 +44,7 @@ const colors = ref([
 </template>
 
 <script lang="ts" setup>
-  import pickColors from 'vue-pick-colors'
+  import PickColors from 'vue-pick-colors'
   const value = ref('#ff4500')
 </script>
 ```
@@ -60,7 +60,7 @@ Use `show-alpha` <pick-colors v-model:value="showAlphaValue" show-alpha/>
 </template>
 
 <script lang="ts" setup>
-  import pickColors from 'vue-pick-colors'
+  import PickColors from 'vue-pick-colors'
   const value = ref('rgba(255, 69, 0, 0.68)')
 </script>
 ```
@@ -99,7 +99,7 @@ If `width` or `height` is empty, use `size`
 </template>
 
 <script lang="ts" setup>
-  import pickColors from 'vue-pick-colors'
+  import PickColors from 'vue-pick-colors'
   const value = ref('#00ced1')
   const size = ref(40)
   const width = ref(80)
@@ -110,13 +110,14 @@ If `width` or `height` is empty, use `size`
 ## Predefined Colors
 
 Use `colors` <pick-colors v-model:value="colorsValue" show-alpha :colors="colors"/>
+
 ```vue
 <template>
   <pick-colors v-model:value="value" show-alpha :colors="colors"/>
 </template>
 
 <script lang="ts" setup>
-  import pickColors from 'vue-pick-colors'
+  import PickColors from 'vue-pick-colors'
   const value = ref('#1e90ffff')
   const colors = ref([
         'rgba(255, 69, 0, 0.68)',
@@ -137,6 +138,7 @@ Use `colors` <pick-colors v-model:value="colorsValue" show-alpha :colors="colors
 ## Theme
 
 Use `theme`  <pick-colors v-model:value="themeValue" show-alpha theme="dark" />
+
 ```vue
 <template>
   <pick-colors v-model:value="value" show-alpha :theme="theme" />
@@ -150,7 +152,13 @@ Use `theme`  <pick-colors v-model:value="themeValue" show-alpha theme="dark" />
 
 ## Control Picker
 
-Use `show-picker`<pick-colors v-model:value="value" v-model:show-picker="showPicker"/><button class="primary-button"  @click="toggleShowPicker">{{ showPicker ? 'close' : 'open' }}</button>
+<ClientOnly>
+Use <code>show-picker</code>
+<pick-colors v-model:value="showPickerValue" v-model:show-picker="showPicker"/>
+<div class="primary-button"  @click="toggleShowPicker">
+  {{ showPicker ? 'close' : 'open' }}
+</div>
+</ClientOnly>
 
 ```vue
 <template>
@@ -158,7 +166,7 @@ Use `show-picker`<pick-colors v-model:value="value" v-model:show-picker="showPic
   <button class="primary-button" @click="toggleShowPicker">{{ showPicker ? 'close' : 'open' }}</button>
 </template>
 <script lang="ts" setup>
-  import pickColors from 'vue-pick-colors'
+  import PickColors from 'vue-pick-colors'
   const value = ref('#fa64c3')
   const showPicker = ref(false)
 </script>
@@ -182,12 +190,13 @@ Use `show-picker`<pick-colors v-model:value="value" v-model:show-picker="showPic
 ## Add Color
 
 Use `add-color`  <pick-colors v-model:value="addColorValue" add-color />
+
 ```vue
 <template>
   <pick-colors v-model:value="value" add-color />
 </template>
 <script lang="ts" setup>
-  import pickColors from 'vue-pick-colors'
+  import PickColors from 'vue-pick-colors'
   const value = ref('#1f93ff')
 </script>
 ```

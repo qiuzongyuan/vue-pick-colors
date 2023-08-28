@@ -35,6 +35,7 @@ const colors = ref([
 # 快速上手
 
 ## 基本使用
+
 `value` 设置为 `#ff4500` <pick-colors v-model:value="value"/>
 
 ```vue
@@ -43,21 +44,23 @@ const colors = ref([
 </template>
 
 <script lang="ts" setup>
-  import pickColors from 'vue-pick-colors'
+  import PickColors from 'vue-pick-colors'
   const value = ref('#ff4500')
 </script>
 ```
 
 
 ## 使用透明度
+
 使用 `show-alpha` <pick-colors v-model:value="showAlphaValue" show-alpha/>
+
 ```vue
 <template>
   <pick-colors v-model:value="value" show-alpha/>
 </template>
 
 <script lang="ts" setup>
-  import pickColors from 'vue-pick-colors'
+  import PickColors from 'vue-pick-colors'
   const value = ref('rgba(255, 69, 0, 0.68)')
 </script>
 ```
@@ -96,7 +99,7 @@ const colors = ref([
 </template>
 
 <script lang="ts" setup>
-  import pickColors from 'vue-pick-colors'
+  import PickColors from 'vue-pick-colors'
   const value = ref('#00ced1')
   const size = ref(40)
   const width = ref(80)
@@ -107,13 +110,14 @@ const colors = ref([
 ## 设置预定义颜色
 
 使用 `colors` <pick-colors v-model:value="colorsValue" show-alpha :colors="colors"/>
+
 ```vue
 <template>
   <pick-colors v-model:value="value" show-alpha :colors="colors"/>
 </template>
 
 <script lang="ts" setup>
-  import pickColors from 'vue-pick-colors'
+  import PickColors from 'vue-pick-colors'
   const value = ref('#1e90ffff')
   const colors = ref([
         'rgba(255, 69, 0, 0.68)',
@@ -134,6 +138,7 @@ const colors = ref([
 ## 使用主题
 
 使用 `theme`  <pick-colors v-model:value="themeValue" show-alpha theme="dark" />
+
 ```vue
 <template>
   <pick-colors v-model:value="value" show-alpha :theme="theme" />
@@ -147,7 +152,11 @@ const colors = ref([
 
 ## 控制拾取器
 
-使用 `show-picker`<pick-colors v-model:value="value" v-model:show-picker="showPicker"/> <button class="primary-button" @click="toggleShowPicker">{{ showPicker ? '关闭' : '打开' }}</button>
+<ClientOnly>
+使用 <code>show-picker</code>
+<pick-colors v-model:value="showPickerValue" v-model:show-picker="showPicker"/>
+<div class="primary-button" @click="toggleShowPicker">{{ showPicker ? '关闭' : '打开' }}</div>
+</ClientOnly>
 
 ```vue
 <template>
@@ -155,7 +164,7 @@ const colors = ref([
   <button class="primary-button" @click="toggleShowPicker">{{ showPicker ? '关闭' : '打开' }}</button>
 </template>
 <script lang="ts" setup>
-  import pickColors from 'vue-pick-colors'
+  import PickColors from 'vue-pick-colors'
   const value = ref('#fa64c3')
   const showPicker = ref(false)
 </script>
@@ -166,7 +175,7 @@ const colors = ref([
     background: #1890ff;
     text-shadow: 0 -1px 0 rgba(0,0,0,.12);
     box-shadow: 0 2px #0000000b;
-    padding: 0 20px;
+    padding: 3px 20px;
     border-radius: 5px;
     display: inline;
     font-weight: 500;
@@ -179,12 +188,13 @@ const colors = ref([
 ## 添加颜色
 
 使用 `add-color`  <pick-colors v-model:value="addColorValue" add-color />
+
 ```vue
 <template>
   <pick-colors v-model:value="value" add-color />
 </template>
 <script lang="ts" setup>
-  import pickColors from 'vue-pick-colors'
+  import PickColors from 'vue-pick-colors'
   const value = ref('#1f93ff')
 </script>
 ```

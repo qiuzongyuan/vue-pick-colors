@@ -1,6 +1,6 @@
 import { AppContext } from 'vue'
 import DefaultTheme from 'vitepress/theme'
-import PickColors from '../../../src'
+import PickColors from 'vue-pick-colors'
 import './index.css'
 export default {
   extends: DefaultTheme,

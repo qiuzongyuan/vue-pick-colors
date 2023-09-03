@@ -28,7 +28,7 @@
       :selected="colorItemSelected(-1)"
       :data-index="-1"
     />
-    <teleport :to="popupContainer == null ?  'body' :  popupContainer">
+    <teleport :to="popupContainer" :disabled="teleportDisabled">
       <transition>
         <picker
           class="picker"
@@ -101,6 +101,14 @@ export default defineComponent({
       type: Number,
       default: 13
     },
+    popupContainer: {
+      type: [String, Object, Boolean] as PropType<string | RendererElement | boolean>,
+      default: 'body'
+    },
+    zIndex: {
+      type: Number,
+      default: 1000
+    },
     colors: {
       type: Array as PropType<string []>,
       default: () => [
@@ -117,9 +125,6 @@ export default defineComponent({
         '#1f93ff',
         '#fa64c3'
       ]
-    },
-    popupContainer: {
-      type: [String, Object] as PropType<string | RendererElement>
     }
   },
   emits: ['change', 'update:value', 'update:showPicker', 'overflowMax', 'closePicker'],
@@ -155,7 +160,7 @@ export default defineComponent({
     const targetRef = ref(null)
     const pickerRef = ref(null)
 
-    const { style: pickerStyle } = usePopper(targetRef, pickerRef)
+    const { style: pickerStyle } = usePopper(targetRef, pickerRef, { zIndex: props.zIndex })
 
     const onOpenPicker = () => {
       if (unref(targetRef) == null) {
@@ -210,6 +215,12 @@ export default defineComponent({
       }
     })
     const addColorItemShow = ref(props.max > unref(valueList).length)
+    const teleportDisabled = computed(() => {
+      if (typeof props.popupContainer === 'boolean') {
+        return props.popupContainer === false
+      }
+      return false
+    })
     const onPickerChange = (color: string) => {
       const index = unref(selectedIndex)
       const values = unref(valueList).slice()
@@ -312,8 +323,8 @@ export default defineComponent({
       onColorItemDrop,
       colorItemsRef,
       pickerStyle,
-      values
-
+      values,
+      teleportDisabled
     }
   }
 })

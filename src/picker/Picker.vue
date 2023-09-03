@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, watch, ref, unref } from 'vue'
-import type { CSSProperties, PropType } from 'vue'
+import type { PropType, CSSProperties } from 'vue'
 import Saturation from './Saturation.vue'
 import Hue from './Hue.vue'
 import Alpha from './Alpha.vue'
@@ -50,7 +50,7 @@ export default defineComponent({
       default: () => []
     },
     style: {
-      type: Object as PropType<CSSProperties>,
+      type: Object as PropType<Partial<CSSProperties>>,
       default: () => ({})
     }
   },

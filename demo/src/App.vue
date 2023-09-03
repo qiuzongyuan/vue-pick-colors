@@ -16,6 +16,7 @@
     :colors="['', 'rgba(0,0,0,1)', 'hsla(0, 52%, 31%, 1)', '#3333']"
     :max="3"
     @closePicker="closePicker"
+    :popup-container="false"
   />
   <br />
   <button @click="onSwitchTheme">切换主题</button>
@@ -24,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, unref } from 'vue'
+import { defineComponent, ref } from 'vue'
 import PickColors, { Theme } from '../../src/index'
 export default defineComponent({
   name: 'App',
@@ -77,5 +78,4 @@ export default defineComponent({
 </script>
 
 <style scoped>
-
 </style>

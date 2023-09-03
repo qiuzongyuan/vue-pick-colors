@@ -214,7 +214,8 @@ const colors = ref([
 | show-alpha           | 是否支持透明度选择                                      | boolean                       | false                                                        |       |
 | add-color            | 是否支持添加颜色                                        | boolean                       | false                                                        |       |
 | popup-container      | 定义拾取器的容器                                        | string \| Vue.RendererElement | 'body'                                                       | 1.5.0 |
-| max                  | 添加颜色最大数                                          | number                        | 13                                                           |       |
+| z-index | 拾取器的层级   | number | 1000 | 1.5.0 |
+| max     | 添加颜色最大数 | number | 13   |       |
 
 <br/>
 

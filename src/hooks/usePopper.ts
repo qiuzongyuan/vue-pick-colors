@@ -1,8 +1,9 @@
 import { Ref, nextTick, onBeforeUnmount, ref, unref, watch } from 'vue'
+import type { CSSProperties } from 'vue'
 import { Options, Instance, createPopper } from '@popperjs/core'
 let instance: Instance = null
-const usePopper = (target: Ref<any>, popper: Ref<any>) => {
-  const style = ref<Partial<CSSStyleDeclaration>>()
+const usePopper = (target: Ref<any>, popper: Ref<any>, defaultStyle: Partial<CSSProperties>) => {
+  const style = ref<Partial<CSSProperties>>({})
   const options: Options = {
     strategy: 'absolute',
     placement: 'auto',
@@ -43,7 +44,8 @@ const usePopper = (target: Ref<any>, popper: Ref<any>) => {
           const { styles, placement } = state
           const { popper } = styles
           style.value = {
-            ...popper,
+            ...popper as CSSProperties,
+            ...defaultStyle,
             transformOrigin: placement === 'top' ? 'center bottom' : ''
           }
         }

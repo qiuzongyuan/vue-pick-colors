@@ -215,8 +215,9 @@ Use `add-color`  <pick-colors v-model:value="addColorValue" add-color />
 | format               | color format                                                 | hex ｜ rgb ｜ hsl \| hsv      | hex                                                          |         |
 | show-alpha           | whether to display the alpha slider                          | boolean                       | false                                                        |         |
 | add-color            | support for adding colors                                    | boolean                       | false                                                        |         |
-| popup-container      | defines the container for the picker                         | string \| Vue.RendererElement | 'body'                                                       | 1.5.0   |
-| max                  | maximum number of colors to add                              | number                        | 13                                                           |         |
+| popup-container      | defines the container for the picker                         | string \| Vue.RendererElement | 'body'                                                       | 1.5.0   | 
+|z-index | the z-index  of the picker      | number | 1000 | 1.5.0 |
+| max     | maximum number of colors to add | number | 13   |       |
 
 <br/>
 

@@ -1,26 +1,25 @@
 <template>
-  <div style="height: 200vh;">
-    <pick-colors v-model:value="value2" format="hsl" :theme="theme" @change="onColorChange2" @closePicker="closePicker"/>
-  <br />
-  <button @click="toggleShowPicker">{{ showPicker ? '关闭' : '打开' }}</button>
-  <pick-colors v-model:show-picker="showPicker" value="#333" show-alpha :theme="theme" :width="40" :size="60" @closePicker="closePicker"/>
-  <br />
-  <pick-colors v-model:value="value3" format="hsv" showAlpha :theme="theme" @closePicker="closePicker"/>
-  <br />
-  <div style="height: 400px;" />
-  <pick-colors
-    :theme="theme"
-    show-alpha
-    add-color
-    @change="onColorChange"
-    :colors="['', 'rgba(0,0,0,1)', 'hsla(0, 52%, 31%, 1)', '#3333']"
-    :max="3"
-    @closePicker="closePicker"
-    :popup-container="false"
-  />
-  <br />
-  <button @click="onSwitchTheme">切换主题</button>
-  <div ref="divRef"></div>
+  <div>
+    <pick-colors v-model:value="value2" format="hsl" @change="onColorChange2" @closePicker="closePicker"/>
+    <br />
+    <button @click="toggleShowPicker">{{ showPicker ? '关闭' : '打开' }}</button>
+    <pick-colors v-model:show-picker="showPicker" value="#333" show-alpha :width="40" :size="60" @closePicker="closePicker"/>
+    <br />
+    <pick-colors v-model:value="value3" format="hsv" showAlpha :theme="theme" @closePicker="closePicker"/>
+    <br />
+    <pick-colors
+      :theme="theme"
+      show-alpha
+      add-color
+      @change="onColorChange"
+      :colors="['', 'rgba(0,0,0,1)', 'hsla(0, 52%, 31%, 1)', '#3333']"
+      :max="3"
+      @closePicker="closePicker"
+      :popup-container="false"
+    />
+    <br />
+    <button @click="onSwitchTheme">切换主题</button>
+    <div ref="divRef"></div>
   </div>
 </template>
 

@@ -1,6 +1,6 @@
 {
   "name": "vue-pick-colors",
-  "version": "1.5.8",
+  "version": "1.6.0",
   "description": "A Color picker for Vue.js 3",
   "main": "dist/index.umd.js",
   "module": "dist/index.esm.js",
@@ -13,7 +13,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "npm run clean && npm run lint && rollup -c ./rollup.config.ts",
+    "build": "npm run test && npm run clean && npm run lint && rollup -c ./rollup.config.ts",
     "build:dev": "npm run clean && npm run lint && rollup -wc ./rollup.config.ts",
     "dev": "vite ./demo",
     "prepublishOnly": "npm run build",

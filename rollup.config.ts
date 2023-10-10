@@ -24,7 +24,8 @@ const exclude = [
 ]
 
 const globals = {
-  vue: 'vue'
+  vue: 'Vue',
+  '@popperjs/core': 'Popperjs'
 }
 
 module.exports = {
@@ -63,7 +64,7 @@ module.exports = {
     }),
     terser({
       compress: {
-        drop_console: true
+        // drop_console: true
       }
     }),
     filesize()

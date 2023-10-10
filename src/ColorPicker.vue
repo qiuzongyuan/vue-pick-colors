@@ -147,7 +147,7 @@ export default defineComponent({
     const colorItemSelected = (index) => {
       return (props.addColor ? unref(valueList).length > 0 : unref(valueList).length > 1) && unref(selectedIndex) === index
     }
-    const isShowPicker = ref()
+    const isShowPicker = ref(false)
     watch(
       () => props.showPicker,
       () => {
@@ -184,26 +184,38 @@ export default defineComponent({
     }
     const colorPicker = ref<HTMLElement>()
 
+    let openTimer: ReturnType<typeof setTimeout> | undefined
     const onColorClick = async (e: Event) => {
       const target = e.target as HTMLElement
       const index = target.dataset?.index
       if (index == null || index === '') return
-      selectedIndex.value = +index
+      const i = +index
+      if (unref(selectedIndex) === i) return
+      if (unref(selectedIndex) != null && unref(selectedIndex) !== i) {
+        // 在同一个组件里面
+        onClosePicker()
+        if (openTimer) clearTimeout(openTimer)
+        openTimer = setTimeout(() => {
+          onOpenPicker()
+          clearTimeout(openTimer)
+        }, 100)
+      } else {
+        onOpenPicker()
+      }
+      selectedIndex.value = i
       targetRef.value = target
-      onOpenPicker()
     }
-    let timer: ReturnType<typeof setTimeout> | undefined
-    const onOtherClick = async (e: Event) => {
-      e?.stopPropagation()
+    let closeTimer: ReturnType<typeof setTimeout> | undefined
+    const onAllClick = async (e: Event) => {
       const target = e.target as HTMLElement
       const isColorItem = !unref(colorPicker)?.isEqualNode(target) && unref(colorPicker)?.contains(target)
       if (isColorItem) return
-      const popper = unref(pickerRef)?.$el as HTMLElement
-      const isPopperContains = popper?.contains(target) || false
+      const popperTarget = unref(pickerRef)?.$el as HTMLElement
+      const isPopperContains = popperTarget?.contains(target) || false
       // 点击卡片区域
       if (isPopperContains) return
-      if (timer) clearTimeout(timer)
-      timer = setTimeout(() => {
+      if (closeTimer) clearTimeout(closeTimer)
+      closeTimer = setTimeout(() => {
         // 关闭卡片
         if (unref(isShowPicker)) onClosePicker()
       }, 0)
@@ -211,7 +223,7 @@ export default defineComponent({
     watch(isShowPicker, () => {
       if (unref(isShowPicker)) {
         onOpenPicker()
-        clearTimeout(timer)
+        clearTimeout(closeTimer)
       }
     })
     const addColorItemShow = ref(props.max > unref(valueList).length)
@@ -295,16 +307,20 @@ export default defineComponent({
     })
     const colorItemsRef = ref([])
     onMounted(() => {
-      document.addEventListener('mouseup', onOtherClick, false)
+      document.addEventListener('mouseup', onAllClick, false)
       if (props.showPicker) {
         onOpenPicker()
       }
     })
     onUnmounted(() => {
-      document.removeEventListener('mouseup', onOtherClick, false)
-      if (timer) {
-        clearTimeout(timer)
-        timer = null
+      document.removeEventListener('mouseup', onAllClick, false)
+      if (openTimer) {
+        clearTimeout(openTimer)
+        openTimer = null
+      }
+      if (closeTimer) {
+        clearTimeout(closeTimer)
+        closeTimer = null
       }
     })
     return {
@@ -345,15 +361,12 @@ export default defineComponent({
 }
 
 .picker {
-  will-change: transform;
-  z-index: 9;
   overflow: hidden;
-  transition: left 60ms ease-in-out;
 }
 
 .v-enter-active,
 .v-leave-active {
-  transition: opacity 200ms ease-in-out, transform 200ms ease-in-out, ;
+  transition: opacity 200ms ease-in-out, transform 200ms ease-in-out;
   opacity:1;
   transform: scaleY(1);
   transform-origin: center top;

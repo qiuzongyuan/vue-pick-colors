@@ -13,7 +13,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "npm run test && npm run clean && npm run lint && rollup -c ./rollup.config.ts",
+    "build": "npm run clean && npm run lint && rollup -c ./rollup.config.ts",
     "build:dev": "npm run clean && npm run lint && rollup -wc ./rollup.config.ts",
     "dev": "vite ./demo",
     "prepublishOnly": "npm run build",

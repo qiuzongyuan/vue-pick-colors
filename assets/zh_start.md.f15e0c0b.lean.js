@@ -1,1 +1,0 @@
-import{_ as s,o as a,c as n,Q as l}from"./chunks/framework.edce7cc3.js";const h=JSON.parse('{"title":"开始","description":"","frontmatter":{},"headers":[],"relativePath":"zh/start.md","filePath":"zh/start.md"}'),p={name:"zh/start.md"},o=l("",5),e=[o];function t(c,r,E,y,i,d){return a(),n("div",null,e)}const v=s(p,[["render",t]]);export{h as __pageData,v as default};

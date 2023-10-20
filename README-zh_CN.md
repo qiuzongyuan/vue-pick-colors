@@ -28,7 +28,7 @@ yarn add vue-pick-colors
 
 ### 使用
 
-```vue
+```
 <template>
   <pick-colors v-model:value="value"/>
 </template>

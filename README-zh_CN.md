@@ -3,8 +3,7 @@
 
 > 外观样式基于 [vue-color-kit](https://github.com/anish2690/vue-color-kit)
 
-
-> [English ](https://github.com/qiuzongyuan/vue-pick-colors)
+> [English ](https://github.com/qiuzongyuan/vue-pick-colors/blob/main/README-en.md)
 
 ### [Demo](https://qiuzongyuan.github.io/vue-pick-colors/zh/use.html)
 

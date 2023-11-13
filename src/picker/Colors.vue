@@ -8,7 +8,7 @@
         :border="false"
         :border-radius="3"
         :selected="selectedIndex === index"
-        @click.stop.prevent="onSelectColor(color, index)"
+        @click.stop.prevent="onSelectColor(color, +index)"
       />
     </template>
   </div>

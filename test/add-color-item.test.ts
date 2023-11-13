@@ -1,7 +1,6 @@
 import { describe, it, expect } from '@jest/globals'
 import { mount } from '@vue/test-utils'
 import AddColorItem from '../src/add-color-item'
-
 describe('add color item', () => {
   it('size', () => {
     const size = 26

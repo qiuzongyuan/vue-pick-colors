@@ -3,7 +3,7 @@
     <pick-colors v-model:value="value2" format="hsl" @change="onColorChange2" @closePicker="closePicker"/>
     <br />
     <button @click="toggleShowPicker">{{ showPicker ? '关闭' : '打开' }}</button>
-    <pick-colors v-model:show-picker="showPicker" value="#333" show-alpha :width="40" :size="60" @closePicker="closePicker"/>
+    <pick-colors v-model:show-picker="showPicker" v-model:value="value" show-alpha :width="40" :size="60" @closePicker="closePicker"/>
     <br />
     <pick-colors v-model:value="value3" format="hsv" showAlpha :theme="theme" @closePicker="closePicker"/>
     <br />
@@ -32,8 +32,8 @@ export default defineComponent({
     PickColors
   },
   setup () {
-    const value = ref('#222')
-    const value2 = ref('#333')
+    const value = ref('')
+    const value2 = ref('')
     const value3 = ref(['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc'])
     const onColorChange = (value: string | string[], color: string, index: number) => {
       console.log(value, color, index)

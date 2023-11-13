@@ -1,60 +1,61 @@
 <template>
   <div
-    class="color-picker"
-    ref="colorPicker"
-    @dragstart.stop="onColorItemDragStart"
-    @dragover.prevent.stop="onColorItemDragOver"
-    @drop.prevent.stop="onColorItemDrop"
-    @click.stop="onColorClick"
+      class="color-picker"
+      ref="colorPicker"
+      @dragstart.stop="onColorItemDragStart"
+      @dragover.prevent.stop="onColorItemDragOver"
+      @drop.prevent.stop="onColorItemDrop"
+      @click.stop="onColorClick"
   >
     <color-item
-      v-for="(value, index) in values"
-      :key="index"
-      class="color-item"
-      :ref="(el) => colorItemsRef[index] = el"
-      :size="size"
-      :width="width"
-      :height="height"
-      :value="value"
-      :selected="colorItemSelected(index)"
-      :data-index="index"
-      :draggable="valueList.length > 1"
-      :format="format"
+        class="color-item"
+        v-for="(value, index) in values"
+        :key="index"
+        :ref="(el) => colorItemsRef[index] = el"
+        :size="size"
+        :width="width"
+        :height="height"
+        :value="value"
+        :selected="colorItemSelected(index)"
+        :data-index="index"
+        :draggable="valueList.length > 1"
+        :format="format"
     />
     <add-color-item
-      class="add-color-item"
-      v-if="addColor && addColorItemShow"
-      ref="addColorItem"
-      :selected="colorItemSelected(-1)"
-      :data-index="-1"
+        class="add-color-item"
+        v-if="addColor && addColorItemShow"
+        ref="addColorItem"
+        :selected="colorItemSelected(-1)"
+        :data-index="-1"
     />
-    <teleport :to="popupContainer" :disabled="teleportDisabled">
+    <teleport :to="toPopupContainer" :disabled="teleportDisabled">
       <transition>
         <picker
-          class="picker"
-          :style="pickerStyle"
-          ref="pickerRef"
-          :value="selectedColor"
-          :format="format"
-          :show-alpha="showAlpha"
-          :colors="colors"
-          v-if="isShowPicker"
-          @change="onPickerChange"
+            class="picker"
+            :style="pickerStyle"
+            ref="pickerRef"
+            :value="selectedColor"
+            :format="format"
+            :show-alpha="showAlpha"
+            :colors="colors"
+            v-if="isShowPicker"
+            @change="onPickerChange"
         />
-    </transition>
+      </transition>
     </teleport>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, onMounted, onUnmounted, provide, computed, watch, unref, toRaw, nextTick } from 'vue'
-import type { RendererElement, PropType } from 'vue'
+import type { PropType } from 'vue'
 import Picker from './picker'
 import ColorItem from './color-item'
 import AddColorItem from './add-color-item'
 import type { Theme, Format } from './constant'
 import usePopper from './hooks/usePopper'
 import { colorFormat } from './utils'
+
 export default defineComponent({
   name: 'ColorPicker',
   components: {
@@ -97,13 +98,16 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
+    deleteColor: {
+      type: Boolean,
+      default: true
+    },
     max: {
       type: Number,
       default: 13
     },
     popupContainer: {
-      type: [String, Object, Boolean] as PropType<string | RendererElement | boolean>,
-      default: 'body'
+      type: [String, Object, Boolean] as PropType<string | HTMLElement | boolean>
     },
     zIndex: {
       type: Number,
@@ -140,9 +144,9 @@ export default defineComponent({
       }, {
         immediate: true
       })
-    const selectedIndex = ref<undefined|number>(undefined)
+    const selectedIndex = ref<undefined | number>(undefined)
     // 设置添加初始值
-    const selectedColor = computed<undefined|string>(() => unref(valueList)[unref(selectedIndex)])
+    const selectedColor = computed<undefined | string>(() => unref(valueList)[unref(selectedIndex)])
 
     const colorItemSelected = (index) => {
       return (props.addColor ? unref(valueList).length > 0 : unref(valueList).length > 1) && unref(selectedIndex) === index
@@ -165,6 +169,7 @@ export default defineComponent({
     const onOpenPicker = () => {
       if (unref(targetRef) == null) {
         targetRef.value = unref(colorItemsRef)[0]
+        selectedIndex.value = 0
       }
       if (props.showPicker === undefined) {
         isShowPicker.value = true
@@ -227,6 +232,12 @@ export default defineComponent({
       }
     })
     const addColorItemShow = ref(props.max > unref(valueList).length)
+    const toPopupContainer = computed<string | HTMLElement>(() => {
+      if (typeof props.popupContainer === 'string' || (typeof props.popupContainer === 'object' && props.popupContainer != null)) {
+        return props.popupContainer
+      }
+      return 'body'
+    })
     const teleportDisabled = computed(() => {
       if (typeof props.popupContainer === 'boolean') {
         return props.popupContainer === false
@@ -277,7 +288,8 @@ export default defineComponent({
       const target = e.target as HTMLElement
       dragTargetIndex = +target.dataset.index
     }
-    const onColorItemDragOver = (e: DragEvent) => {}
+    const onColorItemDragOver = (e: DragEvent) => {
+    }
     const onColorItemDrop = (e: DragEvent) => {
       const target = e.target as HTMLElement
       const insertIndex = +target.dataset.index
@@ -340,7 +352,8 @@ export default defineComponent({
       colorItemsRef,
       pickerStyle,
       values,
-      teleportDisabled
+      teleportDisabled,
+      toPopupContainer
     }
   }
 })
@@ -367,7 +380,7 @@ export default defineComponent({
 .v-enter-active,
 .v-leave-active {
   transition: opacity 200ms ease-in-out, transform 200ms ease-in-out;
-  opacity:1;
+  opacity: 1;
   transform: scaleY(1);
   transform-origin: center top;
 }

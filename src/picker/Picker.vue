@@ -6,7 +6,27 @@
         <hue class="hue" :hue="h" @change="onSelectHue"/>
         <alpha class="alpha" :alpha="a" :color="rgbStr" @change="onSelectAlpha" v-if="showAlpha"/>
       </div>
-      <input-value :label="label" :value="colorValue" :width="inputWidth" @change="onInputChange"  @blur="handleChange" @enter="handleChange"/>
+      <template v-if="Array.isArray(format)">
+        <input-value
+          v-for="(itemFormat, index) in format"
+          :key="index" :label="handleInputLabel(itemFormat)"
+          :value="colorValue"
+          :width="inputWidth"
+          @change="onInputChange"
+          @blur="handleChange(itemFormat)"
+          @enter="handleChange(itemFormat)"
+        />
+      </template>
+      <template v-else>
+        <input-value
+          :label="handleInputLabel(format)"
+          :value="colorValue"
+          :width="inputWidth"
+          @change="onInputChange"
+          @blur="handleChange(format)"
+          @enter="handleChange(format)"
+        />
+      </template>
       <Colors class="colors" v-if="colors.length > 0" :colors="colors" :selected-index="selectColorIndex" @change="onSelectColor"/>
     </div>
   </div>
@@ -33,7 +53,7 @@ export default defineComponent({
   },
   props: {
     format: {
-      type: String as PropType<Format>,
+      type: [String, Array] as PropType<Format | Format []>,
       default: 'hex'
     },
     showAlpha: {
@@ -80,7 +100,7 @@ export default defineComponent({
     watch(hsva, (hsva, oldHsva) => {
       let color = ''
       if (hsva != null) {
-        color = hsvFormat({ ...hsva }, props.format, props.showAlpha)
+        color = hsvFormat({ ...hsva }, 'hsv', props.showAlpha)
         cacheHsva.value = { ...hsva }
       } else {
         cacheHsva.value = null
@@ -99,10 +119,8 @@ export default defineComponent({
     const a = computed(() => unref(hsva)?.a != null ? unref(hsva)?.a : 1)
     const rgb = computed(() => hsv2rgb(unref(h), unref(s), unref(v)))
     const rgbStr = computed(() => `rgb(${unref(rgb).r}, ${unref(rgb).g}, ${unref(rgb).b})`)
-    const label = computed(() => {
-      const format = props.format
-      const showAlpha = props.showAlpha
-      if (showAlpha) {
+    const handleInputLabel = (format: Format) => {
+      if (props.showAlpha) {
         switch (format) {
           case 'hsv':
             return 'HSVA'
@@ -125,7 +143,7 @@ export default defineComponent({
             return 'HEX'
         }
       }
-    })
+    }
     const onSelectHue = (hue: number) => {
       selectColorIndex.value = -1
       if (unref(hsva) == null) {
@@ -207,14 +225,13 @@ export default defineComponent({
         }
       }
     }
-    const handleChange = () => {
+    const handleChange = (format: Format) => {
       const color = unref(colorValue)?.trim()
       if (color === '') {
         hsva.value = null
         return
       }
       const showAlpha = props.showAlpha
-      const format = props.format
       const isCheck = checkColorValue(color, format, showAlpha)
       if (isCheck) {
         handleColorChange(color, format, showAlpha)
@@ -240,7 +257,7 @@ export default defineComponent({
       onSelectSaturation,
       onSelectHue,
       onSelectAlpha,
-      label,
+      handleInputLabel,
       colorValue,
       pickerStyle,
       inputWidth,

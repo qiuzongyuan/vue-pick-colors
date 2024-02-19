@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, watch } from 'vue'
 import PickColors, { Theme } from '../../src/index'
 export default defineComponent({
   name: 'App',
@@ -34,6 +34,10 @@ export default defineComponent({
   setup () {
     const value = ref('')
     const value2 = ref('')
+    watch(value2, () => {
+      console.log(value2.value);
+      
+    })
     const value3 = ref(['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc'])
     const onColorChange = (value: string | string[], color: string, index: number) => {
       console.log(value, color, index)

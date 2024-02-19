@@ -167,10 +167,8 @@ export default defineComponent({
     const { style: pickerStyle } = usePopper(targetRef, pickerRef, { zIndex: props.zIndex })
 
     const onOpenPicker = () => {
-      if (unref(targetRef) == null) {
-        targetRef.value = unref(colorItemsRef)[0]
-        selectedIndex.value = 0
-      }
+      if (unref(targetRef) == null) targetRef.value = unref(colorItemsRef)[0]
+      if (unref(selectedIndex) == null) selectedIndex.value = 0
       if (props.showPicker === undefined) {
         isShowPicker.value = true
       } else {

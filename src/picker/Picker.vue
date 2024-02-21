@@ -40,7 +40,7 @@ export default defineComponent({
   },
   props: {
     format: {
-      type: [String, Array] as PropType<Format>,
+      type: String as PropType<Format>,
       default: 'hex'
     },
     showAlpha: {

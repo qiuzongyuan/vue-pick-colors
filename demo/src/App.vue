@@ -1,6 +1,6 @@
 <template>
   <div>
-    <pick-colors v-model:value="value2" format="hsl" @change="onColorChange2" @closePicker="closePicker"/>
+    <pick-colors v-model:value="value2" format="rgb" @change="onColorChange2" @closePicker="closePicker"/>
     <br />
     <button @click="toggleShowPicker">{{ showPicker ? '关闭' : '打开' }}</button>
     <pick-colors v-model:show-picker="showPicker" v-model:value="value" show-alpha :width="40" :size="60" @closePicker="closePicker"/>

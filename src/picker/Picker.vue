@@ -6,18 +6,6 @@
         <hue class="hue" :hue="h" @change="onSelectHue"/>
         <alpha class="alpha" :alpha="a" :color="rgbStr" @change="onSelectAlpha" v-if="showAlpha"/>
       </div>
-      <template v-if="Array.isArray(format)">
-        <input-value
-          v-for="(itemFormat, index) in format"
-          :key="index" :label="handleInputLabel(itemFormat)"
-          :value="colorValue"
-          :width="inputWidth"
-          @change="onInputChange"
-          @blur="handleChange(itemFormat)"
-          @enter="handleChange(itemFormat)"
-        />
-      </template>
-      <template v-else>
         <input-value
           :label="handleInputLabel(format)"
           :value="colorValue"
@@ -26,7 +14,6 @@
           @blur="handleChange(format)"
           @enter="handleChange(format)"
         />
-      </template>
       <Colors class="colors" v-if="colors.length > 0" :colors="colors" :selected-index="selectColorIndex" @change="onSelectColor"/>
     </div>
   </div>
@@ -53,7 +40,7 @@ export default defineComponent({
   },
   props: {
     format: {
-      type: [String, Array] as PropType<Format | Format []>,
+      type: [String, Array] as PropType<Format>,
       default: 'hex'
     },
     showAlpha: {
@@ -80,7 +67,6 @@ export default defineComponent({
     const inputWidth = computed(() => props.showAlpha ? 165 : 140)
     const hsva = ref()
     const cacheHsva = ref()
-
     const colorValue = ref()
     const handleTransformValue = () => {
       const value = props.value?.trim()
@@ -100,7 +86,7 @@ export default defineComponent({
     watch(hsva, (hsva, oldHsva) => {
       let color = ''
       if (hsva != null) {
-        color = hsvFormat({ ...hsva }, 'hsv', props.showAlpha)
+        color = hsvFormat({ ...hsva }, props.format, props.showAlpha)
         cacheHsva.value = { ...hsva }
       } else {
         cacheHsva.value = null

@@ -107,7 +107,8 @@ export default defineComponent({
       default: 13
     },
     popupContainer: {
-      type: [String, Object, Boolean] as PropType<string | HTMLElement | boolean>
+      type: [String, Object, Boolean] as PropType<string | HTMLElement | boolean>,
+      default: 'body'
     },
     zIndex: {
       type: Number,

@@ -19,7 +19,7 @@
         :selected="colorItemSelected(index)"
         :data-index="index"
         :draggable="valueList.length > 1"
-        :format="format"
+        :format="formatValue"
     />
     <add-color-item
         class="add-color-item"
@@ -35,11 +35,13 @@
             :style="pickerStyle"
             ref="pickerRef"
             :value="selectedColor"
-            :format="format"
+            :format="formatValue"
             :show-alpha="showAlpha"
             :colors="colors"
+            :formatOptions="formatOptions"
             v-if="isShowPicker"
             @change="onPickerChange"
+            @formatChange="onFormatChange"
         />
       </transition>
     </teleport>
@@ -49,6 +51,7 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted, onUnmounted, provide, computed, watch, unref, toRaw, nextTick } from 'vue'
 import type { PropType } from 'vue'
+import { PositioningStrategy, Placement } from '@popperjs/core'
 import Picker from './picker'
 import ColorItem from './color-item'
 import AddColorItem from './add-color-item'
@@ -83,8 +86,7 @@ export default defineComponent({
       type: [Number, String]
     },
     format: {
-      type: String as PropType<Format>,
-      default: 'hex'
+      type: String as PropType<Format>
     },
     showPicker: {
       type: Boolean,
@@ -130,18 +132,38 @@ export default defineComponent({
         '#1f93ff',
         '#fa64c3'
       ]
+    },
+    position: {
+      type: String as PropType<PositioningStrategy>
+    },
+    placement: {
+      type: String as PropType<Placement>
+    },
+    formatOptions: {
+      type: [Boolean, Array] as PropType<Format [] | Boolean>,
+      default: () => ['rgb', 'hex', 'hsl', 'hsv']
     }
   },
-  emits: ['change', 'update:value', 'update:showPicker', 'overflowMax', 'closePicker'],
+  emits: ['change', 'update:value', 'update:showPicker', 'overflowMax', 'closePicker', 'formatChange'],
   setup (props, { emit }) {
     const valueList = ref<string []>([])
     const values = computed(() => unref(valueList).map((value) => colorFormat(value, 'hex', props.showAlpha)))
+    const formatValue = ref<Format>('hex')
+    watch(() => props.format, () => {
+      formatValue.value = props.format
+    }, {
+      immediate: true
+    })
+    const onFormatChange = (format:Format) => {
+      formatValue.value = format
+      emit('formatChange', format)
+    }
     watch(
       () => props.value,
       () => {
         const value = props.value || ''
         const values = Array.isArray(value) ? value : [value]
-        valueList.value = values.map(value => colorFormat(value, props.format, props.showAlpha))
+        valueList.value = values.map(value => colorFormat(value, unref(formatValue), props.showAlpha))
       }, {
         immediate: true
       })
@@ -165,7 +187,10 @@ export default defineComponent({
     const targetRef = ref(null)
     const pickerRef = ref(null)
 
-    const { style: pickerStyle } = usePopper(targetRef, pickerRef, { zIndex: props.zIndex })
+    const { style: pickerStyle } = usePopper(targetRef, pickerRef, {
+      defaultStyle: { zIndex: props.zIndex },
+      strategy: props.position
+    })
 
     const onOpenPicker = () => {
       if (unref(targetRef) == null) targetRef.value = unref(colorItemsRef)[0]
@@ -352,7 +377,9 @@ export default defineComponent({
       pickerStyle,
       values,
       teleportDisabled,
-      toPopupContainer
+      toPopupContainer,
+      formatValue,
+      onFormatChange
     }
   }
 })

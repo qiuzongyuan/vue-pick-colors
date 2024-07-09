@@ -1,8 +1,11 @@
 <template>
   <div class="input">
-    <span class="label">
-      {{ label }}
-    </span>
+    <FormatValue
+      :value="format"
+      :showAlpha="showAlpha"
+      :options="formatOptions"
+      @change="onFormatChange"
+    />
     <input
       class="value"
       :style="valueStyle"
@@ -16,11 +19,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, PropType } from 'vue'
+import { Format } from '../../constant'
+import FormatValue from './FormatValue.vue'
 export default defineComponent({
   name: 'Input',
+  components: {
+    FormatValue
+  },
   props: {
-    label: {
+    format: {
       type: String,
       default: 'RGBA'
     },
@@ -29,11 +37,16 @@ export default defineComponent({
       default: ''
     },
     width: {
-      type: Number,
-      default: 168
+      type: Number
+    },
+    showAlpha: {
+      type: Boolean
+    },
+    formatOptions: {
+      type: [Boolean, Array] as PropType<Format [] | Boolean>
     }
   },
-  emits: ['change', 'focus', 'blur', 'enter'],
+  emits: ['change', 'focus', 'blur', 'enter', 'formatChange'],
   setup (props, { emit }) {
     const valueStyle = computed(() => ({
       minWidth: `${props.width}px`,
@@ -52,12 +65,16 @@ export default defineComponent({
     const onEnter = () => {
       emit('enter')
     }
+    const onFormatChange = (format) => {
+      emit('formatChange', format)
+    }
     return {
       onInput,
       valueStyle,
       onFocus,
       onBlur,
-      onEnter
+      onEnter,
+      onFormatChange
     }
   }
 })
@@ -65,24 +82,10 @@ export default defineComponent({
 
 <style scoped lang="less">
 .input {
-  display: inline-block;
+  display: flex;
   font-size: 12px;
 }
-.label {
-  width: 45px;
-  height: 30px;
-  float: left;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 500;
-  color: #999999;
-  background: #e7e8e9;
-}
-[pick-colors-theme='dark'] .label {
-  color: #999;
-  background: #252930;
-}
+
 .value {
   flex: 1;
   height: 30px;

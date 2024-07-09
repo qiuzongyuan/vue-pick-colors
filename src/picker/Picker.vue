@@ -13,8 +13,8 @@
           :width="showAlpha ? 150 : 125"
           :formatOptions="formatOptions"
           @change="onInputChange"
-          @blur="handleChange(format)"
-          @enter="handleChange(format)"
+          @blur="handleChange"
+          @enter="handleChange"
           @formatChange="onFormatChange"
         />
       <Colors class="colors" v-if="colors.length > 0" :colors="colors" :selected-index="selectColorIndex" @change="onSelectColor"/>
@@ -30,7 +30,7 @@ import Hue from './Hue.vue'
 import Alpha from './Alpha.vue'
 import InputValue from './input-value'
 import Colors from './Colors.vue'
-import { hsvFormat, hsv2rgb, checkColorValue, transformHsva, checkColorFormat, filterHsva } from '../utils'
+import { hsvFormat, hsv2rgb, transformHsva, checkColorFormat, filterHsva, checkHsva } from '../utils'
 import { ALPHA_FORMAT_MAP, Format, FORMAT_MAP } from '../constant'
 export default defineComponent({
   name: 'Picker',
@@ -198,16 +198,18 @@ export default defineComponent({
         }
       }
     }
-    const handleChange = (format: Format) => {
+    const handleChange = () => {
       const color = unref(colorValue)?.trim()
       if (color === '') {
         hsva.value = null
         return
       }
-      const showAlpha = props.showAlpha
-      const isCheck = checkColorValue(color, format, showAlpha)
+      const { showAlpha } = props
+      const format = checkColorFormat(color)
+      const newHsva = transformHsva(color, format, showAlpha)
+      const isCheck = checkHsva(newHsva)
       if (isCheck) {
-        handleColorChange(color, format, showAlpha)
+        hsva.value = newHsva
       } else {
         // 无效值
         if (unref(cacheHsva) != null) {

@@ -12,7 +12,7 @@
       show-alpha
       add-color
       @change="onColorChange"
-      :colors="['', 'rgba(0,0,0,1)', 'hsla(0, 52%, 31%, 1)', '#3333']"
+      :colors="['#00', 'rgba(0,0,0,1)', 'hsla(0, 52%, 31%, 1)', '#3333']"
       :max="3"
       @closePicker="closePicker"
       :popup-container="false"
@@ -33,7 +33,7 @@ export default defineComponent({
   },
   setup () {
     const value = ref('')
-    const value2 = ref('')
+    const value2 = ref('#22')
     watch(value2, () => {
       console.log(value2.value);
       

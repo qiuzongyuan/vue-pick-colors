@@ -2,8 +2,6 @@
 
 >  🎉 A Color picker for Vue.js 3
 
-> The appearance style is based on [vue-color-kit](https://github.com/anish2690/vue-color-kit)
-
 > [🇨🇳中文版](https://github.com/qiuzongyuan/vue-pick-colors)
 
 

@@ -188,6 +188,7 @@ export const colorFormat = (color: unknown, format: Format, useAlpha: boolean) =
   if (typeof color === 'string' && color !== '') {
     const hsv = transformHsva(color, checkColorFormat(color), useAlpha)
     const filterHsv = filterHsva(hsv)
+    if (filterHsv == null) return ''
     return hsvFormat(filterHsv, format, useAlpha)
   }
   return ''
@@ -323,7 +324,8 @@ export const checkColorFormat = (color: string) => {
   return 'hex'
 }
 
-export const filterHsva = ({ h, s, v, a }: { h: number, s:number, v:number, a: number }) => {
+export const filterHsva = ({ h, s, v, a }: { h: number, s:number, v:number, a: number } | null) => {
+  if (isNaN(h) && isNaN(s) && isNaN(v)) return null
   if (isNaN(h)) h = 0
   if (isNaN(s)) s = 0
   if (isNaN(v)) v = 0
@@ -331,14 +333,10 @@ export const filterHsva = ({ h, s, v, a }: { h: number, s:number, v:number, a: n
   return { h, s, v, a }
 }
 
-export function debounce (fn, delay = 100) {
-  let timer = null
-  return function () {
-    if (timer) {
-      clearTimeout(timer)
-    }
-    timer = setTimeout(() => {
-      fn.apply(this, arguments)
-    }, delay)
-  }
+export const checkHsva = ({ h, s, v, a }: { h: number, s:number, v:number, a: number }) => {
+  if (isNaN(h)) return false
+  if (isNaN(s)) return false
+  if (isNaN(v)) return false
+  if (isNaN(a)) return false
+  return true
 }

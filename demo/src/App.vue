@@ -1,6 +1,6 @@
 <template>
   <div>
-    <pick-colors v-model:value="value2" format="rgb" @change="onColorChange2" @closePicker="closePicker"/>
+    <pick-colors v-model:value="value2" format="hex" :formatOptions="false" @change="onColorChange2" @closePicker="closePicker"/>
     <br />
     <button @click="toggleShowPicker">{{ showPicker ? '关闭' : '打开' }}</button>
     <pick-colors v-model:show-picker="showPicker" v-model:value="value" show-alpha :width="40" :size="60" @closePicker="closePicker"/>
@@ -12,7 +12,7 @@
       show-alpha
       add-color
       @change="onColorChange"
-      :colors="['', 'rgba(0,0,0,1)', 'hsla(0, 52%, 31%, 1)', '#3333']"
+      :colors="['#00', 'rgba(0,0,0,1)', 'hsla(0, 52%, 31%, 1)', '#3333']"
       :max="3"
       @closePicker="closePicker"
       :popup-container="false"
@@ -33,7 +33,7 @@ export default defineComponent({
   },
   setup () {
     const value = ref('')
-    const value2 = ref('')
+    const value2 = ref('#22')
     watch(value2, () => {
       console.log(value2.value);
       

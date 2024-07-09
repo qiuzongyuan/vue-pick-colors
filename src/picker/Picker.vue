@@ -7,12 +7,15 @@
         <alpha class="alpha" :alpha="a" :color="rgbStr" @change="onSelectAlpha" v-if="showAlpha"/>
       </div>
         <input-value
-          :label="handleInputLabel(format)"
+          :format="handleInputFormat(format)"
           :value="colorValue"
-          :width="inputWidth"
+          :showAlpha="showAlpha"
+          :width="showAlpha ? 150 : 125"
+          :formatOptions="formatOptions"
           @change="onInputChange"
-          @blur="handleChange(format)"
-          @enter="handleChange(format)"
+          @blur="handleChange"
+          @enter="handleChange"
+          @formatChange="onFormatChange"
         />
       <Colors class="colors" v-if="colors.length > 0" :colors="colors" :selected-index="selectColorIndex" @change="onSelectColor"/>
     </div>
@@ -25,10 +28,10 @@ import type { PropType, CSSProperties } from 'vue'
 import Saturation from './Saturation.vue'
 import Hue from './Hue.vue'
 import Alpha from './Alpha.vue'
-import InputValue from './InputValue.vue'
+import InputValue from './input-value'
 import Colors from './Colors.vue'
-import { hsvFormat, hsv2rgb, checkColorValue, transformHsva, checkColorFormat, filterHsva } from '../utils'
-import type { Format } from '../constant'
+import { hsvFormat, hsv2rgb, transformHsva, checkColorFormat, filterHsva, checkHsva } from '../utils'
+import { ALPHA_FORMAT_MAP, Format, FORMAT_MAP } from '../constant'
 export default defineComponent({
   name: 'Picker',
   components: {
@@ -59,12 +62,14 @@ export default defineComponent({
     style: {
       type: Object as PropType<Partial<CSSProperties>>,
       default: () => ({})
+    },
+    formatOptions: {
+      type: [Boolean, Array] as PropType<Format [] | Boolean>
     }
   },
-  emits: ['change', 'update:value'],
+  emits: ['change', 'formatChange'],
   setup (props, { emit }) {
     const pickerStyle = computed<Partial<CSSProperties>>(() => ({ ...props.style, width: props.showAlpha ? '230px' : '205px' }))
-    const inputWidth = computed(() => props.showAlpha ? 165 : 140)
     const hsva = ref()
     const cacheHsva = ref()
     const colorValue = ref()
@@ -83,7 +88,7 @@ export default defineComponent({
     }, {
       immediate: true
     })
-    watch(hsva, (hsva, oldHsva) => {
+    watch(() => [unref(hsva), props.format], ([hsva, oldHsva]) => {
       let color = ''
       if (hsva != null) {
         color = hsvFormat({ ...hsva }, props.format, props.showAlpha)
@@ -105,29 +110,11 @@ export default defineComponent({
     const a = computed(() => unref(hsva)?.a != null ? unref(hsva)?.a : 1)
     const rgb = computed(() => hsv2rgb(unref(h), unref(s), unref(v)))
     const rgbStr = computed(() => `rgb(${unref(rgb).r}, ${unref(rgb).g}, ${unref(rgb).b})`)
-    const handleInputLabel = (format: Format) => {
+    const handleInputFormat = (format: Format) => {
       if (props.showAlpha) {
-        switch (format) {
-          case 'hsv':
-            return 'HSVA'
-          case 'hsl':
-            return 'HSLA'
-          case 'rgb':
-            return 'RGBA'
-          default:
-            return 'HEX'
-        }
+        return ALPHA_FORMAT_MAP[format]
       } else {
-        switch (format) {
-          case 'hsv':
-            return 'HSV'
-          case 'hsl':
-            return 'HSL'
-          case 'rgb':
-            return 'RGB'
-          default:
-            return 'HEX'
-        }
+        return FORMAT_MAP[format]
       }
     }
     const onSelectHue = (hue: number) => {
@@ -211,16 +198,18 @@ export default defineComponent({
         }
       }
     }
-    const handleChange = (format: Format) => {
+    const handleChange = () => {
       const color = unref(colorValue)?.trim()
       if (color === '') {
         hsva.value = null
         return
       }
-      const showAlpha = props.showAlpha
-      const isCheck = checkColorValue(color, format, showAlpha)
+      const { showAlpha } = props
+      const format = checkColorFormat(color)
+      const newHsva = transformHsva(color, format, showAlpha)
+      const isCheck = checkHsva(newHsva)
       if (isCheck) {
-        handleColorChange(color, format, showAlpha)
+        hsva.value = newHsva
       } else {
         // 无效值
         if (unref(cacheHsva) != null) {
@@ -234,6 +223,9 @@ export default defineComponent({
       selectColorIndex.value = -1
       colorValue.value = color
     }
+    const onFormatChange = (format) => {
+      emit('formatChange', format)
+    }
     return {
       h,
       s,
@@ -243,14 +235,14 @@ export default defineComponent({
       onSelectSaturation,
       onSelectHue,
       onSelectAlpha,
-      handleInputLabel,
+      handleInputFormat,
       colorValue,
       pickerStyle,
-      inputWidth,
       onInputChange,
       handleChange,
       selectColorIndex,
-      onSelectColor
+      onSelectColor,
+      onFormatChange
     }
   }
 })

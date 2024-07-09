@@ -1,12 +1,18 @@
 import { Ref, nextTick, onBeforeUnmount, ref, unref, watch } from 'vue'
 import type { CSSProperties } from 'vue'
-import { Options, Instance, createPopper } from '@popperjs/core'
+import { Options, Instance, createPopper, Placement, PositioningStrategy } from '@popperjs/core'
+interface PopperOptions {
+  strategy?: PositioningStrategy
+  placement?:Placement
+  defaultStyle?:Partial<CSSProperties>
+}
 let instance: Instance = null
-const usePopper = (target: Ref<any>, popper: Ref<any>, defaultStyle: Partial<CSSProperties>) => {
+const usePopper = (target: Ref<any>, popper: Ref<any>, popperOptions?:PopperOptions) => {
   const style = ref<Partial<CSSProperties>>({})
+  const { placement, defaultStyle, strategy } = popperOptions || {}
   const options: Options = {
-    strategy: 'absolute',
-    placement: 'auto',
+    strategy: strategy || 'absolute',
+    placement: placement || 'auto',
     onFirstUpdate: () => {
       instance.update()
     },
@@ -27,7 +33,6 @@ const usePopper = (target: Ref<any>, popper: Ref<any>, defaultStyle: Partial<CSS
       {
         name: 'flip',
         options: {
-          fallbackPlacements: ['top'],
           allowedAutoPlacements: ['top', 'bottom']
         }
       },
@@ -46,7 +51,7 @@ const usePopper = (target: Ref<any>, popper: Ref<any>, defaultStyle: Partial<CSS
           style.value = {
             ...popper as CSSProperties,
             ...defaultStyle,
-            transformOrigin: placement === 'top' ? 'center bottom' : ''
+            transformOrigin: placement === 'top' ? 'center bottom' : 'center top'
           }
         }
       }

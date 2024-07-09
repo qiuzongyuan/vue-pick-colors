@@ -189,7 +189,8 @@ export default defineComponent({
 
     const { style: pickerStyle } = usePopper(targetRef, pickerRef, {
       defaultStyle: { zIndex: props.zIndex },
-      strategy: props.position
+      strategy: props.position,
+      placement: props.placement
     })
 
     const onOpenPicker = () => {

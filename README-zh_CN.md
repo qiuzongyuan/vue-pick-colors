@@ -2,7 +2,6 @@
 
 >  🎉 A Color picker for Vue.js 3
 
-
 ### [Demo](https://qiuzongyuan.github.io/vue-pick-colors/use.html)
 
 <div style="display: flex">

@@ -30,6 +30,7 @@ const colors = ref([
   const toggleShowPicker = () => {
     showPicker.value = !unref(showPicker)
   }
+  const formatOptions = ref(['rgb', 'hex'])
 </script>
 
 # 快速上手
@@ -97,17 +98,18 @@ const colors = ref([
 </script>
 ```
 
-`format-options` 设置为 `['rgb', 'hex']` <pick-colors v-model:value="formatValue" :format="format" :format-options="['rgb', 'hex']" show-alpha/>
+`format-options` 设置为 `['rgb', 'hex']` <pick-colors v-model:value="formatValue" :format="format" :format-options="formatOptions" show-alpha/>
 
 ```vue
 <template>
-  <pick-colors v-model:value="formatValue" :format="format" :format-options="['rgb', 'hex']" show-alpha/>
+  <pick-colors v-model:value="formatValue" :format="format" :format-options="formatOptions" show-alpha/>
 </template>
 
 <script lang="ts" setup>
   import pickColors, { Format } from 'vue-pick-colors'
   const value = ref('#90ee90')
   const format = ref<Format>('rgb')
+  const formatOptions = ref<Format []>(['rgb', 'hex'])
 </script>
 ```
 

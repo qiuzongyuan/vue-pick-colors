@@ -3,7 +3,7 @@ import { ref, unref } from 'vue'
 const value = ref('#ff4500')
 const showAlphaValue = ref('rgba(255, 69, 0, 0.68)')
 const formatValue = ref('#90ee90')
-const formatOptionsFalseValue = ref('#ff4500ff')
+const formatOptionsFalseValue = ref('#ffe243ff')
 const formatOptionsValue = ref('#1e90ffff')
 const sizeValue = ref('#00ced1')
 const colorsValue = ref('#1e90ffff')
@@ -95,7 +95,7 @@ const colors = ref([
 
 <script lang="ts" setup>
   import pickColors, { Format } from 'vue-pick-colors'
-  const value = ref('#ff4500ff')
+  const value = ref('#ffe243ff')
   const format = ref<Format>('rgb')
 </script>
 ```

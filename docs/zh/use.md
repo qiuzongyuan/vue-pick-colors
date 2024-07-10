@@ -3,6 +3,8 @@ import { ref, unref } from 'vue'
 const value = ref('#ff4500')
 const showAlphaValue = ref('rgba(255, 69, 0, 0.68)')
 const formatValue = ref('#90ee90')
+const formatOptionsFalseValue = ref('#ff4500ff')
+const formatOptionsValue = ref('#1e90ffff')
 const sizeValue = ref('#00ced1')
 const colorsValue = ref('#1e90ffff')
 const themeValue = ref('#1e3b56ff')
@@ -93,21 +95,21 @@ const colors = ref([
 
 <script lang="ts" setup>
   import pickColors, { Format } from 'vue-pick-colors'
-  const value = ref('#90ee90')
+  const value = ref('#00babdff')
   const format = ref<Format>('rgb')
 </script>
 ```
 
-`format-options` 设置为 `['rgb', 'hex']` <pick-colors v-model:value="formatValue" :format="format" :format-options="formatOptions" show-alpha/>
+`format-options` 设置为 `['rgb', 'hex']` <pick-colors v-model:value="formatOptionsValue" :format="format" :format-options="formatOptions" show-alpha/>
 
 ```vue
 <template>
-  <pick-colors v-model:value="formatValue" :format="format" :format-options="formatOptions" show-alpha/>
+  <pick-colors v-model:value="formatOptionsValue" :format="format" :format-options="formatOptions" show-alpha/>
 </template>
 
 <script lang="ts" setup>
   import pickColors, { Format } from 'vue-pick-colors'
-  const value = ref('#90ee90')
+  const value = ref('#1e90ffff')
   const format = ref<Format>('rgb')
   const formatOptions = ref<Format []>(['rgb', 'hex'])
 </script>

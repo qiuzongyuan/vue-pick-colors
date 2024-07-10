@@ -3,6 +3,8 @@ import { ref, unref } from 'vue'
 const value = ref('#ff4500')
 const showAlphaValue = ref('rgba(255, 69, 0, 0.68)')
 const formatValue = ref('#90ee90')
+const formatOptionsFalseValue = ref('#ff4500ff')
+const formatOptionsValue = ref('#1e90ffff')
 const sizeValue = ref('#00ced1')
 const colorsValue = ref('#1e90ffff')
 const themeValue = ref('#1e3b56ff')
@@ -83,7 +85,7 @@ Use `show-alpha` <pick-colors v-model:value="showAlphaValue" show-alpha/>
 ```
 
 ## Format Options
-`format-options` is set to `false` <pick-colors v-model:value="formatValue" :format="format" :format-options="false" show-alpha/>
+`format-options` is set to `false` <pick-colors v-model:value="formatOptionsFalseValue" :format="format" :format-options="false" show-alpha/>
 
 ```vue
 <template>
@@ -92,12 +94,12 @@ Use `show-alpha` <pick-colors v-model:value="showAlphaValue" show-alpha/>
 
 <script lang="ts" setup>
   import pickColors, { Format } from 'vue-pick-colors'
-  const value = ref('#90ee90')
+  const value = ref('#00babdff')
   const format = ref<Format>('rgb')
 </script>
 ```
 
-`format-options` is set to `['rgb', 'hex']` <pick-colors v-model:value="formatValue" :format="format" :format-options="formatOptions" show-alpha/>
+`format-options` is set to `['rgb', 'hex']` <pick-colors v-model:value="formatOptionsValue" :format="format" :format-options="formatOptions" show-alpha/>
 
 ```vue
 <template>
@@ -106,7 +108,7 @@ Use `show-alpha` <pick-colors v-model:value="showAlphaValue" show-alpha/>
 
 <script lang="ts" setup>
   import pickColors, { Format } from 'vue-pick-colors'
-  const value = ref('#90ee90')
+  const value = ref('#1e90ffff')
   const format = ref<Format>('rgb')
   const formatOptions = ref<Format []>(['rgb', 'hex'])
 </script>

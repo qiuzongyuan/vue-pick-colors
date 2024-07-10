@@ -12,6 +12,7 @@
 </div>
 
 
+
 <br/>
 
 ### 安装
@@ -60,7 +61,7 @@ yarn add vue-pick-colors
 | popup-container      | 定义拾取器的容器                                        | string \| Vue.RendererElement\| boolean | 'body'                                                       | 1.5.0 |
 | z-index              | 拾取器的层级                                            | number                                  | 1000                                                         | 1.5.0 |
 | max                  | 添加颜色最大数                                          | number                                  | 13                                                           |       |
-| format-options        | 格式选项，当为false时，不出现选项                       | (hex ｜ rgb ｜ hsl ｜ hsv) [] \| false  | ['rgb', 'hex', 'hsl', 'hsv']                                 | 1.7.0 |
+| format-options       | 格式选项，当为false时，不出现选项                       | (hex ｜ rgb ｜ hsl ｜ hsv) [] \| false  | ['rgb', 'hex', 'hsl', 'hsv']                                 | 1.7.0 |
 | position             | 定位方式                                                | absolute \| fixed                       | absolute                                                     | 1.7.0 |
 | placement            | 弹出窗口的位置                                          | bottom \| top \| left \| right          | bottom                                                       | 1.7.0 |
 
@@ -74,3 +75,4 @@ yarn add vue-pick-colors
 | formatChange | 格式变化           | function(format: string)                                     | 1.7.0 |
 | close-picker | 关闭拾取器         | function(value: string｜string [])                           | 1.5.0 |
 | overflow-max | 颜色添加达到最大值 | —                                                            |       |
+

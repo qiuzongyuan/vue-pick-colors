@@ -1,8 +1,8 @@
 <template>
   <div>
-    <pick-colors v-model:value="value2" format="hex" :formatOptions="false" @change="onColorChange2" @closePicker="closePicker"/>
+    <pick-colors v-model:value="value2" format="hex" @change="onColorChange2" @closePicker="closePicker"/>
     <br />
-    <button @click="toggleShowPicker">{{ showPicker ? '关闭' : '打开' }}</button>
+    <!-- <button @click="toggleShowPicker">{{ showPicker ? '关闭' : '打开' }}</button>
     <pick-colors v-model:show-picker="showPicker" v-model:value="value" show-alpha :width="40" :size="60" @closePicker="closePicker"/>
     <br />
     <pick-colors v-model:value="value3" format="hsv" showAlpha :theme="theme" @closePicker="closePicker"/>
@@ -19,7 +19,7 @@
     />
     <br />
     <button @click="onSwitchTheme">切换主题</button>
-    <div ref="divRef"></div>
+    <div ref="divRef"></div> -->
   </div>
 </template>
 

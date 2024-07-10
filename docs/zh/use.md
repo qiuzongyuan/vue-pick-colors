@@ -3,6 +3,8 @@ import { ref, unref } from 'vue'
 const value = ref('#ff4500')
 const showAlphaValue = ref('rgba(255, 69, 0, 0.68)')
 const formatValue = ref('#90ee90')
+const formatOptionsFalseValue = ref('#ffe243ff')
+const formatOptionsValue = ref('#1e90ffff')
 const sizeValue = ref('#00ced1')
 const colorsValue = ref('#1e90ffff')
 const themeValue = ref('#1e3b56ff')
@@ -30,6 +32,7 @@ const colors = ref([
   const toggleShowPicker = () => {
     showPicker.value = !unref(showPicker)
   }
+  const formatOptions = ref(['rgb', 'hex'])
 </script>
 
 # 快速上手
@@ -78,6 +81,37 @@ const colors = ref([
   import pickColors, { Format } from 'vue-pick-colors'
   const value = ref('#90ee90')
   const format = ref<Format>('rgb')
+</script>
+```
+
+
+## 设置格式选项
+`format-options` 设置为 `false` <pick-colors v-model:value="formatOptionsFalseValue" :format="format" :format-options="false" show-alpha/>
+
+```vue
+<template>
+ <pick-colors v-model:value="value" :format="format" :format-options="false" show-alpha/>
+</template>
+
+<script lang="ts" setup>
+  import pickColors, { Format } from 'vue-pick-colors'
+  const value = ref('#ffe243ff')
+  const format = ref<Format>('rgb')
+</script>
+```
+
+`format-options` 设置为 `['rgb', 'hex']` <pick-colors v-model:value="formatOptionsValue" :format="format" :format-options="formatOptions" show-alpha/>
+
+```vue
+<template>
+  <pick-colors v-model:value="value" :format="format" :format-options="formatOptions" show-alpha/>
+</template>
+
+<script lang="ts" setup>
+  import pickColors, { Format } from 'vue-pick-colors'
+  const value = ref('#1e90ffff')
+  const format = ref<Format>('rgb')
+  const formatOptions = ref<Format []>(['rgb', 'hex'])
 </script>
 ```
 
@@ -216,14 +250,16 @@ const colors = ref([
 | popup-container      | 定义拾取器的容器                                        | string \| Vue.RendererElement | 'body'                                                       | 1.5.0 |
 | z-index | 拾取器的层级   | number | 1000 | 1.5.0 |
 | max     | 添加颜色最大数 | number | 13   |       |
-
-<br/>
+| format-options       | 格式选项，当为false时，不出现选项                       | (hex ｜ rgb ｜ hsl ｜ hsv) [] \| false  | ['rgb', 'hex', 'hsl', 'hsv']                                 | 1.7.0 |
+| position             | 定位方式                                                | absolute \| fixed                       | absolute                                                     | 1.7.0 |
+| placement            | 弹出窗口的位置                                          | bottom \| top \| left \| right          | bottom    | 1.7.0 |
 
 ## 事件
 
 | 事件名       | 描述               | 参数                                                         | 版本  |
 | ------------ | ------------------ | ------------------------------------------------------------ | ----- |
 | change       | 颜色值变化         | function(value: string｜string [],color: string,index: number) |       |
+| formatChange | 格式变化           | function(format: string)                                     | 1.7.0 |
 | close-picker | 关闭拾取器         | function(value: string｜string [])                           | 1.5.0 |
 | <div style="white-space: nowrap;">overflow-max</div> | 颜色添加达到最大值 | —                                                            |       |
 

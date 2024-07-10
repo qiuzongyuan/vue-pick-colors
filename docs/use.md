@@ -81,6 +81,35 @@ Use `show-alpha` <pick-colors v-model:value="showAlphaValue" show-alpha/>
 </script>
 ```
 
+## Format Options
+`format-options` is set to `false` <pick-colors v-model:value="formatValue" :format="format" :format-options="false" show-alpha/>
+
+```vue
+<template>
+ <pick-colors v-model:value="formatValue" :format="format" :format-options="false" show-alpha/>
+</template>
+
+<script lang="ts" setup>
+  import pickColors, { Format } from 'vue-pick-colors'
+  const value = ref('#90ee90')
+  const format = ref<Format>('rgb')
+</script>
+```
+
+`format-options` is set to `['rgb', 'hex']` <pick-colors v-model:value="formatValue" :format="format" :format-options="['rgb', 'hex']" show-alpha/>
+
+```vue
+<template>
+  <pick-colors v-model:value="formatValue" :format="format" :format-options="['rgb', 'hex']" show-alpha/>
+</template>
+
+<script lang="ts" setup>
+  import pickColors, { Format } from 'vue-pick-colors'
+  const value = ref('#90ee90')
+  const format = ref<Format>('rgb')
+</script>
+```
+
 ## Size
 
 Use `size` <pick-colors v-model:value="sizeValue" :size="size"/>
@@ -218,13 +247,15 @@ Use `add-color`  <pick-colors v-model:value="addColorValue" add-color />
 | popup-container      | defines the container for the picker                         | string \| Vue.RendererElement | 'body'                                                       | 1.5.0   | 
 |z-index | the z-index  of the picker      | number | 1000 | 1.5.0 |
 | max     | maximum number of colors to add | number | 13   |       |
-
-<br/>
+| format-options       | Format options, when false, no options appear                | (hex ｜ rgb ｜ hsl ｜ hsv) [] \|false   | ['rgb', 'hex', 'hsl', 'hsv']                                 | 1.7.0   |
+| position             | The position  of the picker                                  | absolute \| fixed                        | absolute                                                     | 1.7.0   |
+| placement            | The placement of the picker                                  | bottom  \| top \| left \| right             | bottom                                                       | 1.7.0   |
 
 ### Events
 
 | Events Name  | Description        | Arguments                                                    | version |
 | ------------ | ------------------ | ------------------------------------------------------------ | ------- |
 | change       | color value change | function(value: string｜string [],color: string,index: number) |         |
+| formatChange | format change      | function(format: string)                                     |    1.7.0     |
 | close-picker  | close picker       | function(value: string｜string [])                           | 1.5.0   |
 | <div style="white-space: nowrap;">overflow-max</div> | color added to max | —                                                            |         |

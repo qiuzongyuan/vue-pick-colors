@@ -70,8 +70,19 @@ export const hsv2rgb = (h, s, v) => {
   }
 }
 
+export const roundToTwoDecimals = (n: number) => {
+  const numberString = n.toString()
+  const regex = /\.(\d{1,2})(\d*)/
+  const match = numberString.match(regex)
+  if (match && match[2].length > 0) {
+    return parseFloat(n.toFixed(2))
+  }
+  return n
+}
+
 export const hsvFormat = ({ h, s, v, a }, format: Format, useAlpha: boolean) => {
   if (useAlpha) {
+    a = roundToTwoDecimals(a)
     switch (format) {
       case 'hsl': {
         const hsl = hsv2hsl(h, s / 100, v / 100)

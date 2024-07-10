@@ -89,12 +89,12 @@ Use `show-alpha` <pick-colors v-model:value="showAlphaValue" show-alpha/>
 
 ```vue
 <template>
- <pick-colors v-model:value="formatValue" :format="format" :format-options="false" show-alpha/>
+ <pick-colors v-model:value="value" :format="format" :format-options="false" show-alpha/>
 </template>
 
 <script lang="ts" setup>
   import pickColors, { Format } from 'vue-pick-colors'
-  const value = ref('#00babdff')
+  const value = ref('#ff4500ff')
   const format = ref<Format>('rgb')
 </script>
 ```
@@ -103,7 +103,7 @@ Use `show-alpha` <pick-colors v-model:value="showAlphaValue" show-alpha/>
 
 ```vue
 <template>
-  <pick-colors v-model:value="formatValue" :format="format" :format-options="formatOptions" show-alpha/>
+  <pick-colors v-model:value="value" :format="format" :format-options="formatOptions" show-alpha/>
 </template>
 
 <script lang="ts" setup>

@@ -32,7 +32,7 @@ const colors = ref([
   const toggleShowPicker = () => {
     showPicker.value = !unref(showPicker)
   }
-  const formatOptions = ref(['rgb', 'hex'])
+  const formatOptions = ref(['rgb', 'hex', 'hsl', 'hsv'])
 </script>
 
 # Usage
@@ -85,19 +85,6 @@ Use `show-alpha` <pick-colors v-model:value="showAlphaValue" show-alpha/>
 ```
 
 ## Format Options
-`format-options` is set to `false` <pick-colors v-model:value="formatOptionsFalseValue" :format="format" :format-options="false" show-alpha/>
-
-```vue
-<template>
- <pick-colors v-model:value="value" :format="format" :format-options="false" show-alpha/>
-</template>
-
-<script lang="ts" setup>
-  import pickColors, { Format } from 'vue-pick-colors'
-  const value = ref('#ffe243ff')
-  const format = ref<Format>('rgb')
-</script>
-```
 
 `format-options` is set to `['rgb', 'hex', 'hsl', 'hsv']` <pick-colors v-model:value="formatOptionsValue" :format="format" :format-options="formatOptions" show-alpha/>
 

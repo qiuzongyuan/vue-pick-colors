@@ -60,7 +60,7 @@ yarn add vue-pick-colors
 | popup-container      | Defines the container for the picker                         | string \| Vue.RendererElement\| boolean | 'body'                                                       | 1.5.0   |
 | z-index              | The z-index  of the picker                                   | number                                  | 1000                                                         | 1.5.0   |
 | max                  | Maximum number of colors to add                              | number                                  | 13                                                           |         |
-| format-options       | Format options, when false, no options appear                | (hex ｜ rgb ｜ hsl ｜ hsv) [] \|false   | ['rgb', 'hex', 'hsl', 'hsv']                                 | 1.7.0   |
+| format-options       | Format options, when false, no options appear                | (hex ｜ rgb ｜ hsl ｜ hsv) [] \|false   | false                                | 1.7.0   |
 | position             | The position  of the picker                                  | absolute \|fixed                        | absolute                                                     | 1.7.0   |
 | placement            | The placement of the picker                                  | bottom \|top \|left \|right             | bottom                                                       | 1.7.0   |
 

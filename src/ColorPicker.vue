@@ -141,7 +141,7 @@ export default defineComponent({
     },
     formatOptions: {
       type: [Boolean, Array] as PropType<Format [] | Boolean>,
-      default: () => ['rgb', 'hex', 'hsl', 'hsv']
+      default: false
     }
   },
   emits: ['change', 'update:value', 'update:showPicker', 'overflowMax', 'closePicker', 'formatChange'],

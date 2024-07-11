@@ -100,7 +100,7 @@ const colors = ref([
 </script>
 ```
 
-`format-options` 设置为 `['rgb', 'hex']` <pick-colors v-model:value="formatOptionsValue" :format="format" :format-options="formatOptions" show-alpha/>
+`format-options` 设置为 `['rgb', 'hex', 'hsl', 'hsv']` <pick-colors v-model:value="formatOptionsValue" :format="format" :format-options="formatOptions" show-alpha/>
 
 ```vue
 <template>
@@ -111,7 +111,7 @@ const colors = ref([
   import pickColors, { Format } from 'vue-pick-colors'
   const value = ref('#1e90ffff')
   const format = ref<Format>('rgb')
-  const formatOptions = ref<Format []>(['rgb', 'hex'])
+  const formatOptions = ref<Format []>(['rgb', 'hex', 'hsl', 'hsv'])
 </script>
 ```
 

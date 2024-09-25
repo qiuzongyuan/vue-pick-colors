@@ -294,12 +294,9 @@ export default defineComponent({
         value = color
       }
 
-      if (props.value === undefined) {
-        valueList.value = Array.isArray(value) ? value : [value]
-      } else {
-        emit('update:value', value)
-        emit('change', value, color, index)
-      }
+      valueList.value = Array.isArray(value) ? value : [value]
+      emit('update:value', value)
+      emit('change', value, color, index)
 
       // 添加到最大
       if (props.addColor && len >= props.max) {

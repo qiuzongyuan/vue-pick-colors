@@ -1,6 +1,6 @@
 {
   "name": "vue-pick-colors",
-  "version": "1.7.6",
+  "version": "1.7.7",
   "description": "A Color picker for Vue.js 3",
   "main": "dist/index.umd.js",
   "module": "dist/index.esm.js",

@@ -207,6 +207,10 @@ export default defineComponent({
       const { showAlpha } = props
       const format = checkColorFormat(color)
       const newHsva = transformHsva(color, format, showAlpha)
+      // HEX 格式下如果没有 alpha 通道则默认为 1
+      if (format === 'hex' && showAlpha && isNaN(newHsva.a)) {
+        newHsva.a = 1
+      }
       const isCheck = checkHsva(newHsva)
       if (isCheck) {
         hsva.value = newHsva

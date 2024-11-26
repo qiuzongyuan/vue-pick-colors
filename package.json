@@ -16,7 +16,6 @@
     "build": "npm run clean && npm run lint && rollup -c ./rollup.config.ts",
     "build:dev": "npm run clean && npm run lint && rollup -wc ./rollup.config.ts",
     "dev": "vite ./demo",
-    "prepublishOnly": "npm run build",
     "lint": "eslint ./src --ext .vue,.js,.ts,.jsx,.tsx",
     "lint:fix": "eslint --fix ./src --ext .vue,.js,.ts,.jsx,.tsx",
     "clean": "rimraf ./dist",
@@ -42,7 +41,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/qiuzongyuan/vue-pick-colors"
+    "url": "git+https://github.com/qiuzongyuan/vue-pick-colors.git"
   },
   "devDependencies": {
     "@babel/core": "^7.16.7",

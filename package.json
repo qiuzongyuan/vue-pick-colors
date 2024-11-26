@@ -20,6 +20,7 @@
     "lint:fix": "eslint --fix ./src --ext .vue,.js,.ts,.jsx,.tsx",
     "clean": "rimraf ./dist",
     "test": "jest",
+    "prepublishOnly": "npm run build",
     "test:coverage": "jest --coverage",
     "docs": "vitepress dev docs",
     "docs:build": "vitepress build docs",
@@ -84,7 +85,7 @@
     "vite": "^2.7.12",
     "vite-plugin-dts": "^3.5.2",
     "vite-plugin-eslint": "^1.3.0",
-    "vitepress": "^1.0.0-rc.5",
+    "vitepress": "1.0.0-rc.5",
     "vue": "^3.2.26",
     "vue-jest": "^5.0.0-alpha.10"
   },

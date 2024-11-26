@@ -344,7 +344,9 @@ export const filterHsva = ({ h, s, v, a }: { h: number, s:number, v:number, a: n
   return { h, s, v, a }
 }
 
-export const checkHsva = ({ h, s, v, a }: { h: number, s:number, v:number, a: number }) => {
+export const checkHsva = (hsva: { h: number, s:number, v:number, a: number } | null) => {
+  if (!hsva) return false
+  const { h, s, v, a } = hsva
   if (isNaN(h)) return false
   if (isNaN(s)) return false
   if (isNaN(v)) return false

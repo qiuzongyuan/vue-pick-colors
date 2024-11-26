@@ -206,7 +206,7 @@ export default defineComponent({
       }
       const { showAlpha } = props
       const format = checkColorFormat(color)
-      const newHsva = transformHsva(color, format, showAlpha)
+      const newHsva = filterHsva(transformHsva(color, format, showAlpha))
       const isCheck = checkHsva(newHsva)
       if (isCheck) {
         hsva.value = newHsva

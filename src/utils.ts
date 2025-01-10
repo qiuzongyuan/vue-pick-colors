@@ -82,7 +82,7 @@ export const roundToTwoDecimals = (n: number) => {
 
 export const hsvFormat = ({ h, s, v, a }, format: Format, useAlpha: boolean) => {
   if (useAlpha) {
-    a = roundToTwoDecimals(a)
+    if (['hsl', 'hsv', 'rga'].includes(format)) a = roundToTwoDecimals(a)
     switch (format) {
       case 'hsl': {
         const hsl = hsv2hsl(h, s / 100, v / 100)

@@ -1,12 +1,13 @@
 <template>
-  <div class="alpha" @mousedown.prevent.stop="onSelect">
-    <canvas ref="canvas"/>
-    <div class="slider" :style="sliderStyle"/>
+  <div class="alpha" @mousedown.prevent.stop="onSelect" @touchstart.prevent.stop="onSelect">
+    <canvas ref="canvas" />
+    <div class="slider" :style="sliderStyle" />
   </div>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, onMounted, ref, watch } from 'vue'
+
 export default defineComponent({
   name: 'Alpha',
   props: {
@@ -34,6 +35,8 @@ export default defineComponent({
       top: `${props.alpha * props.height - sliderHeightHalf}px`,
       height: `${sliderHeight}px`
     }))
+
+    // 创建 alpha 方块，用于背景图案
     const createAlphaSquare = (size: number) => {
       const canvas = document.createElement('canvas')
       const ctx = canvas.getContext('2d')
@@ -47,6 +50,7 @@ export default defineComponent({
       ctx.fillRect(size, size, size, size)
       return canvas
     }
+
     const canvas = ref<HTMLCanvasElement>()
     const renderAlpha = () => {
       const ctx = canvas.value.getContext('2d')
@@ -61,34 +65,62 @@ export default defineComponent({
       ctx.fillStyle = gradient
       ctx.fillRect(0, 0, props.width, props.height)
     }
+
+    // 监听 color 改变
     watch(() => props.color, () => {
       renderAlpha()
     })
+
+    // 初始化画布
     onMounted(() => {
       renderAlpha()
     })
-    const onSelect = (e: MouseEvent) => {
+
+    // 选择事件处理
+    const onSelect = (e: MouseEvent | TouchEvent) => {
       const target = e.target as HTMLCanvasElement
       const { top } = target.getBoundingClientRect()
-      const onSelectMoving = (e: MouseEvent) => {
-        const { clientY } = e
+
+      // 处理鼠标或触摸开始事件
+      const onSelectMoving = (e: MouseEvent | TouchEvent) => {
+        let clientY
+        if (e instanceof MouseEvent) {
+          clientY = e.clientY
+        } else if (e instanceof TouchEvent) {
+          clientY = e.touches[0].clientY
+        }
+
         let y = clientY - top
         if (y < 0) y = 0
         if (y > props.height) y = props.height
         const a = parseFloat((y / props.height).toFixed(2))
         emit('change', a)
       }
+
       const onSelectEnd = () => {
         document.removeEventListener('mousemove', onSelectMoving)
         document.removeEventListener('mouseup', onSelectEnd)
+        document.removeEventListener('touchmove', onSelectMoving)
+        document.removeEventListener('touchend', onSelectEnd)
       }
-      // 单点击选择
+
+      // 单次点击选择
       onSelectMoving(e)
-      // 选择移动
-      document.addEventListener('mousemove', onSelectMoving)
-      // 选择结束
-      document.addEventListener('mouseup', onSelectEnd)
+
+      // 鼠标事件
+      if (e instanceof MouseEvent) {
+        document.addEventListener('mousemove', onSelectMoving)
+        document.addEventListener('mouseup', onSelectEnd)
+      }
+
+      // 触摸事件
+      if (e instanceof TouchEvent) {
+        e.preventDefault() // 防止页面滚动
+        document.addEventListener('touchmove', onSelectMoving, { passive: false })
+        document.addEventListener('touchend', onSelectEnd)
+      }
     }
+
     return {
       canvas,
       sliderStyle,
@@ -101,7 +133,9 @@ export default defineComponent({
 <style scoped lang="less">
 .alpha {
   position: relative;
+  touch-action: none; /* 禁止触摸滚动行为 */
 }
+
 .slider {
   width: 100%;
   background: #fff;
@@ -109,6 +143,6 @@ export default defineComponent({
   position: absolute;
   left: 0;
   z-index: 1;
-  pointer-events: none;
+  pointer-events: none; /* 禁止滑块接受鼠标或触摸事件 */
 }
 </style>

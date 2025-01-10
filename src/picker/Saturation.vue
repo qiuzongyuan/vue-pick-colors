@@ -3,10 +3,11 @@
     class="saturation"
     :style="saturationStyle"
     @mousedown.prevent.stop="onSelect"
+    @touchstart.prevent.stop="onSelect"
   >
-    <div class="saturation-white"></div>
-    <div class="saturation-black"></div>
-    <div class="slider" :style="sliderStyle"/>
+    <div class="saturation-white" />
+    <div class="saturation-black" />
+    <div class="slider" :style="sliderStyle" />
   </div>
 </template>
 
@@ -47,32 +48,63 @@ export default defineComponent({
       width: `${sliderSize}px`,
       height: `${sliderSize}px`
     }))
-    const onSelect = (e: MouseEvent) => {
+    const onSelect = (e: MouseEvent | TouchEvent) => {
       const target = e.target as HTMLCanvasElement
       const { left, top } = target.getBoundingClientRect()
-      const onSelectMoving = (e: MouseEvent) => {
-        const { clientX, clientY } = e
+
+      // 处理鼠标或触摸开始事件
+      const onSelectMoving = (e: MouseEvent | TouchEvent) => {
+        let clientX, clientY
+
+        // 兼容触摸事件和鼠标事件
+        if (e instanceof MouseEvent) {
+          clientX = e.clientX
+          clientY = e.clientY
+        } else if (e instanceof TouchEvent) {
+          clientX = e.touches[0].clientX
+          clientY = e.touches[0].clientY
+        }
+
+        // 计算相对于目标元素的坐标
         let x = clientX - left
         let y = clientY - top
+
+        // 保证坐标在有效范围内
         if (x < 0) x = 0
         if (y < 0) y = 0
         if (x > props.size) x = props.size
         if (y > props.size) y = props.size
+
         const saturation = (x / props.size) * 100
         const value = 100 - (y / props.size) * 100
+
         emit('change', saturation, value)
       }
+
+      // 单次点击选择
+      onSelectMoving(e)
+
       const onSelectEnd = () => {
         document.removeEventListener('mousemove', onSelectMoving)
         document.removeEventListener('mouseup', onSelectEnd)
+        document.removeEventListener('touchmove', onSelectMoving)
+        document.removeEventListener('touchend', onSelectEnd)
       }
-      // 单点击选择
+
       onSelectMoving(e)
-      // 选择移动
-      document.addEventListener('mousemove', onSelectMoving)
-      // 选择结束
-      document.addEventListener('mouseup', onSelectEnd)
+
+      if (e instanceof MouseEvent) {
+        document.addEventListener('mousemove', onSelectMoving)
+        document.addEventListener('mouseup', onSelectEnd)
+      }
+
+      if (e instanceof TouchEvent) {
+        e.preventDefault() // 防止页面滑动
+        document.addEventListener('touchmove', onSelectMoving, { passive: false })
+        document.addEventListener('touchend', onSelectEnd)
+      }
     }
+
     return {
       saturationStyle,
       sliderStyle,

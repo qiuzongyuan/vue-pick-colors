@@ -60,7 +60,7 @@ export default defineComponent({
         if (e instanceof MouseEvent) {
           clientX = e.clientX
           clientY = e.clientY
-        } else if (e instanceof TouchEvent) {
+        } else if (window.TouchEvent && e instanceof TouchEvent) {
           clientX = e.touches[0].clientX
           clientY = e.touches[0].clientY
         }
@@ -98,7 +98,7 @@ export default defineComponent({
         document.addEventListener('mouseup', onSelectEnd)
       }
 
-      if (e instanceof TouchEvent) {
+      if (window.TouchEvent && e instanceof TouchEvent) {
         e.preventDefault() // 防止页面滑动
         document.addEventListener('touchmove', onSelectMoving, { passive: false })
         document.addEventListener('touchend', onSelectEnd)
